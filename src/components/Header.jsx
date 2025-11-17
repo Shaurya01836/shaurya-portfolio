@@ -1,7 +1,7 @@
 import BentoCard from "./BentoCard";
-import { RiFileTextLine } from "@remixicon/react"; 
+import { RiFileTextLine, RiArrowDownSLine } from "@remixicon/react";
 
-// Logos
+
 const githubLogoUrl =
   "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg";
 const leetcodeLogoUrl =
@@ -11,12 +11,10 @@ const gfgLogoUrl =
 const hackerrankLogoUrl =
   "https://cdn-1.webcatalog.io/catalog/hackerrank/hackerrank-icon.png";
 
-
 const Header = () => {
   return (
-    <div className="p-4 md:p-8 text-black lg:min-h-screen flex items-center">
+    <div className="relative p-4 md:p-8 text-black lg:min-h-screen flex items-center">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full items-center">
-      
         <BentoCard className="col-span-2 h-44 p-0">
           <img
             src="https://i.ibb.co/sdJT6xxV/image.png"
@@ -25,16 +23,14 @@ const Header = () => {
           />
         </BentoCard>
 
-       
         <BentoCard className="h-48 p-0">
           <img
-            src="https://i.ibb.co/HDG54N2Q/1747907083945.jpg" 
+            src="https://i.ibb.co/HDG54N2Q/1747907083945.jpg"
             alt="secondary image"
             className="w-full h-full object-cover rounded-2xl"
           />
         </BentoCard>
 
-        {/* --- Resume Link Card (ICON REPLACED) --- */}
         <BentoCard className="h-48 p-4">
           <a
             href="https://hackerrank-resume.s3.us-east-1.amazonaws.com/uploads/26823516/MjY4MjM1MTY=.pdf"
@@ -42,7 +38,6 @@ const Header = () => {
             rel="noopener noreferrer"
             className="h-full w-full flex flex-col items-center justify-center text-center gap-2"
           >
-            {/* Replaced <img src={resumeUrl} ... /> with the Remixicon */}
             <RiFileTextLine size={40} className="text-gray-800" />
             <div>
               <h2 className="font-semibold text-lg">Resume</h2>
@@ -122,6 +117,11 @@ const Header = () => {
             </div>
           </a>
         </BentoCard>
+      </div>
+
+      <div className="hidden lg:flex absolute bottom-10 right-10 flex-col items-center gap-1 text-gray-500">
+        <RiArrowDownSLine size={24} />
+        <span className="text-sm font-semibold">Scroll to explore</span>
       </div>
     </div>
   );

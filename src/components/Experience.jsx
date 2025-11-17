@@ -1,24 +1,24 @@
-import React from "react";
+
 import { RiBuildingLine } from "@remixicon/react";
 
 const experienceData = [
   {
     company: "Software Technology Parks of India, Jaipur",
     role: "Frontend Web Developer",
-    duration: "Date - Date", // Replace with your actual dates
+    duration: "Date - Date", 
     tasks: [
       "Contributed to frontend development of dashboards and user interfaces.",
       "Enhanced application usability through UI/UX improvements and feature updates.",
       "Collaborated on code refactoring and component optimization for better maintainability.",
     ],
   },
-  // You can add more job experiences here in the future
+ 
 ];
 
 const Experience = () => {
   return (
     <div className="flex flex-col items-center w-full px-8 py-20 gap-10 bg-white text-black">
-      {/* Section Header */}
+    
 
       <h1 className="font-bold text-xl">Experience</h1>
 
