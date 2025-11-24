@@ -1,5 +1,4 @@
-import  { useState } from "react";
-import { RiTrophyLine } from "@remixicon/react";
+import { RiTrophyLine, RiExternalLinkLine } from "@remixicon/react";
 
 const achievementsData = [
   {
@@ -7,7 +6,7 @@ const achievementsData = [
     event: "MetaMask × HackQuest DevCook Global Hackathon",
     year: "2025",
     description:
-      "Secured two awards: 🥇 1st Prize in Chain For Good and 🥉 3rd Prize in Cross-Chain Interoperability & Asset Movement.",
+      "Secured two awards: 1st Prize in Chain For Good and 3rd Prize in Cross-Chain Interoperability & Asset Movement.",
     prize: "$833 Total",
     icon: <RiTrophyLine />,
     imageUrl: "https://via.placeholder.com/800x600.png?text=PayPact+Award",
@@ -49,91 +48,76 @@ const achievementsData = [
     description:
       "Secured a top position among 50+ teams for the AyurHerb project.",
     icon: <RiTrophyLine />,
-    imageUrl: "https://i.ibb.co/LXSWfXcJ/IMG20241025175647.jpg", 
+    imageUrl: "https://i.ibb.co/LXSWfXcJ/IMG20241025175647.jpg",
   },
 ];
 
 const Achievements = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-
-  const handleCardClick = (imageUrl) => {
-    if (imageUrl) {
-      setSelectedImage(imageUrl);
-      setIsModalOpen(true);
-    }
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedImage(null);
-  };
-
   const cardBaseClass =
-    "flex items-start gap-6 p-6 border border-gray-200 rounded-md shadow-sm transition-all duration-300";
+    "flex items-start gap-6 p-6 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 relative group bg-white dark:bg-[#0A0A0A] text-left w-full first:rounded-t-md last:rounded-b-md last:border-b-0";
   const cardInteractiveClass =
-    "hover:shadow-sm cursor-pointer";
+    "cursor-pointer hover:bg-gray-50 dark:hover:bg-[#161b22]";
 
   return (
-    <div className="flex flex-col w-full px-8 pb-10 gap-2 text-black">
-      <h1 className="text-lg text-gray-600 font-semibold">Achievements</h1>
+    <div className="flex flex-col w-full px-8 pb-10 gap-2 text-black dark:text-white">
+      <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold">Achievements</h1>
 
-      <div className="w-full space-y-8">
-        {achievementsData.map((achievement, index) => (
-          <div
-            key={index}
-            className={`${cardBaseClass} ${
-              achievement.imageUrl ? cardInteractiveClass : ""
-            }`}
-            onClick={() => handleCardClick(achievement.imageUrl)}
-          >
-            <div className="text-blue-500 bg-blue-50 p-3 rounded-full flex-shrink-0">
-              {achievement.icon}
-            </div>
-            <div className="flex-1">
-              <div className="flex justify-between items-start mb-1">
-                <h2 className="text-xl font-bold text-gray-800">
-                  {achievement.title}
-                </h2>
-                {achievement.prize && (
-                  <span className="ml-4 flex-shrink-0 bg-green-100 text-green-800 text-sm font-semibold px-3 py-1 rounded-full">
-                    {achievement.prize}
-                  </span>
-                )}
-              </div>
+      <div className="w-full border border-gray-200 dark:border-gray-800 rounded-md shadow-sm">
+        {achievementsData.map((achievement, index) => {
+       
+          const CardTag = achievement.imageUrl ? "a" : "div";
+          const cardProps = achievement.imageUrl
+            ? {
+                href: achievement.imageUrl,
+                target: "_blank",
+                rel: "noopener noreferrer",
+              }
+            : {};
 
-              <p className="text-md font-semibold text-gray-500">
-                {achievement.event} ({achievement.year})
-              </p>
-              <p className="mt-2 text-gray-600">{achievement.description}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70 transition-opacity duration-300"
-          onClick={closeModal}
-        >
-          <div
-            className="relative bg-white p-4 rounded-lg shadow-xl max-w-4xl w-auto transition-all duration-300"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={closeModal}
-              className="absolute -top-4 -right-4 bg-white text-gray-700 rounded-full w-10 h-10 flex items-center justify-center text-2xl font-bold shadow-lg hover:bg-red-500 hover:text-white transition-all duration-200"
+          return (
+            <CardTag
+              key={index}
+              {...cardProps}
+              className={`${cardBaseClass} ${
+                achievement.imageUrl ? cardInteractiveClass : ""
+              }`}
             >
-              &times;
-            </button>
-            <img
-              src={selectedImage}
-              alt="Achievement Certificate"
-              className="rounded-md max-h-[80vh] w-auto"
-            />
-          </div>
-        </div>
-      )}
+              <div className="text-gray-800 dark:text-gray-200 bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md flex-shrink-0 ">
+                {achievement.icon}
+              </div>
+              <div className="flex-1">
+                <div className="flex justify-between items-start mb-1">
+                  <h2 className="text-xl font-bold text-gray-800 dark:text-white pr-2">
+                    {achievement.title}
+                  </h2>
+
+                  <div className="flex items-center gap-3">
+                    {achievement.prize && (
+                      <span className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400 text-sm font-semibold px-3 py-1 rounded-full whitespace-nowrap">
+                        {achievement.prize}
+                      </span>
+                    )}
+
+                 
+                    {achievement.imageUrl && (
+                      <div className="text-gray-400">
+                        <RiExternalLinkLine size={20} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <p className="text-md font-semibold text-gray-500 dark:text-gray-400">
+                  {achievement.event} ({achievement.year})
+                </p>
+                <p className="mt-2 text-gray-600 dark:text-gray-300 leading-relaxed">
+                  {achievement.description}
+                </p>
+              </div>
+            </CardTag>
+          );
+        })}
+      </div>
     </div>
   );
 };

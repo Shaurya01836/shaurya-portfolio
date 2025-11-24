@@ -46,25 +46,25 @@ const skillsData = {
 
 const Skills = () => {
   return (
-    <div className="flex flex-col w-full px-8  gap-2 bg-white text-black">
-      <h1 className="text-lg text-gray-600 font-semibold">
-        Skills & Expertise
+    <div className="flex flex-col w-full px-8 gap-2 bg-white dark:bg-[#0A0A0A] text-black dark:text-white transition-colors duration-300">
+      <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold">
+        Stack
       </h1>
 
-      <div className="w-full  gap-8">
+      <div className="w-full gap-8">
         {Object.entries(skillsData).map(([category, skills]) => (
           <div
             key={category}
-            className="border border-gray-200 rounded-md p-6 shadow-sm "
+            className="border border-gray-200 dark:border-gray-800 rounded-md p-6 shadow-sm bg-white dark:bg-[#0A0A0A]"
           >
             <div className="flex flex-wrap gap-4">
               {skills.map(({ name, icon }) => (
                 <div
                   key={name}
-                  className="flex items-center gap-3 bg-gray-50 rounded-md p-2"
+                  className="flex items-center gap-3 bg-gray-50 dark:bg-[#161b22] rounded-md p-2 border border-transparent"
                 >
                   <img src={icon} alt={`${name} logo`} className="w-6 h-6" />
-                  <span className="font-semibold text-md text-gray-800">
+                  <span className="font-semibold text-md text-gray-800 dark:text-gray-200">
                     {name}
                   </span>
                 </div>

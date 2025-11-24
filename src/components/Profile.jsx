@@ -5,23 +5,19 @@ import {
   RiTwitterLine,
 } from "@remixicon/react";
 
-
 const leetcodeLogoUrl = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/leetcode/leetcode-original.svg";
 const gfgLogoUrl = "https://media.geeksforgeeks.org/wp-content/uploads/20230403183704/gfg_logo.png";
 const hackerrankLogoUrl = "https://cdn-1.webcatalog.io/catalog/hackerrank/hackerrank-icon.png";
 
-
 const TechBadge = ({ text }) => (
-  <span className="inline-flex items-center px-2 py-0.5 mx-1 rounded bg-gray-100 text-gray-800 border border-gray-200 text-base font-medium hover:bg-gray-200 transition-colors align-baseline cursor-pointer">
+  <span className="inline-flex items-center px-2 py-0.5 mx-1 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors align-baseline cursor-pointer">
     {text}
   </span>
 );
 
 export const ConnectSection = ({ className }) => (
   <div className={`mt-10 ${className}`}>
-
     <div className="flex items-center gap-4 flex-wrap">
-    
      <a
         href="https://www.linkedin.com/in/this-is-shaurya-upadhyay"
         target="_blank"
@@ -34,7 +30,7 @@ export const ConnectSection = ({ className }) => (
         href="https://github.com/Shaurya01836"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-black hover:scale-105 transition-all duration-300"
+        className="text-black dark:text-white hover:scale-105 transition-all duration-300"
       >
         <RiGithubLine size={28} />
       </a>
@@ -54,7 +50,6 @@ export const ConnectSection = ({ className }) => (
       >
         <RiInstagramLine size={28} />
       </a>
-
      
       <a
         href="https://leetcode.com/u/shaurya01836/"
@@ -65,7 +60,6 @@ export const ConnectSection = ({ className }) => (
         <img src={leetcodeLogoUrl} alt="LeetCode" className="w-7 h-7" />
       </a>
 
-     
       <a
         href="https://www.geeksforgeeks.org/user/shaurya3ms8/"
         target="_blank"
@@ -75,7 +69,6 @@ export const ConnectSection = ({ className }) => (
         <img src={gfgLogoUrl} alt="GeeksForGeeks" className="w-7 h-7" />
       </a>
 
-     
       <a
         href="https://www.hackerrank.com/profile/shaurya01836"
         target="_blank"
@@ -88,10 +81,9 @@ export const ConnectSection = ({ className }) => (
   </div>
 );
 
-
 const Profile = () => {
   return (
-    <div className="flex flex-col h-full justify-center p-8 lg:pl-20">
+    <div className="flex flex-col h-full justify-center p-8 lg:pl-20 text-gray-900 dark:text-gray-100">
       <div className="flex-grow flex flex-col justify-center">
         <img
           src="https://i.ibb.co/8LJ9qL10/Whats-App-Image-2025-06-23-at-00-34-04-8a1e77d6.jpg"
@@ -102,8 +94,8 @@ const Profile = () => {
           <h1 className="text-4xl font-bold tracking-tight">
             Shaurya Upadhyay
           </h1>
-          <div className="mt-4 max-w-lg text-lg text-gray-600 leading-loose">
-            <p className="font-semibold text-lg text-black mb-2">
+          <div className="mt-4 max-w-lg text-lg text-gray-600 dark:text-gray-300 leading-loose">
+            <p className="font-semibold text-lg text-black dark:text-white mb-2">
               A Java Developer.
             </p>
             <p>

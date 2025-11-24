@@ -13,29 +13,29 @@ function Cards({
       href={liveDemo}
       target="_blank"
       rel="noopener noreferrer"
-      className={`bg-white text-black w-full rounded-3xl  shadow-sm border border-gray-200 flex flex-col ${className}`}
+      className={`bg-white dark:bg-[#0A0A0A] text-black dark:text-gray-100 w-full rounded-md shadow-sm border border-gray-200 dark:border-gray-800 flex flex-col hover:border-gray-300 dark:hover:border-gray-600 transition-all ${className}`}
     >
-      {/* Image Container */}
-      <div className="w-full h-48 bg-gray-100 rounded-3xl mb-4">
+     
+      <div className="w-full h-48 bg-gray-100 dark:bg-gray-800 rounded-t-md overflow-hidden">
         <img
-          className="w-full h-full object-cover rounded-t-3xl"
+          className="w-full h-full object-cover"
           src={image}
           alt={`${title} project screenshot`}
         />
       </div>
 
-      {/* Text Content */}
+  
       <div className="flex flex-col flex-grow text-left p-4">
-        <h2 className="text-xl font-bold">{title}</h2>
-        <p className="text-gray-600 mt-1 text-sm flex-grow">{description}</p>
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white">{title}</h2>
+        <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm flex-grow leading-relaxed">{description}</p>
       </div>
 
-      {/* Tech Stack */}
-      <div className="flex flex-wrap gap-2 mt-4 p-4">
+    
+      <div className="flex flex-wrap gap-2 p-4 pt-0">
         {techStack.map((tech, index) => (
           <span
             key={index}
-            className="bg-gray-200 text-sm px-3 py-1 rounded-full text-gray-800"
+            className="bg-gray-200 dark:bg-gray-800 text-sm px-3 py-1 rounded-md text-gray-800 dark:text-gray-300"
           >
             {tech}
           </span>
