@@ -4,11 +4,12 @@ import Projects from "./components/Projects";
 import Skills from "./components/Skills";
 import Experience from "./components/Experience";
 import Achievements from "./components/Achievements";
+import GithubGraph from "./components/GithubGraph";
 
 function App() {
   return (
-    <div className="bg-white font-sans text-gray-900">
-      <div className="flex flex-col lg:flex-row">
+    <div className="bg-white text-gray-900 sm:px-52 min-h-screen">
+      <div className="flex flex-col lg:flex-row border border-gray-200 bg-white">
         <aside className="lg:w-2/5 lg:h-screen lg:sticky lg:top-0">
           <Profile />
         </aside>
@@ -17,15 +18,19 @@ function App() {
           <section id="home">
             <Header />
           </section>
-          <section id="projects">
-            <Projects />
-          </section>
-          <section id="skills">
-            <Skills />
+          <section id="github">
+            <GithubGraph />
           </section>
           <section id="experience">
             <Experience />
           </section>
+          <section id="skills">
+            <Skills />
+          </section>
+          <section id="projects">
+            <Projects />
+          </section>
+
           <section id="achievements">
             <Achievements />
           </section>

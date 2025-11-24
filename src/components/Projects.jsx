@@ -3,9 +3,9 @@ import Cryptify from "../assets/Cryptify.png";
 
 function Projects() {
   return (
-    <div className="flex flex-col items-center w-full px-8 py-20 gap-10 text-black">
+    <div className="flex flex-col py-20 w-full px-8 gap-2 text-black">
       {/* Section Header - Aligned to the left */}
-      <h1 className="font-bold text-xl ">
+      <h1 className="text-lg text-gray-600 font-semibold">
         Recent Projects
       </h1>
 

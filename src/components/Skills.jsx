@@ -20,8 +20,6 @@ const skillsData = {
       name: "Tailwind CSS",
       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg",
     },
-  ],
-  "Databases & Tools": [
     {
       name: "MySQL",
       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mysql/mysql-original.svg",
@@ -43,24 +41,28 @@ const skillsData = {
       icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg",
     },
   ],
+  
 };
 
 const Skills = () => {
   return (
-    <div className="flex flex-col items-center w-full px-8 py-20 gap-10 bg-white text-black">
-      <h1 className="font-bold text-xl">Skills & Expertise</h1>
+    <div className="flex flex-col w-full px-8  gap-2 bg-white text-black">
+      <h1 className="text-lg text-gray-600 font-semibold">
+        Skills & Expertise
+      </h1>
 
-      <div className="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="w-full  gap-8">
         {Object.entries(skillsData).map(([category, skills]) => (
           <div
             key={category}
-            className="border border-gray-200 rounded-3xl p-6 shadow-sm "
+            className="border border-gray-200 rounded-md p-6 shadow-sm "
           >
-            <h2 className="text-xl font-bold mb-6 text-gray-800">{category}</h2>
-
-            <div className="space-y-5">
+            <div className="flex flex-wrap gap-4">
               {skills.map(({ name, icon }) => (
-                <div key={name} className="flex items-center gap-3 bg-gray-50 rounded-xl p-2">
+                <div
+                  key={name}
+                  className="flex items-center gap-3 bg-gray-50 rounded-md p-2"
+                >
                   <img src={icon} alt={`${name} logo`} className="w-6 h-6" />
                   <span className="font-semibold text-md text-gray-800">
                     {name}

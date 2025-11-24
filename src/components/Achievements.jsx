@@ -70,13 +70,13 @@ const Achievements = () => {
   };
 
   const cardBaseClass =
-    "flex items-start gap-6 p-6 border border-gray-200 rounded-3xl shadow-sm transition-all duration-300";
+    "flex items-start gap-6 p-6 border border-gray-200 rounded-md shadow-sm transition-all duration-300";
   const cardInteractiveClass =
     "hover:shadow-sm cursor-pointer";
 
   return (
-    <div className="flex flex-col items-center w-full px-8 py-20 gap-10 text-black">
-      <h1 className="font-bold text-xl">Achievements</h1>
+    <div className="flex flex-col w-full px-8 pb-10 gap-2 text-black">
+      <h1 className="text-lg text-gray-600 font-semibold">Achievements</h1>
 
       <div className="w-full space-y-8">
         {achievementsData.map((achievement, index) => (
