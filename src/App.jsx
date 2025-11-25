@@ -7,7 +7,6 @@ import Experience from "./components/Experience";
 import Achievements from "./components/Achievements";
 import GithubGraph from "./components/GithubGraph";
 import Loading from "./components/Loading";
-import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -74,7 +73,6 @@ function App() {
         </main>
       </div>
 
-      <Analytics />
     </div>
   );
 }
