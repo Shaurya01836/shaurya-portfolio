@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import Profile, { ConnectSection } from "./components/Profile";
+import Profile from "./components/Profile";
 import Header from "./components/Header";
 import Projects from "./components/Projects";
 import Skills from "./components/Skills";
@@ -7,6 +7,7 @@ import Experience from "./components/Experience";
 import Achievements from "./components/Achievements";
 import GithubGraph from "./components/GithubGraph";
 import Loading from "./components/Loading";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -47,7 +48,7 @@ function App() {
     setIsLoading(false);
   };
 
- if (isLoading) {
+  if (isLoading) {
     return <Loading onComplete={handleLoadingComplete} />;
   }
 
@@ -73,9 +74,7 @@ function App() {
         </main>
       </div>
 
-      <section id="contact" className="lg:hidden px-8 pb-20">
-        <ConnectSection />
-      </section>
+      <Analytics />
     </div>
   );
 }

@@ -5,9 +5,12 @@ import {
   RiTwitterLine,
 } from "@remixicon/react";
 
-const leetcodeLogoUrl = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/leetcode/leetcode-original.svg";
-const gfgLogoUrl = "https://media.geeksforgeeks.org/wp-content/uploads/20230403183704/gfg_logo.png";
-const hackerrankLogoUrl = "https://cdn-1.webcatalog.io/catalog/hackerrank/hackerrank-icon.png";
+const leetcodeLogoUrl =
+  "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/leetcode/leetcode-original.svg";
+const gfgLogoUrl =
+  "https://media.geeksforgeeks.org/wp-content/uploads/20230403183704/gfg_logo.png";
+const hackerrankLogoUrl =
+  "https://cdn-1.webcatalog.io/catalog/hackerrank/hackerrank-icon.png";
 
 const TechBadge = ({ text }) => (
   <span className="inline-flex items-center px-2 py-0.5 mx-1 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors align-baseline cursor-pointer">
@@ -18,7 +21,7 @@ const TechBadge = ({ text }) => (
 export const ConnectSection = ({ className }) => (
   <div className={`mt-10 ${className}`}>
     <div className="flex items-center gap-4 flex-wrap">
-     <a
+      <a
         href="https://www.linkedin.com/in/this-is-shaurya-upadhyay"
         target="_blank"
         rel="noopener noreferrer"
@@ -50,7 +53,7 @@ export const ConnectSection = ({ className }) => (
       >
         <RiInstagramLine size={28} />
       </a>
-     
+
       <a
         href="https://leetcode.com/u/shaurya01836/"
         target="_blank"
@@ -64,7 +67,7 @@ export const ConnectSection = ({ className }) => (
         href="https://www.geeksforgeeks.org/user/shaurya3ms8/"
         target="_blank"
         rel="noopener noreferrer"
-         className="transition-all duration-300 hover:scale-105"
+        className="transition-all duration-300 hover:scale-105"
       >
         <img src={gfgLogoUrl} alt="GeeksForGeeks" className="w-7 h-7" />
       </a>
@@ -99,21 +102,25 @@ const Profile = () => {
               A Java Developer.
             </p>
             <p>
-              I build robust backend applications using 
+              I build robust backend applications using
               <TechBadge text="Java" />
-              . With a focus on 
+              . With a focus on
               <TechBadge text="Backend Development" />
-              . Enthusiastic about 
-              <TechBadge text="Data Structures & Algorithms" />
-              , driven by a passion for efficient code.
+              . Enthusiastic about
+              <TechBadge text="Data Structures & Algorithms" />, driven by a
+              passion for efficient code.
             </p>
           </div>
-        
         </div>
       </div>
-      <a href="https://hackerrank-resume.s3.us-east-1.amazonaws.com/uploads/26823516/MjY4MjM1MTY=.pdf" target="_blank"><TechBadge text="Resume" /></a> 
+      <a
+        href="https://hackerrank-resume.s3.us-east-1.amazonaws.com/uploads/26823516/MjY4MjM1MTY=.pdf"
+        target="_blank"
+      >
+        <TechBadge text="Resume" />
+      </a>
 
-      <ConnectSection className="hidden lg:block" />
+      <ConnectSection />
     </div>
   );
 };
