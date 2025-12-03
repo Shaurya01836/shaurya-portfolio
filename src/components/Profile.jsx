@@ -64,7 +64,7 @@ export const ConnectSection = ({ className }) => (
       </a>
 
       <a
-        href="https://www.geeksforgeeks.org/user/shaurya3ms8/"
+        href="https://www.geeksforgeeks.org/user/shaurya01836/"
         target="_blank"
         rel="noopener noreferrer"
         className="transition-all duration-300 hover:scale-105"
