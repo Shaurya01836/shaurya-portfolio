@@ -54,7 +54,7 @@ const achievementsData = [
 
 const Achievements = () => {
   const cardBaseClass =
-    "flex items-start gap-6 p-6 border-b border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 relative group bg-white dark:bg-[#0A0A0A] text-left w-full first:rounded-t-md last:rounded-b-md last:border-b-0";
+    "flex items-start gap-6 p-6 border-b border-dashed border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 relative group bg-white dark:bg-[#0A0A0A] text-left w-full first:rounded-t-md last:rounded-b-md last:border-b-0";
   const cardInteractiveClass =
     "cursor-pointer hover:bg-gray-50 dark:hover:bg-[#161b22]";
 
@@ -62,7 +62,7 @@ const Achievements = () => {
     <div className="flex flex-col w-full px-8 pb-10 gap-2 text-black dark:text-white">
       <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold">Achievements</h1>
 
-      <div className="w-full border border-gray-200 dark:border-gray-800 rounded-md shadow-sm">
+      <div className="w-full border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-md shadow-sm">
         {achievementsData.map((achievement, index) => {
        
           const CardTag = achievement.imageUrl ? "a" : "div";

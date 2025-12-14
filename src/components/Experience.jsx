@@ -18,7 +18,7 @@ const Experience = () => {
     <div className="flex flex-col w-full px-8 py-10 gap-2 bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold">Experience</h1>
 
-      <div className="w-full space-y-12 border border-gray-200 dark:border-gray-800 rounded-md p-6 shadow-sm bg-white dark:bg-[#0A0A0A]">
+      <div className="w-full space-y-12 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-md p-6 shadow-sm bg-white dark:bg-[#0A0A0A]">
         {experienceData.map((job, index) => (
           <div key={index} className="flex flex-col gap-2">
 

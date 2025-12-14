@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Profile from "./components/Profile";
 import Header from "./components/Header";
-import Projects from "./components/Projects";
-import Skills from "./components/Skills";
-import Experience from "./components/Experience";
-import Achievements from "./components/Achievements";
-import GithubGraph from "./components/GithubGraph";
+import Home from "./components/Home";
+import Blogs from "./components/Blogs";
 import Loading from "./components/Loading";
+import BlogDetail from "./components/BlogDetail";
+import Navbar from "./components/Navbar";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -52,28 +52,26 @@ function App() {
   }
 
   return (
-    <div className="bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100 sm:px-52 min-h-screen transition-colors duration-300">
-      <div className="flex flex-col lg:flex-row border-x border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0A0A0A] transition-colors duration-300">
-        <aside className="lg:w-2/5 lg:h-screen lg:sticky lg:top-0">
-          <Profile />
-        </aside>
+    <Router>
+      <div className="bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100 sm:px-52 min-h-screen transition-colors duration-300">
+        <div className="flex flex-col lg:flex-row border-x border-dashed border-gray-200 dark:border-gray-800 bg-white dark:bg-[#0A0A0A] transition-colors duration-300">
+          <aside className="lg:w-2/5 lg:h-screen lg:sticky lg:top-0">
+            <Profile />
+          </aside>
 
-        <main className="lg:w-3/5 pb-20 lg:pb-0">
-          <Header toggleTheme={toggleTheme} isDarkMode={darkMode} />
+          <main className="lg:w-3/5 pb-20 lg:pb-0">
+            <Navbar toggleTheme={toggleTheme} isDarkMode={darkMode} />
+          
 
-          <GithubGraph darkMode={darkMode} />
-
-          <Experience />
-
-          <Skills />
-
-          <Projects />
-
-          <Achievements />
-        </main>
+            <Routes>
+              <Route path="/" element={<Home darkMode={darkMode} />} />
+              <Route path="/blogs" element={<Blogs />} />
+              <Route path="/blogs/:id" element={<BlogDetail />} />
+            </Routes>
+          </main>
+        </div>
       </div>
-
-    </div>
+    </Router>
   );
 }
 

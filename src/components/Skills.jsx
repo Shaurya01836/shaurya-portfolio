@@ -55,7 +55,7 @@ const Skills = () => {
         {Object.entries(skillsData).map(([category, skills]) => (
           <div
             key={category}
-            className="border border-gray-200 dark:border-gray-800 rounded-md p-6 shadow-sm bg-white dark:bg-[#0A0A0A]"
+            className="border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-md p-6 shadow-sm bg-white dark:bg-[#0A0A0A]"
           >
             <div className="flex flex-wrap gap-4">
               {skills.map(({ name, icon }) => (
