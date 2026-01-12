@@ -12,8 +12,10 @@
   "dependencies": {
     "@remixicon/react": "^4.6.0",
     "@vercel/analytics": "^1.5.0",
+    "date-fns": "^4.1.0",
     "lucide-react": "^0.544.0",
     "react": "^18.3.1",
+    "react-activity-calendar": "^3.0.5",
     "react-dom": "^18.3.1",
     "react-github-calendar": "^5.0.0",
     "react-router-dom": "^7.10.1",

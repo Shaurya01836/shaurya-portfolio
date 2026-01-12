@@ -13,7 +13,7 @@ const hackerrankLogoUrl =
   "https://cdn-1.webcatalog.io/catalog/hackerrank/hackerrank-icon.png";
 
 const TechBadge = ({ text }) => (
-  <span className="inline-flex items-center px-2 py-0.5 mx-1 rounded bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-gray-700 text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors align-baseline cursor-pointer">
+  <span className="inline-flex items-center px-2 py-0.5 mx-1 rounded bg-gray-100 dark:bg-transparent text-gray-800 dark:text-gray-200 border border-gray-200 dark:border-dashed dark:border-gray-700 text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors align-baseline cursor-pointer">
     {text}
   </span>
 );
