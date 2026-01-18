@@ -61,7 +61,7 @@ const Skills = () => {
               {skills.map(({ name, icon }) => (
                 <div
                   key={name}
-                  className="flex items-center gap-3 bg-gray-50 dark:bg-[#161b22] rounded-md p-2 border border-transparent"
+                  className="flex items-center gap-3 bg-gray-50 dark:bg-transparent dark:border-dashed dark:border-gray-700 dark:hover:bg-gray-700 rounded-md p-2 border border-transparent"
                 >
                   <img src={icon} alt={`${name} logo`} className="w-6 h-6" />
                   <span className="font-semibold text-md text-gray-800 dark:text-gray-200">

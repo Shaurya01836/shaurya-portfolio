@@ -54,37 +54,43 @@ const CodingProfile = ({ darkMode }) => {
   useEffect(() => {
     const fetchLeetCode = async () => {
       try {
+      
         const response = await fetch(
-          `https://leetcode-stats-api.herokuapp.com/${LEETCODE_USERNAME}`
+          `https://alfa-leetcode-api.onrender.com/${LEETCODE_USERNAME}/solved`
+        );
+        
+      
+        const calendarResponse = await fetch(
+          `https://alfa-leetcode-api.onrender.com/${LEETCODE_USERNAME}/calendar`
         );
 
-        if (!response.ok) throw new Error("Failed to fetch LeetCode data");
+        if (!response.ok || !calendarResponse.ok) throw new Error("Failed to fetch LeetCode data");
 
         const data = await response.json();
+        const calendarData = await calendarResponse.json();
 
-        if (data.status === "success") {
-          const calendarRaw =
-            typeof data.submissionCalendar === "string"
-              ? JSON.parse(data.submissionCalendar)
-              : data.submissionCalendar || {};
+       
+        const calendarRaw =
+            typeof calendarData.submissionCalendar === "string"
+              ? JSON.parse(calendarData.submissionCalendar)
+              : calendarData.submissionCalendar || {};
 
-          const { activeDays, maxStreak } = processCalendarData(calendarRaw);
+        const { activeDays, maxStreak } = processCalendarData(calendarRaw);
 
-          setLeetCodeStats({
-            totalSolved: data.totalSolved,
+        setLeetCodeStats({
+            totalSolved: data.solvedProblem, 
             easy: data.easySolved,
             medium: data.mediumSolved,
             hard: data.hardSolved,
-            ranking: data.ranking,
+            ranking: data.ranking || "N/A", 
             activeDays,
             maxStreak,
             loading: false,
             error: null,
-          });
-        } else {
-          throw new Error(data.message || "API returned error");
-        }
+        });
+
       } catch (error) {
+        console.error("LeetCode Fetch Error:", error);
         setLeetCodeStats((prev) => ({
           ...prev,
           loading: false,
@@ -96,8 +102,15 @@ const CodingProfile = ({ darkMode }) => {
     fetchLeetCode();
   }, [LEETCODE_USERNAME]);
 
+  
   if (leetCodeStats.error) {
-    return null;
+    return (
+       <div className="flex flex-col w-full px-8 pb-10 gap-4 text-black dark:text-white">
+         <div className="p-4 border border-red-200 bg-red-50 text-red-600 rounded-md">
+           Unable to load LeetCode profile. Please try again later.
+         </div>
+       </div>
+    );
   }
 
   return (
