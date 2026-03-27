@@ -1,7 +1,7 @@
 const BentoCard = ({ children, className }) => {
   return (
     <div
-      className={`rounded-3xl border border-gray-200 dark:border-gray-800 flex flex-col items-center justify-center text-center ${className}`}
+      className={`rounded-md border border-gray-200 dark:border-[#1F1F1F] flex flex-col items-center justify-center text-center ${className}`}
     >
       {children}
     </div>

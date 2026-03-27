@@ -29,7 +29,7 @@ const Achievements = () => {
   }, []);
 
   const cardBaseClass =
-    "flex items-start gap-6 p-6 border-b border-dashed border-gray-200 dark:border-gray-800 shadow-sm transition-all duration-300 relative group bg-white dark:bg-[#0A0A0A] text-left w-full first:rounded-t-md last:rounded-b-md last:border-b-0";
+    "flex items-start gap-6 p-6 border-b border-solid border-gray-200 dark:border-[#1F1F1F] shadow-sm transition-all duration-300 relative group bg-white dark:bg-[#0A0A0A] text-left w-full first:rounded-t-md last:rounded-b-md last:border-b-0";
   const cardInteractiveClass =
     "cursor-pointer hover:bg-gray-50 dark:hover:bg-[#161b22]";
 
@@ -37,9 +37,14 @@ const Achievements = () => {
 
   return (
     <div className="flex flex-col w-full px-8 pb-10 gap-2 text-black dark:text-white">
-      <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold">Achievements</h1>
+      <div className="flex items-center gap-4 mb-4">
+        <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold uppercase tracking-wider">
+          Achievements
+        </h1>
+        <div className="h-[1px] flex-grow bg-gray-100 dark:bg-[#1F1F1F]"></div>
+      </div>
 
-      <div className="w-full border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-md shadow-sm">
+      <div className="w-full border-2 border-solid border-gray-200 dark:border-[#1F1F1F] rounded-md shadow-sm">
         {achievements.map((achievement) => {
           const CardTag = achievement.imageUrl ? "a" : "div";
           const cardProps = achievement.imageUrl

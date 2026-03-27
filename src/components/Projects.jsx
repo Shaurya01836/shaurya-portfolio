@@ -31,9 +31,12 @@ function Projects() {
 
   return (
     <div className="flex flex-col py-20 w-full px-8 gap-2 text-black dark:text-white">
-      <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold">
-        Recent Projects
-      </h1>
+      <div className="flex items-center gap-4">
+        <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold uppercase tracking-wider">
+          Recent Projects
+        </h1>
+        <div className="h-[1px] flex-grow bg-gray-100 dark:bg-[#1F1F1F]"></div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-6xl">
         {projects.map((project) => (

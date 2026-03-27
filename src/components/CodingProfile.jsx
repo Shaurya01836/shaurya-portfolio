@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+// eslint-disable-next-line no-unused-vars, react/prop-types
 const CodingProfile = ({ darkMode }) => {
   const [leetCodeStats, setLeetCodeStats] = useState({
     totalSolved: 0,
@@ -105,22 +106,21 @@ const CodingProfile = ({ darkMode }) => {
   
   if (leetCodeStats.error) {
     return (
-       <div className="flex flex-col w-full px-8 pb-10 gap-4 text-black dark:text-white">
-         <div className="p-4 border border-red-200 bg-red-50 text-red-600 rounded-md">
-           Unable to load LeetCode profile. Please try again later.
-         </div>
-       </div>
-    );
+      <></>
+    )
   }
 
   return (
     <div className="flex flex-col w-full px-8 pb-10 gap-4 text-black dark:text-white transition-colors duration-300">
-      <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold">
-        Coding Profile
-      </h1>
+      <div className="flex items-center gap-4 mb-2">
+        <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold uppercase tracking-wider">
+          Coding Profile
+        </h1>
+        <div className="h-[1px] flex-grow bg-gray-100 dark:bg-[#1F1F1F]"></div>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full h-full">
-        <div className="col-span-1 md:col-span-2 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-md p-6 bg-white dark:bg-[#0A0A0A] flex flex-col justify-between min-h-[250px]">
+        <div className="col-span-1 md:col-span-2 border-2 border-solid border-gray-200 dark:border-[#1F1F1F] rounded-md p-6 bg-white dark:bg-[#0A0A0A] flex flex-col justify-between min-h-[250px]">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-bold flex items-center gap-2">
               LeetCode
@@ -170,7 +170,7 @@ const CodingProfile = ({ darkMode }) => {
         </div>
 
         <div className="col-span-1 flex flex-col gap-4 h-full">
-          <div className="flex-1 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-md p-6 bg-white dark:bg-[#0A0A0A] flex flex-col items-center justify-center text-center hover:bg-gray-50 dark:hover:bg-[#161b22] transition-colors min-h-[115px]">
+          <div className="flex-1 border-2 border-solid border-gray-200 dark:border-[#1F1F1F] rounded-md p-6 bg-white dark:bg-[#0A0A0A] flex flex-col items-center justify-center text-center hover:bg-gray-50 dark:hover:bg-[#161b22] transition-colors min-h-[115px]">
             <span className="text-gray-500 text-sm mb-1">Active Days</span>
             <span className="text-3xl font-bold text-blue-500">
               {leetCodeStats.loading ? "..." : leetCodeStats.activeDays}
@@ -178,7 +178,7 @@ const CodingProfile = ({ darkMode }) => {
             <span className="text-xs text-gray-400 mt-1">Total Days</span>
           </div>
 
-          <div className="flex-1 border-2 border-dashed border-gray-200 dark:border-gray-800 rounded-md p-6 bg-white dark:bg-[#0A0A0A] flex flex-col items-center justify-center text-center hover:bg-gray-50 dark:hover:bg-[#161b22] transition-colors min-h-[115px]">
+          <div className="flex-1 border-2 border-solid border-gray-200 dark:border-[#1F1F1F] rounded-md p-6 bg-white dark:bg-[#0A0A0A] flex flex-col items-center justify-center text-center hover:bg-gray-50 dark:hover:bg-[#161b22] transition-colors min-h-[115px]">
             <span className="text-gray-500 text-sm mb-1">Max Streak</span>
             <span className="text-3xl font-bold text-orange-500">
               {leetCodeStats.loading ? "..." : `${leetCodeStats.maxStreak} 🔥`}

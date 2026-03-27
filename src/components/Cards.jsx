@@ -16,6 +16,7 @@ function Cards({
           className="w-full h-full object-cover"
           src={image}
           alt={`${title} project screenshot`}
+          loading="lazy"
         />
       </div>
 
@@ -41,7 +42,7 @@ function Cards({
     </>
   );
 
-  const commonClasses = `bg-white dark:bg-[#0A0A0A] text-black dark:text-gray-100 w-full rounded-md shadow-sm border border-dashed border-gray-200 dark:border-gray-800 flex flex-col hover:border-gray-300 dark:hover:border-gray-600 transition-all ${className}`;
+  const commonClasses = `bg-white dark:bg-[#0A0A0A] text-black dark:text-gray-100 w-full rounded-md shadow-sm border border-solid border-gray-200 dark:border-[#1F1F1F] flex flex-col hover:border-gray-300 dark:hover:border-gray-600 transition-all ${className}`;
 
   if (to) {
     return (

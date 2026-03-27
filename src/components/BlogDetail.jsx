@@ -61,7 +61,7 @@ const BlogDetail = () => {
         <span>Back to Blogs</span>
       </Link>
 
-      <div className="w-full h-64 md:h-96 rounded-xl overflow-hidden shadow-sm border border-gray-200 dark:border-gray-800">
+      <div className="w-full h-64 md:h-96 rounded-md overflow-hidden shadow-sm border border-gray-200 dark:border-[#1F1F1F]">
         <img
           src={
             blog.thumbnailUrl ||
@@ -89,7 +89,7 @@ const BlogDetail = () => {
         </div>
       </div>
 
-      <hr className="border-gray-200 dark:border-gray-800" />
+      <hr className="border-gray-200 dark:border-[#1F1F1F]" />
 
       <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
         {blog.content}
