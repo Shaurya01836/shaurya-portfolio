@@ -5,6 +5,8 @@ import {
   RiCalendarLine,
   RiPriceTag3Line,
 } from "@remixicon/react";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase.config";
 
 const BlogDetail = () => {
   const { id } = useParams();
@@ -12,35 +14,28 @@ const BlogDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const LOCAL_API = import.meta.env.VITE_API_LOCAL;
-  const PROD_API = import.meta.env.VITE_API_PROD;
-
   useEffect(() => {
     const fetchBlogDetail = async () => {
       try {
-        const response = await fetch(`${LOCAL_API}/api/blogs/${id}`);
-        if (!response.ok) throw new Error("Local failed");
+        console.log(`Fetching Blog Detail (${id}) from Firestore...`);
+        const blogRef = doc(db, "blogs", id);
+        const blogSnap = await getDoc(blogRef);
 
-        const data = await response.json();
-        setBlog(data);
-        setLoading(false);
-      } catch (localErr) {
-        try {
-          const prodResponse = await fetch(`${PROD_API}/api/blogs/${id}`);
-          if (!prodResponse.ok) throw new Error("Prod failed");
-
-          const data = await prodResponse.json();
-          setBlog(data);
-          setLoading(false);
-        } catch (prodErr) {
-          setError(prodErr.message);
-          setLoading(false);
+        if (blogSnap.exists()) {
+          setBlog({ id: blogSnap.id, ...blogSnap.data() });
+        } else {
+          setError("Blog not found");
         }
+        setLoading(false);
+      } catch (firebaseErr) {
+        console.error("Firebase fetch failed", firebaseErr);
+        setError("Unable to connect to Blog Database.");
+        setLoading(false);
       }
     };
 
     fetchBlogDetail();
-  }, [id, LOCAL_API, PROD_API]);
+  }, [id]);
 
   if (loading)
     return (

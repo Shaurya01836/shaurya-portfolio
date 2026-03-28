@@ -6,6 +6,7 @@ import Blogs from "./components/Blogs";
 import Loading from "./components/Loading";
 import BlogDetail from "./components/BlogDetail";
 import Navbar from "./components/Navbar";
+import MigrateBlogs from "./components/MigrateBlogs";
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -66,6 +67,7 @@ function App() {
               <Route path="/" element={<Home darkMode={darkMode} />} />
               <Route path="/blogs" element={<Blogs />} />
               <Route path="/blogs/:id" element={<BlogDetail />} />
+              <Route path="/migrate-blogs" element={<MigrateBlogs />} />
             </Routes>
           </main>
         </div>

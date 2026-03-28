@@ -1,20 +1,17 @@
 import { useEffect, useState, useCallback } from "react";
 import Cards from "./Cards";
 import { RiErrorWarningLine, RiRefreshLine } from "@remixicon/react";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db } from "../firebase.config";
 
 // 1. Skeleton Component for Loading State
 const BlogSkeleton = () => (
   <div className="flex flex-col bg-white dark:bg-[#0A0A0A] rounded-md shadow-sm border border-gray-200 dark:border-[#1F1F1F] w-full animate-pulse h-full">
-  
     <div className="w-full h-48 bg-gray-200 dark:bg-gray-800 rounded-t-md"></div>
-    
-   
     <div className="flex flex-col p-4 gap-3 flex-grow">
       <div className="h-6 bg-gray-200 dark:bg-gray-800 rounded w-3/4"></div>
       <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-full"></div>
       <div className="h-4 bg-gray-200 dark:bg-gray-800 rounded w-2/3"></div>
-      
-    
       <div className="flex gap-2 mt-auto pt-2">
         <div className="h-6 w-20 bg-gray-200 dark:bg-gray-800 rounded-md"></div>
       </div>
@@ -28,44 +25,31 @@ const Blogs = () => {
   const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
 
-  const LOCAL_API = import.meta.env.VITE_API_LOCAL;
-  const PROD_API = import.meta.env.VITE_API_PROD;
-
-
   const fetchBlogs = useCallback(async () => {
     setLoading(true);
     setError(null);
 
     try {
-      console.log("Attempting Local Fetch...");
-      const response = await fetch(`${LOCAL_API}/api/blogs`);
+      console.log("Fetching Blogs from Firebase Firestore...");
+      const blogsRef = collection(db, "blogs");
+      const q = query(blogsRef, orderBy("createdAt", "desc"));
+      const querySnapshot = await getDocs(q);
       
-      if (!response.ok) throw new Error("Local fetch failed");
-      
-      const data = await response.json();
-      setBlogs(data);
+      const blogsData = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+
+      setBlogs(blogsData);
       setLoading(false);
-      console.log("Loaded from: Localhost");
+      console.log("Loaded from: Firebase Firestore");
 
-    } catch (localErr) {
-      console.warn("Switching to Production...", localErr);
-      
-      try {
-        const prodResponse = await fetch(`${PROD_API}/api/blogs`);
-        
-        if (!prodResponse.ok) throw new Error("Production fetch failed");
-
-        const data = await prodResponse.json();
-        setBlogs(data);
-        setLoading(false);
-
-      } catch (prodErr) {
-        console.error(prodErr);
-        setError("Unable to connect to Blog Server.");
-        setLoading(false);
-      }
+    } catch (firebaseErr) {
+      console.error("Firebase fetch failed", firebaseErr);
+      setError("Unable to connect to Blog Database.");
+      setLoading(false);
     }
-  }, [LOCAL_API, PROD_API]);
+  }, []);
 
 
   useEffect(() => {

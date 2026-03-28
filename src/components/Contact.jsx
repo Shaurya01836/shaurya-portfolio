@@ -2,6 +2,7 @@ import { useState } from "react";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { RiMailLine, RiSendPlaneLine, RiLoader4Line, RiCheckLine } from "@remixicon/react";
+import emailjs from "@emailjs/browser";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -16,10 +17,25 @@ const Contact = () => {
     setStatus("loading");
 
     try {
+      // 1. Save to Firebase Firestore (Backup)
       await addDoc(collection(db, "contacts"), {
         ...formData,
         timestamp: serverTimestamp(),
       });
+
+      // 2. Send Email via EmailJS
+      const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      const templateParams = {
+        name: formData.name,
+        email: formData.email,
+        message: formData.message,
+      };
+
+      await emailjs.send(serviceId, templateId, templateParams, publicKey);
+
       setStatus("success");
       setFormData({ name: "", email: "", message: "" });
       setTimeout(() => setStatus("idle"), 5000);
