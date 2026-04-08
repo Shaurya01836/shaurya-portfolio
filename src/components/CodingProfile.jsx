@@ -55,48 +55,75 @@ const CodingProfile = ({ darkMode }) => {
   useEffect(() => {
     const fetchLeetCode = async () => {
       try {
-      
+        // Primary API
         const response = await fetch(
-          `https://alfa-leetcode-api.onrender.com/${LEETCODE_USERNAME}/solved`
-        );
-        
-      
-        const calendarResponse = await fetch(
-          `https://alfa-leetcode-api.onrender.com/${LEETCODE_USERNAME}/calendar`
+          `https://leetcode-stats.tashif.codes/${LEETCODE_USERNAME}`
         );
 
-        if (!response.ok || !calendarResponse.ok) throw new Error("Failed to fetch LeetCode data");
+        if (!response.ok) throw new Error("Primary API failed");
 
         const data = await response.json();
-        const calendarData = await calendarResponse.json();
+        
+        if (data.status !== "success") throw new Error("Primary API returned failure status");
 
-       
-        const calendarRaw =
-            typeof calendarData.submissionCalendar === "string"
-              ? JSON.parse(calendarData.submissionCalendar)
-              : calendarData.submissionCalendar || {};
-
-        const { activeDays, maxStreak } = processCalendarData(calendarRaw);
+        const { activeDays, maxStreak } = processCalendarData(data.submissionCalendar || {});
 
         setLeetCodeStats({
-            totalSolved: data.solvedProblem, 
-            easy: data.easySolved,
-            medium: data.mediumSolved,
-            hard: data.hardSolved,
-            ranking: data.ranking || "N/A", 
-            activeDays,
-            maxStreak,
-            loading: false,
-            error: null,
+          totalSolved: data.totalSolved,
+          easy: data.easySolved,
+          medium: data.mediumSolved,
+          hard: data.hardSolved,
+          ranking: data.ranking || "N/A",
+          activeDays,
+          maxStreak,
+          loading: false,
+          error: null,
         });
 
-      } catch (error) {
-        console.error("LeetCode Fetch Error:", error);
-        setLeetCodeStats((prev) => ({
-          ...prev,
-          loading: false,
-          error: "Failed to load stats",
-        }));
+      } catch (primaryError) {
+        console.warn("Primary LeetCode API failed, trying fallback:", primaryError);
+        
+        try {
+          // Fallback API
+          const response = await fetch(
+            `https://alfa-leetcode-api.onrender.com/${LEETCODE_USERNAME}/solved`
+          );
+          
+          const calendarResponse = await fetch(
+            `https://alfa-leetcode-api.onrender.com/${LEETCODE_USERNAME}/calendar`
+          );
+
+          if (!response.ok || !calendarResponse.ok) throw new Error("Fallback API failed");
+
+          const data = await response.json();
+          const calendarData = await calendarResponse.json();
+
+          const calendarRaw =
+              typeof calendarData.submissionCalendar === "string"
+                ? JSON.parse(calendarData.submissionCalendar)
+                : calendarData.submissionCalendar || {};
+
+          const { activeDays, maxStreak } = processCalendarData(calendarRaw);
+
+          setLeetCodeStats({
+              totalSolved: data.solvedProblem, 
+              easy: data.easySolved,
+              medium: data.mediumSolved,
+              hard: data.hardSolved,
+              ranking: data.ranking || "N/A", 
+              activeDays,
+              maxStreak,
+              loading: false,
+              error: null,
+          });
+        } catch (fallbackError) {
+          console.error("LeetCode Fallback API also failed:", fallbackError);
+          setLeetCodeStats((prev) => ({
+            ...prev,
+            loading: false,
+            error: "Failed to load stats",
+          }));
+        }
       }
     };
 
