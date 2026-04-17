@@ -1,9 +1,13 @@
+import { useEffect, useState } from "react";
+import PropTypes from "prop-types";
 import {
   RiInstagramLine,
   RiLinkedinLine,
   RiGithubLine,
   RiTwitterLine,
 } from "@remixicon/react";
+import { collection, getDocs, limit, query } from "firebase/firestore";
+import { db } from "../firebase.config";
 
 const leetcodeLogoUrl =
   "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/leetcode/leetcode-original.svg";
@@ -11,12 +15,18 @@ const gfgLogoUrl =
   "https://media.geeksforgeeks.org/wp-content/uploads/20230403183704/gfg_logo.png";
 const hackerrankLogoUrl =
   "https://cdn-1.webcatalog.io/catalog/hackerrank/hackerrank-icon.png";
+const defaultResumeUrl =
+  "https://hackerrank-resume.s3.us-east-1.amazonaws.com/uploads/26823516/MjY4MjM1MTY=.pdf";
 
 const TechBadge = ({ text }) => (
   <span className="inline-flex items-center px-2 py-0.5 mx-1 rounded bg-gray-100 dark:bg-transparent text-gray-800 dark:text-gray-200 border-2 border-dotted border-gray-200 dark:border-solid dark:border-[#1F1F1F] text-base font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors align-baseline cursor-pointer">
     {text}
   </span>
 );
+
+TechBadge.propTypes = {
+  text: PropTypes.string.isRequired,
+};
 
 export const ConnectSection = ({ className }) => (
   <div className={`mt-10 ${className}`}>
@@ -84,7 +94,36 @@ export const ConnectSection = ({ className }) => (
   </div>
 );
 
+ConnectSection.propTypes = {
+  className: PropTypes.string,
+};
+
 const Profile = () => {
+  const [resumeUrl, setResumeUrl] = useState(defaultResumeUrl);
+
+  useEffect(() => {
+    const fetchResumeUrl = async () => {
+      try {
+        const q = query(collection(db, "profile"), limit(1));
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const profileData = querySnapshot.docs[0].data();
+          const dbResumeUrl =
+            profileData.resumeUrl || profileData.resumeLink || profileData.reusmeUrl;
+
+          if (typeof dbResumeUrl === "string" && dbResumeUrl.trim()) {
+            setResumeUrl(dbResumeUrl);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching resume URL:", error);
+      }
+    };
+
+    fetchResumeUrl();
+  }, []);
+
   return (
     <div className="flex flex-col h-full justify-center p-8 lg:pl-20 text-gray-900 dark:text-gray-100">
       <div className="flex-grow flex flex-col justify-center">
@@ -99,23 +138,29 @@ const Profile = () => {
           </h1>
           <div className="mt-4 max-w-lg text-lg text-gray-600 dark:text-gray-300 leading-loose">
             <p className="font-semibold text-lg text-black dark:text-white mb-2">
-              A Java Developer.
+              Software Developer
             </p>
             <p>
-              I build robust backend applications using
+              Building with
+              <TechBadge text="React.js" />
+              &
               <TechBadge text="Java" />
-              . With a focus on
-              <TechBadge text="Backend Development" />
-              . Enthusiastic about
-              <TechBadge text="Data Structures & Algorithms" />, driven by a
-              passion for efficient code.
+               Exploring
+              <TechBadge text="Spring Boot" />
+              ,
+              <TechBadge text="REST APIs" />
+               Passionate about
+              <TechBadge text="DSA" />
+              &
+              <TechBadge text="AI-assisted development" />
             </p>
           </div>
         </div>
       </div>
       <a
-        href="https://hackerrank-resume.s3.us-east-1.amazonaws.com/uploads/26823516/MjY4MjM1MTY=.pdf"
+        href={resumeUrl}
         target="_blank"
+        rel="noopener noreferrer"
       >
         <TechBadge text="Resume" />
       </a>
