@@ -2,22 +2,35 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase.config";
 import BentoCard from "./BentoCard";
-import { RiTrophyLine, RiGlobalLine, RiAwardLine, RiCodeLine } from "@remixicon/react";
+import {
+  RiTrophyLine,
+  RiAwardLine,
+  RiCodeLine,
+  RiGlobalLine,
+} from "@remixicon/react";
 
-// Abstract Skeleton Components for Bento Look
+const metamaskLogoUrl =
+  "https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg";
+
 const TrophySkeleton = () => (
-  <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-amber-100/50 to-orange-100/50 dark:from-amber-900/10 dark:to-orange-900/10">
+  <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-blue-100/50 to-indigo-100/50 dark:from-blue-900/10 dark:to-indigo-900/10">
     <div className="absolute inset-0 opacity-20 dark:opacity-10">
-      <div className="absolute top-[-10%] left-[-10%] w-32 h-32 bg-amber-400 rounded-full blur-3xl" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-32 h-32 bg-orange-400 rounded-full blur-3xl" />
+      <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-from)_0%,_transparent_70%)] from-blue-400" />
     </div>
-    <div className="relative z-10 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-12">
-      <RiTrophyLine size={64} className="text-amber-500 dark:text-amber-400 drop-shadow-lg" />
+    <div className="relative z-10 transition-transform duration-500 group-hover:scale-110">
+      <RiTrophyLine
+        size={64}
+        className="text-blue-500 dark:text-blue-400 drop-shadow-lg"
+      />
     </div>
-    {/* Decorative lines */}
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-      <div className="w-48 h-48 border border-amber-200/30 dark:border-amber-700/20 rounded-full animate-pulse" />
-      <div className="absolute w-64 h-64 border border-amber-100/20 dark:border-amber-800/10 rounded-full transform rotate-45" />
+    <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 opacity-30">
+      {[...Array(3)].map((_, i) => (
+        <div
+          key={i}
+          className="w-full h-[1px] bg-blue-300 dark:bg-blue-700 transform rotate-12"
+          style={{ marginTop: `${i * 20}px` }}
+        />
+      ))}
     </div>
   </div>
 );
@@ -28,27 +41,57 @@ const GlobalSkeleton = () => (
       <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-from)_0%,_transparent_70%)] from-blue-400" />
     </div>
     <div className="relative z-10 transition-transform duration-500 group-hover:scale-110">
-      <RiGlobalLine size={64} className="text-blue-500 dark:text-blue-400 drop-shadow-lg" />
+      <RiGlobalLine
+        size={64}
+        className="text-blue-500 dark:text-blue-400 drop-shadow-lg"
+      />
     </div>
     <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 opacity-30">
       {[...Array(3)].map((_, i) => (
-        <div key={i} className="w-full h-[1px] bg-blue-300 dark:bg-blue-700 transform rotate-12" style={{ marginTop: `${i * 20}px` }} />
+        <div
+          key={i}
+          className="w-full h-[1px] bg-blue-300 dark:bg-blue-700 transform rotate-12"
+          style={{ marginTop: `${i * 20}px` }}
+        />
       ))}
+    </div>
+  </div>
+);
+const MetaMask = () => (
+  <div className="group relative flex h-full w-full items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-orange-100/70 via-amber-100/50 to-yellow-100/70 dark:from-orange-900/20 dark:via-amber-900/10 dark:to-yellow-900/20">
+    <div className="absolute inset-0 opacity-60 dark:opacity-30">
+      <div className="absolute -left-10 -top-12 h-28 w-28 rounded-full bg-orange-300/70 blur-2xl transition-transform duration-700 group-hover:translate-x-4 group-hover:translate-y-5" />
+      <div className="absolute -right-10 -bottom-12 h-36 w-36 rounded-full bg-amber-300/70 blur-2xl transition-transform duration-700 group-hover:-translate-x-4 group-hover:-translate-y-3" />
+    </div>
+
+    <div className="relative z-10 flex items-center justify-center transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-3">
+      <img
+        src={metamaskLogoUrl}
+        alt="MetaMask logo"
+        className="h-20 w-20 drop-shadow-[0_10px_20px_rgba(0,0,0,0.3)] transition-transform duration-700 group-hover:rotate-6"
+        loading="lazy"
+      />
     </div>
   </div>
 );
 
 const AwardSkeleton = () => (
-  <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-emerald-100/50 to-teal-100/50 dark:from-emerald-900/10 dark:to-teal-900/10">
+  <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-emerald-100/50 to-yellow-100/50 dark:from-emerald-900/10 dark:to-yellow-900/10">
     <div className="absolute inset-0">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-emerald-300/20 dark:bg-emerald-700/10 rounded-full blur-2xl" />
     </div>
     <div className="relative z-10 transition-transform duration-500 group-hover:scale-110 group-hover:-rotate-12">
-      <RiAwardLine size={64} className="text-emerald-500 dark:text-emerald-400 drop-shadow-lg" />
+      <RiAwardLine
+        size={64}
+        className="text-emerald-500 dark:text-emerald-400 drop-shadow-lg"
+      />
     </div>
     <div className="absolute bottom-4 left-4 right-4 flex gap-2">
       {[...Array(4)].map((_, i) => (
-        <div key={i} className="h-1 flex-grow bg-emerald-200 dark:bg-emerald-800 rounded-full" />
+        <div
+          key={i}
+          className="h-1 flex-grow bg-emerald-200 dark:bg-emerald-800 rounded-full"
+        />
       ))}
     </div>
   </div>
@@ -58,11 +101,18 @@ const CodeSkeleton = () => (
   <div className="relative w-full h-full flex items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-purple-100/50 to-pink-100/50 dark:from-purple-900/10 dark:to-pink-900/10">
     <div className="absolute inset-x-4 top-4 bottom-4 flex flex-col gap-3 opacity-40">
       {[...Array(6)].map((_, i) => (
-        <div key={i} className="h-2 bg-purple-300 dark:bg-purple-700 rounded-full" style={{ width: `${Math.random() * 50 + 40}%` }} />
+        <div
+          key={i}
+          className="h-2 bg-purple-300 dark:bg-purple-700 rounded-full"
+          style={{ width: `${Math.random() * 50 + 40}%` }}
+        />
       ))}
     </div>
     <div className="relative z-10 transition-transform duration-500 group-hover:scale-110">
-      <RiCodeLine size={64} className="text-purple-500 dark:text-purple-400 drop-shadow-lg" />
+      <RiCodeLine
+        size={64}
+        className="text-purple-500 dark:text-purple-400 drop-shadow-lg"
+      />
     </div>
   </div>
 );
@@ -75,11 +125,14 @@ const Achievements = () => {
   useEffect(() => {
     const fetchAchievements = async () => {
       try {
-        const q = query(collection(db, "achievements"), orderBy("year", "desc"));
+        const q = query(
+          collection(db, "achievements"),
+          orderBy("year", "desc"),
+        );
         const querySnapshot = await getDocs(q);
-        const data = querySnapshot.docs.map(doc => ({
+        const data = querySnapshot.docs.map((doc) => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         }));
         setAchievements(data);
       } catch (error) {
@@ -115,20 +168,29 @@ const Achievements = () => {
 
   const skeletonMap = [
     <TrophySkeleton key="trophy" />,
-    <GlobalSkeleton key="global" />,
     <CodeSkeleton key="code" />,
+    <MetaMask key="metamask" />,
+    <GlobalSkeleton key="global" />,
     <AwardSkeleton key="award" />,
+    <GlobalSkeleton key="global" />,
   ];
 
   const gridSpans = [
     "md:col-span-1", // Wide
     "md:col-span-1", // Square
-    "md:col-span-2", // Square 
+    "md:col-span-2", // Square
     "md:col-span-1", // Wide
     "md:col-span-1", // Square
   ];
 
-  const hiddenDetailKeys = new Set(["id", "title", "event", "year", "description", "imageUrl"]);
+  const hiddenDetailKeys = new Set([
+    "id",
+    "title",
+    "event",
+    "year",
+    "description",
+    "imageUrl",
+  ]);
   const formatLabel = (key) =>
     key
       .replace(/([A-Z])/g, " $1")
@@ -144,7 +206,7 @@ const Achievements = () => {
           value !== undefined &&
           value !== null &&
           value !== "" &&
-          (typeof value === "string" || typeof value === "number")
+          (typeof value === "string" || typeof value === "number"),
       )
     : [];
 
@@ -157,7 +219,7 @@ const Achievements = () => {
         <div className="h-[1px] flex-grow bg-gray-100 dark:bg-[#1F1F1F]"></div>
       </div>
 
-     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:grid-flow-dense md:auto-rows-[minmax(220px,auto)]">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:grid-flow-dense md:auto-rows-[minmax(220px,auto)]">
         {achievements.map((achievement, index) => (
           <BentoCard
             key={achievement.id}
@@ -209,7 +271,9 @@ const Achievements = () => {
                   Close
                 </button>
 
-                <h3 className="pr-20 text-2xl font-bold text-gray-900 dark:text-white">{selectedAchievement.title}</h3>
+                <h3 className="pr-20 text-2xl font-bold text-gray-900 dark:text-white">
+                  {selectedAchievement.title}
+                </h3>
                 <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
                   {selectedAchievement.event} • {selectedAchievement.year}
                 </p>
@@ -225,7 +289,9 @@ const Achievements = () => {
                         <span className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">
                           {formatLabel(key)}
                         </span>
-                        <span className="text-sm text-gray-800 dark:text-gray-200">{value}</span>
+                        <span className="text-sm text-gray-800 dark:text-gray-200">
+                          {value}
+                        </span>
                       </div>
                     ))}
                   </div>
