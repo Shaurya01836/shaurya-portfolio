@@ -22,7 +22,7 @@ const BentoCard = ({ children, className = "", title, description, header, href,
     </>
   );
 
-  const baseStyles = "group relative flex flex-col rounded-xl border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] overflow-hidden text-left transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-gray-300 dark:hover:border-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50";
+  const baseStyles = "group relative flex flex-col rounded-xl border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] overflow-hidden text-left transition-all duration-300 hover:-translate-y-1 hover:border-gray-300 dark:hover:border-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50";
 
   if (href) {
     return (

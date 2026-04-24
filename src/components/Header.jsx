@@ -1,4 +1,4 @@
-import BentoCard from "./BentoCard";
+
 
 const Header = () => {
  
@@ -12,14 +12,14 @@ const Header = () => {
           </h1>
           <div className="h-[1px] flex-grow bg-gray-100 dark:bg-[#1F1F1F]"></div>
         </div>
-        <BentoCard className="w-full h-44 p-0">
+      
           <img
             src="https://i.ibb.co/PZt4m1GV/stpi.jpg"
             alt="Primary image"
             loading="lazy"
-            className="w-full h-full object-cover rounded-md"
+            className="w-full h-44 object-cover rounded-md"
           />
-        </BentoCard>
+   
       </div>
     </div>
   );
