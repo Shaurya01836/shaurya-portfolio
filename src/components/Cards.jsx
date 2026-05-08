@@ -26,20 +26,25 @@ function Cards({
         <h2 className="text-xl font-bold text-gray-900 dark:text-white">
           {title}
         </h2>
-        <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm flex-grow leading-relaxed">
+        <p className="text-gray-600 dark:text-gray-400 mt-1 text-sm flex-grow leading-relaxed line-clamp-3">
           {description}
         </p>
       </div>
 
       <div className="flex flex-wrap gap-2 p-4 pt-0">
-        {techStack.map((tech, index) => (
+        {techStack.slice(0, 3).map((tech, index) => (
           <span
             key={index}
-            className="bg-gray-200 dark:bg-gray-800 text-sm px-3 py-1 rounded-md text-gray-800 dark:text-gray-300"
+            className="bg-gray-200 dark:bg-gray-800 text-sm px-3 py-1 rounded-md text-gray-800 dark:text-gray-300 whitespace-nowrap"
           >
             {tech}
           </span>
         ))}
+        {techStack.length > 3 && (
+          <span className="bg-gray-200 dark:bg-gray-800 text-sm px-3 py-1 rounded-md text-gray-800 dark:text-gray-300 whitespace-nowrap">
+            +{techStack.length - 3}
+          </span>
+        )}
       </div>
     </>
   );

@@ -125,7 +125,7 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className="flex flex-col h-full justify-center p-8 lg:pl-20 text-gray-900 dark:text-gray-100">
+    <div className="flex flex-col h-full justify-center p-8 pt-20 md:pt-0 lg:pl-20 text-gray-900 dark:text-gray-100">
       <div className="flex-grow flex flex-col justify-center">
         <img
           src="https://i.ibb.co/8LJ9qL10/Whats-App-Image-2025-06-23-at-00-34-04-8a1e77d6.jpg"

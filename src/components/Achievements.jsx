@@ -7,6 +7,7 @@ import {
   RiAwardLine,
   RiCodeLine,
   RiGlobalLine,
+  RiCloseLine,
 } from "@remixicon/react";
 
 const metamaskLogoUrl =
@@ -121,6 +122,7 @@ const Achievements = () => {
   const [achievements, setAchievements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedAchievement, setSelectedAchievement] = useState(null);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     const fetchAchievements = async () => {
@@ -148,6 +150,7 @@ const Achievements = () => {
   useEffect(() => {
     if (!selectedAchievement) return;
 
+    setImageLoaded(false);
     const previousOverflow = document.body.style.overflow;
     const handleEscape = (event) => {
       if (event.key === "Escape") {
@@ -239,21 +242,35 @@ const Achievements = () => {
           onClick={() => setSelectedAchievement(null)}
         >
           <div
-            className="w-full max-w-5xl overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-[#1F1F1F] dark:bg-[#0A0A0A]"
+            className="w-full max-w-5xl relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-[#1F1F1F] dark:bg-[#0A0A0A]"
             role="dialog"
             aria-modal="true"
             aria-label={`${selectedAchievement.title} details`}
             onClick={(event) => event.stopPropagation()}
           >
+            <button
+              type="button"
+              onClick={() => setSelectedAchievement(null)}
+              className="absolute z-50 right-4 top-4 rounded-full bg-white/80 p-2 text-gray-700 shadow-sm backdrop-blur-md transition hover:bg-white hover:text-gray-900 dark:bg-[#0A0A0A]/80 dark:text-gray-300 dark:hover:bg-[#111111] dark:hover:text-white border border-gray-200 dark:border-white/10"
+              aria-label="Close achievement details"
+            >
+              <RiCloseLine size={24} />
+            </button>
             <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="flex min-h-[260px] items-center justify-center bg-gray-50 p-4 dark:bg-[#050505]">
+              <div className="flex min-h-[260px] w-full items-center justify-center bg-gray-50 p-4 dark:bg-[#050505]">
                 {selectedAchievement.imageUrl ? (
-                  <img
-                    src={selectedAchievement.imageUrl}
-                    alt={`${selectedAchievement.title} certificate`}
-                    className="max-h-[70vh] w-full rounded-xl border border-gray-200 object-contain dark:border-[#1F1F1F]"
-                    loading="lazy"
-                  />
+                  <div className="relative w-full flex justify-center items-center">
+                    {!imageLoaded && (
+                      <div className="absolute inset-0 w-full h-full min-h-[260px] rounded-xl bg-gray-200 dark:bg-[#111111] animate-pulse border border-gray-200 dark:border-[#1F1F1F]" />
+                    )}
+                    <img
+                      src={selectedAchievement.imageUrl}
+                      alt={`${selectedAchievement.title} certificate`}
+                      className={`max-h-[70vh] w-full rounded-xl border border-gray-200 object-contain dark:border-[#1F1F1F] transition-opacity duration-300 ${imageLoaded ? 'opacity-100 relative z-10' : 'opacity-0'}`}
+                      loading="lazy"
+                      onLoad={() => setImageLoaded(true)}
+                    />
+                  </div>
                 ) : (
                   <div className="w-full rounded-xl border border-dashed border-gray-300 p-6 text-center text-gray-500 dark:border-gray-700 dark:text-gray-400">
                     Certificate image not available
@@ -262,16 +279,7 @@ const Achievements = () => {
               </div>
 
               <div className="relative flex flex-col p-6 md:p-8">
-                <button
-                  type="button"
-                  onClick={() => setSelectedAchievement(null)}
-                  className="absolute right-4 top-4 rounded-md px-2 py-1 text-sm text-gray-500 transition hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-[#151515] dark:hover:text-white"
-                  aria-label="Close achievement details"
-                >
-                  Close
-                </button>
-
-                <h3 className="pr-20 text-2xl font-bold text-gray-900 dark:text-white">
+                <h3 className="pr-16 text-2xl font-bold text-gray-900 dark:text-white">
                   {selectedAchievement.title}
                 </h3>
                 <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
