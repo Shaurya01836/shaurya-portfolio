@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import PropTypes from "prop-types";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase.config";
 import {
@@ -11,6 +12,44 @@ import {
 } from "@remixicon/react";
 import emailjs from "@emailjs/browser";
 import { AnimatePresence, motion } from "framer-motion";
+
+const Magnetic = ({ children, className = "" }) => {
+  const ref = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    const { clientX, clientY } = e;
+    const { left, top, width, height } = ref.current.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
+    const distanceX = clientX - centerX;
+    const distanceY = clientY - centerY;
+
+    setPosition({ x: distanceX * 0.35, y: distanceY * 0.35 });
+  };
+
+  const handleMouseLeave = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      className={`inline-block ${className}`}
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+Magnetic.propTypes = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+};
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -92,41 +131,45 @@ const Contact = () => {
             </p>
 
             <div className="mt-2 grid gap-3">
-              <motion.a
-                href="mailto:shaurya01836@gmail.com"
-                whileHover={{ y: -2 }}
-                whileTap={{ scale: 0.99 }}
-                className="group flex items-center gap-4 rounded-md border border-solid border-gray-200 bg-gray-50 p-4 transition-colors hover:border-gray-300 dark:border-[#1F1F1F] dark:bg-[#111111] dark:hover:border-[#2B2B2B]"
-              >
-                <div className="rounded-md bg-white p-3 text-blue-500 shadow-sm dark:bg-[#1A1A1A]">
-                  <RiMailLine size={22} />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">
-                    Email
-                  </p>
-                  <p className="text-sm font-semibold text-gray-900 transition-colors group-hover:text-blue-600 dark:text-gray-100 dark:group-hover:text-blue-400">
-                    shaurya01836@gmail.com
-                  </p>
-                </div>
-              </motion.a>
+              <Magnetic className="w-full">
+                <motion.a
+                  href="mailto:shaurya01836@gmail.com"
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.99 }}
+                  className="group flex items-center gap-4 rounded-md border border-solid border-gray-200 bg-gray-50 p-4 transition-colors hover:border-gray-300 dark:border-[#1F1F1F] dark:bg-[#111111] dark:hover:border-[#2B2B2B] w-full"
+                >
+                  <div className="rounded-md bg-white p-3 text-blue-500 shadow-sm dark:bg-[#1A1A1A]">
+                    <RiMailLine size={22} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">
+                      Email
+                    </p>
+                    <p className="text-sm font-semibold text-gray-900 transition-colors group-hover:text-blue-600 dark:text-gray-100 dark:group-hover:text-blue-400">
+                      shaurya01836@gmail.com
+                    </p>
+                  </div>
+                </motion.a>
+              </Magnetic>
 
-              <motion.div
-                whileHover={{ y: -2 }}
-                className="flex items-center gap-4 rounded-md border border-solid border-gray-200 bg-gray-50 p-4 transition-colors hover:border-gray-300 dark:border-[#1F1F1F] dark:bg-[#111111] dark:hover:border-[#2B2B2B]"
-              >
-                <div className="rounded-md bg-white p-3 text-blue-500 shadow-sm dark:bg-[#1A1A1A]">
-                  <RiTimeLine size={22} />
-                </div>
-                <div>
-                  <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">
-                    Response Time
-                  </p>
-                  <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                    Usually within 24 hours
-                  </p>
-                </div>
-              </motion.div>
+              <Magnetic className="w-full">
+                <motion.div
+                  whileHover={{ y: -2 }}
+                  className="flex items-center gap-4 rounded-md border border-solid border-gray-200 bg-gray-50 p-4 transition-colors hover:border-gray-300 dark:border-[#1F1F1F] dark:bg-[#111111] dark:hover:border-[#2B2B2B] w-full"
+                >
+                  <div className="rounded-md bg-white p-3 text-blue-500 shadow-sm dark:bg-[#1A1A1A]">
+                    <RiTimeLine size={22} />
+                  </div>
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-500">
+                      Response Time
+                    </p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                      Usually within 24 hours
+                    </p>
+                  </div>
+                </motion.div>
+              </Magnetic>
             </div>
           </div>
         </motion.div>
@@ -194,40 +237,42 @@ const Contact = () => {
             ></textarea>
           </div>
 
-          <motion.button
-            whileHover={!isLoading && !isSuccess ? { y: -1 } : {}}
-            whileTap={!isLoading && !isSuccess ? { scale: 0.98 } : {}}
-            disabled={isLoading || isSuccess}
-            type="submit"
-            className={`mt-2 flex items-center justify-center gap-2 rounded-md px-8 py-3 font-bold transition-all duration-300 ${
-              isSuccess
-                ? "bg-green-600 text-white"
-                : "bg-blue-600 text-white shadow-lg hover:bg-blue-700 hover:shadow-xl"
-            } disabled:cursor-not-allowed disabled:opacity-70`}
-          >
-            {isLoading ? (
-              <>
-                <RiLoader4Line className="animate-spin" size={20} />
-                Sending...
-              </>
-            ) : isSuccess ? (
-              <>
-                <RiCheckLine size={20} />
-                Message Sent!
-              </>
-            ) : (
-              <>
-                <motion.span
-                  initial={{ x: 0 }}
-                  whileHover={{ x: 2 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 18 }}
-                >
-                  <RiSendPlaneLine size={20} />
-                </motion.span>
-                Send Message
-              </>
-            )}
-          </motion.button>
+          <Magnetic className="w-full">
+            <motion.button
+              whileHover={!isLoading && !isSuccess ? { y: -1 } : {}}
+              whileTap={!isLoading && !isSuccess ? { scale: 0.98 } : {}}
+              disabled={isLoading || isSuccess}
+              type="submit"
+              className={`mt-2 flex items-center justify-center gap-2 rounded-md px-8 py-3 font-bold transition-all duration-300 w-full ${
+                isSuccess
+                  ? "bg-green-600 text-white"
+                  : "bg-blue-600 text-white shadow-lg hover:bg-blue-700 hover:shadow-xl"
+              } disabled:cursor-not-allowed disabled:opacity-70`}
+            >
+              {isLoading ? (
+                <>
+                  <RiLoader4Line className="animate-spin" size={20} />
+                  Sending...
+                </>
+              ) : isSuccess ? (
+                <>
+                  <RiCheckLine size={20} />
+                  Message Sent!
+                </>
+              ) : (
+                <>
+                  <motion.span
+                    initial={{ x: 0 }}
+                    whileHover={{ x: 2 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 18 }}
+                  >
+                    <RiSendPlaneLine size={20} />
+                  </motion.span>
+                  Send Message
+                </>
+              )}
+            </motion.button>
+          </Magnetic>
 
           <AnimatePresence>
             {status === "error" && (
