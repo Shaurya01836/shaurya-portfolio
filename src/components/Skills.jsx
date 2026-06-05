@@ -1,5 +1,44 @@
+import { useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { motion } from 'framer-motion';
+
+const Magnetic = ({ children, scale = 0.25 }) => {
+  const ref = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e) => {
+    const { clientX, clientY } = e;
+    const { left, top, width, height } = ref.current.getBoundingClientRect();
+    const centerX = left + width / 2;
+    const centerY = top + height / 2;
+    const distanceX = clientX - centerX;
+    const distanceY = clientY - centerY;
+
+    setPosition({ x: distanceX * scale, y: distanceY * scale });
+  };
+
+  const handleMouseLeave = () => {
+    setPosition({ x: 0, y: 0 });
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: "spring", stiffness: 150, damping: 15, mass: 0.1 }}
+      className="inline-block"
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+Magnetic.propTypes = {
+  children: PropTypes.node.isRequired,
+  scale: PropTypes.number,
+};
 
 const skillsData = {
   
@@ -7,6 +46,7 @@ const skillsData = {
     { name: "JavaScript", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/javascript/javascript-original.svg" },
     { name: "Java", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/java/java-original.svg" },
     { name: "React.js", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/react/react-original.svg" },
+    { name: "Spring Boot", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" },
     { name: "HTML5", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/html5/html5-original.svg" },
     { name: "CSS3", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/css3/css3-original.svg" },
     { name: "Tailwind CSS", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" },
@@ -14,6 +54,8 @@ const skillsData = {
   "Databases & Tools": [
     { name: "PostgreSQL", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" },
     { name: "MongoDB", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/mongodb/mongodb-original.svg" },
+    { name: "Redis", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/redis/redis-original.svg" },
+    { name: "Firebase", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" },
     { name: "Git", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/git/git-original.svg" },
     { name: "GitHub", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/github/github-original.svg", iconDark: "https://cdn.simpleicons.org/github/ffffff" },
     { name: "Postman", icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg" },
@@ -104,12 +146,13 @@ const Skills = () => {
             </h2>
             <div className="flex flex-wrap gap-3">
               {skills.map((skill) => (
-                <SkillCard 
-                  key={skill.name} 
-                  name={skill.name} 
-                  icon={skill.icon}
-                  iconDark={skill.iconDark}
-                />
+                <Magnetic key={skill.name}>
+                  <SkillCard 
+                    name={skill.name} 
+                    icon={skill.icon}
+                    iconDark={skill.iconDark}
+                  />
+                </Magnetic>
               ))}
             </div>
           </motion.div>
