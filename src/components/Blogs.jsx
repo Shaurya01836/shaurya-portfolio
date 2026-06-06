@@ -4,7 +4,7 @@ import { RiErrorWarningLine, RiRefreshLine } from "@remixicon/react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase.config";
 
-// 1. Skeleton Component for Loading State
+
 const BlogSkeleton = () => (
   <div className="flex flex-col bg-white dark:bg-[#0A0A0A] rounded-md shadow-sm border border-gray-200 dark:border-[#1F1F1F] w-full animate-pulse h-full">
     <div className="w-full h-48 bg-gray-200 dark:bg-gray-800 rounded-t-md"></div>
@@ -30,7 +30,6 @@ const Blogs = () => {
     setError(null);
 
     try {
-      console.log("Fetching Blogs from Firebase Firestore...");
       const blogsRef = collection(db, "blogs");
       const q = query(blogsRef, orderBy("createdAt", "desc"));
       const querySnapshot = await getDocs(q);
@@ -42,10 +41,8 @@ const Blogs = () => {
 
       setBlogs(blogsData);
       setLoading(false);
-      console.log("Loaded from: Firebase Firestore");
-
     } catch (firebaseErr) {
-      console.error("Firebase fetch failed", firebaseErr);
+      setBlogs([]);
       setError("Unable to connect to Blog Database.");
       setLoading(false);
     }
@@ -63,7 +60,7 @@ const Blogs = () => {
   return (
     <div
       id="blogs"
-      className="flex flex-col py-24 w-full px-8 gap-4 text-black dark:text-white transition-colors duration-300"
+      className="flex flex-col pt-20 pb-24 w-full px-8 gap-4 text-black dark:text-white transition-colors duration-300"
     >
       {/* Header */}
       <div className="flex items-center gap-4 mb-2">

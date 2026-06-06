@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
+import { ReactLenis, useLenis } from "lenis/react";
 import Profile from "./components/Profile";
 import Home from "./components/Home";
 import Blogs from "./components/Blogs";
@@ -30,11 +31,20 @@ PageWrapper.propTypes = {
 
 function AnimatedRoutes({ darkMode, toggleTheme }) {
   const location = useLocation();
+  const lenis = useLenis();
+
+  useEffect(() => {
+    if (lenis) {
+      lenis.scrollTo(0, { immediate: true });
+    }
+  }, [location.pathname, lenis]);
+
+  const isBlogSection = location.pathname.startsWith("/blogs");
 
   return (
     <div className="bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100 sm:px-40 min-h-screen transition-colors duration-300">
       <div className="flex flex-col lg:flex-row border-x border-solid border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] transition-colors duration-300">
-        <aside className="lg:w-2/5 lg:h-screen lg:sticky lg:top-0">
+        <aside className={`${isBlogSection ? "hidden lg:block" : ""} lg:w-2/5 lg:h-screen lg:sticky lg:top-0`}>
           <Profile />
         </aside>
 
@@ -132,9 +142,11 @@ function App() {
   }
 
   return (
-    <Router>
-      <AnimatedRoutes darkMode={darkMode} toggleTheme={toggleTheme} />
-    </Router>
+    <ReactLenis root>
+      <Router>
+        <AnimatedRoutes darkMode={darkMode} toggleTheme={toggleTheme} />
+      </Router>
+    </ReactLenis>
   );
 }
 
