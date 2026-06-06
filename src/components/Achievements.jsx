@@ -9,6 +9,7 @@ import {
   RiGlobalLine,
   RiCloseLine,
 } from "@remixicon/react";
+import { useLenis } from "lenis/react";
 
 const metamaskLogoUrl =
   "https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg";
@@ -123,6 +124,19 @@ const Achievements = () => {
   const [loading, setLoading] = useState(true);
   const [selectedAchievement, setSelectedAchievement] = useState(null);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const lenis = useLenis();
+
+  useEffect(() => {
+    if (!lenis) return;
+    if (selectedAchievement) {
+      lenis.stop();
+    } else {
+      lenis.start();
+    }
+    return () => {
+      lenis.start();
+    };
+  }, [selectedAchievement, lenis]);
 
   useEffect(() => {
     const fetchAchievements = async () => {
@@ -240,9 +254,10 @@ const Achievements = () => {
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
           onClick={() => setSelectedAchievement(null)}
+          data-lenis-prevent
         >
           <div
-            className="w-full max-w-5xl relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-[#1F1F1F] dark:bg-[#0A0A0A]"
+            className="w-full max-w-5xl max-h-[85vh] flex flex-col relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-[#1F1F1F] dark:bg-[#0A0A0A]"
             role="dialog"
             aria-modal="true"
             aria-label={`${selectedAchievement.title} details`}
@@ -256,7 +271,7 @@ const Achievements = () => {
             >
               <RiCloseLine size={24} />
             </button>
-            <div className="grid grid-cols-1 md:grid-cols-2">
+            <div className="grid grid-cols-1 md:grid-cols-2 flex-1 overflow-y-auto min-h-0">
               <div className="flex min-h-[260px] w-full items-center justify-center bg-gray-50 p-4 dark:bg-[#050505]">
                 {selectedAchievement.imageUrl ? (
                   <div className="relative w-full flex justify-center items-center">
