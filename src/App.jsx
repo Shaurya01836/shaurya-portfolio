@@ -39,12 +39,10 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
     }
   }, [location.pathname, lenis]);
 
-  const isBlogSection = location.pathname.startsWith("/blogs");
-
   return (
     <div className="bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100 sm:px-36 min-h-screen transition-colors duration-300">
       <div className="flex flex-col lg:flex-row border-x border-solid border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] transition-colors duration-300">
-        <aside className={`${isBlogSection ? "hidden lg:block" : ""} lg:w-2/5 lg:h-screen lg:sticky lg:top-0`}>
+        <aside className="hidden lg:block lg:w-2/5 lg:h-screen lg:sticky lg:top-0">
           <Profile />
         </aside>
 

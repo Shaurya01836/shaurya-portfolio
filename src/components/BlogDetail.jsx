@@ -1,6 +1,6 @@
+import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { motion } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
@@ -13,7 +13,6 @@ import {
   RiGithubLine,
   RiExternalLinkLine,
   RiCodeSSlashLine,
-  RiPulseLine,
   RiTimeLine,
   RiUserStarLine,
   RiAlertLine,
@@ -48,7 +47,7 @@ const CopyButton = ({ text }) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-
+      console.error("Failed to copy text: ", err);
     }
   };
 
@@ -68,8 +67,12 @@ const CopyButton = ({ text }) => {
   );
 };
 
+CopyButton.propTypes = {
+  text: PropTypes.string.isRequired,
+};
+
 const MarkdownComponents = {
-  code({ node, inline, className, children, ...props }) {
+  code({ inline, className, children, ...props }) {
     const match = /language-(\w+)/.exec(className || "");
     const codeString = String(children).replace(/\n$/, "");
 
@@ -112,6 +115,7 @@ const BlogDetail = () => {
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showSkeleton, setShowSkeleton] = useState(false);
 
   useEffect(() => {
     const fetchBlogDetail = async () => {
@@ -125,7 +129,7 @@ const BlogDetail = () => {
           setError("Blog not found");
         }
         setLoading(false);
-      } catch (firebaseErr) {
+      } catch {
         setError("Unable to connect to Blog Database.");
         setLoading(false);
       }
@@ -134,15 +138,66 @@ const BlogDetail = () => {
     fetchBlogDetail();
   }, [id]);
 
+  useEffect(() => {
+    let timeoutId;
+    if (loading) {
+      timeoutId = setTimeout(() => {
+        setShowSkeleton(true);
+      }, 200);
+    } else {
+      setShowSkeleton(false);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [loading]);
+
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[50vh] text-gray-500 dark:text-gray-400">
-        <div className="animate-pulse flex flex-col items-center gap-2">
-          <RiPulseLine size={40} className="animate-spin text-blue-500" />
-          <span>Loading post showcase...</span>
+    if (showSkeleton) {
+      return (
+        <div className="flex flex-col py-20 px-4 md:px-8 w-full max-w-4xl mx-auto gap-6 text-black dark:text-white transition-colors duration-300">
+          {/* Back Button Skeleton */}
+          <div className="w-32 h-6 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
+
+          {/* Hero Image Skeleton */}
+          <div className="w-full h-64 md:h-96 rounded-md bg-gray-200 dark:bg-zinc-800 animate-pulse" />
+
+          {/* Title & Metadata Skeleton */}
+          <div className="flex flex-col gap-4 mt-2">
+            <div className="flex items-center gap-3">
+              <div className="w-28 h-6 bg-gray-200 dark:bg-zinc-800 rounded-full animate-pulse" />
+              <div className="w-20 h-5 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
+            </div>
+            <div className="w-3/4 h-9 md:h-11 bg-gray-300 dark:bg-zinc-700 rounded animate-pulse" />
+          </div>
+
+          <hr className="border-gray-200 dark:border-[#1F1F1F] my-2" />
+
+          {/* Content Skeleton */}
+          <div className="flex flex-col gap-4">
+            <div className="w-full h-4 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
+            <div className="w-11/12 h-4 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
+            <div className="w-5/6 h-4 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
+            <div className="w-4/5 h-4 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
+            <div className="w-2/3 h-4 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
+          </div>
+
+          {/* Grid cards placeholder */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <div className="p-6 border border-gray-200 dark:border-[#1F1F1F] rounded-md bg-white dark:bg-[#0A0A0A] flex flex-col gap-3">
+              <div className="w-24 h-4 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
+              <div className="w-1/2 h-5 bg-gray-300 dark:bg-zinc-700 rounded animate-pulse" />
+            </div>
+            <div className="p-6 border border-gray-200 dark:border-[#1F1F1F] rounded-md bg-white dark:bg-[#0A0A0A] flex flex-col gap-3">
+              <div className="w-24 h-4 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
+              <div className="w-1/3 h-5 bg-gray-300 dark:bg-zinc-700 rounded animate-pulse" />
+            </div>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+    return <div className="min-h-screen bg-white dark:bg-[#0A0A0A]" />;
   }
   if (error && !blog) return <div className="p-8 text-red-500">Error: {error}</div>;
   if (!blog) return <div className="p-8 text-gray-600">Blog not found</div>;

@@ -24,6 +24,7 @@ const Blogs = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
+  const [showSkeleton, setShowSkeleton] = useState(false);
 
   const fetchBlogs = useCallback(async () => {
     setLoading(true);
@@ -42,6 +43,7 @@ const Blogs = () => {
       setBlogs(blogsData);
       setLoading(false);
     } catch (firebaseErr) {
+      console.error("Firebase fetch failed: ", firebaseErr);
       setBlogs([]);
       setError("Unable to connect to Blog Database.");
       setLoading(false);
@@ -52,6 +54,21 @@ const Blogs = () => {
   useEffect(() => {
     fetchBlogs();
   }, [fetchBlogs, retryCount]);
+
+  useEffect(() => {
+    let timeoutId;
+    if (loading) {
+      timeoutId = setTimeout(() => {
+        setShowSkeleton(true);
+      }, 200);
+    } else {
+      setShowSkeleton(false);
+    }
+
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [loading]);
 
   const handleRetry = () => {
     setRetryCount((prev) => prev + 1);
@@ -71,7 +88,7 @@ const Blogs = () => {
       </div>
 
       {/* 2. LOADING STATE: Skeleton Grid */}
-      {loading && (
+      {showSkeleton && (
         <div className="w-full">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-6xl">
             {[...Array(4)].map((_, i) => (
