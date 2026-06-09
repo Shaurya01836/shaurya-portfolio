@@ -9,6 +9,11 @@ import {
 } from "@remixicon/react";
 import { collection, getDocs, limit, query } from "firebase/firestore";
 import { db } from "../firebase.config";
+import {
+  ArrowToMeDoodle,
+  UnderlineDoodle,
+  ResumeHighlightDoodle,
+} from "./Doodles";
 
 const leetcodeLogoUrl =
   "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/leetcode/leetcode-original.svg";
@@ -168,6 +173,7 @@ ConnectSection.propTypes = {
 
 const Profile = () => {
   const [resumeUrl, setResumeUrl] = useState(defaultResumeUrl);
+  const profileRef = useRef(null);
 
   useEffect(() => {
     const fetchResumeUrl = async () => {
@@ -193,17 +199,34 @@ const Profile = () => {
   }, []);
 
   return (
-    <div className="flex flex-col h-full justify-center p-8 pt-20 md:pt-0 lg:pl-20 text-gray-900 dark:text-gray-100">
+    <div
+      ref={profileRef}
+      className="relative flex flex-col h-full justify-center p-8 pt-20 md:pt-0 lg:pl-20 text-gray-900 dark:text-gray-100 overflow-visible"
+    >
       <div className="flex-grow flex flex-col justify-center">
-        <img
-          src="https://i.ibb.co/8LJ9qL10/Whats-App-Image-2025-06-23-at-00-34-04-8a1e77d6.jpg"
-          alt="Shaurya Upadhyay"
-          className="rounded-full w-40 h-40 mb-6 border-4 border-pink-400"
-        />
+        {/* Avatar Image with Arrow Doodle */}
+        <div className="relative w-fit mb-6 group">
+          <img
+            src="https://i.ibb.co/8LJ9qL10/Whats-App-Image-2025-06-23-at-00-34-04-8a1e77d6.jpg"
+            alt="Shaurya Upadhyay"
+            className="rounded-full w-40 h-40 border-4 border-pink-400 relative z-10 select-none pointer-events-none"
+          />
+          <div className="absolute top-[10px] left-[150px] z-20 pointer-events-none">
+            <ArrowToMeDoodle />
+          </div>
+        </div>
+
         <div className="text-left">
-          <h1 className="text-4xl font-bold tracking-tight">
-            Shaurya Upadhyay
-          </h1>
+          {/* Name with Underline Doodle */}
+          <div className="relative w-fit mb-6">
+            <h1 className="text-4xl font-bold tracking-tight pb-1">
+              Shaurya Upadhyay
+            </h1>
+            <div className="absolute bottom-[-16px] left-0 w-full z-10 pointer-events-none">
+              <UnderlineDoodle />
+            </div>
+          </div>
+
           <div className="mt-4 max-w-lg text-lg text-gray-600 dark:text-gray-300 leading-loose">
             <p className="font-semibold text-lg text-black dark:text-white mb-2">
               Software Developer
@@ -213,11 +236,11 @@ const Profile = () => {
               <TechBadge text="React.js" />
               &
               <TechBadge text="Java" />
-               Exploring
+              Exploring
               <TechBadge text="Spring Boot" />
               ,
               <TechBadge text="REST APIs" />
-               Passionate about
+              Passionate about
               <TechBadge text="DSA" />
               &
               <TechBadge text="AI-assisted development" />
@@ -225,14 +248,19 @@ const Profile = () => {
           </div>
         </div>
       </div>
-      <a
-        href={resumeUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <TechBadge text="Resume" />
-      </a>
+      <div className="relative w-fit group mt-16 sm:mt-0">
+        <a
+          href={resumeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="relative z-10"
+        >
+          <TechBadge text="Resume" />
+        </a>
+        <ResumeHighlightDoodle />
+      </div>
 
+      {/* Social Links */}
       <ConnectSection />
     </div>
   );
