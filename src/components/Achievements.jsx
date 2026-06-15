@@ -10,6 +10,7 @@ import {
   RiCloseLine,
 } from "@remixicon/react";
 import { useLenis } from "lenis/react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const metamaskLogoUrl =
   "https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg";
@@ -59,6 +60,7 @@ const GlobalSkeleton = () => (
     </div>
   </div>
 );
+
 const MetaMask = () => (
   <div className="group relative flex h-full w-full items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br from-orange-100/70 via-amber-100/50 to-yellow-100/70 dark:from-orange-900/20 dark:via-amber-900/10 dark:to-yellow-900/20">
     <div className="absolute inset-0 opacity-60 dark:opacity-30">
@@ -165,19 +167,23 @@ const Achievements = () => {
     if (!selectedAchievement) return;
 
     setImageLoaded(false);
-    const previousOverflow = document.body.style.overflow;
-    const handleEscape = (event) => {
+    const handleKeyDown = (event) => {
       if (event.key === "Escape") {
         setSelectedAchievement(null);
       }
+      if (["ArrowUp", "ArrowDown", "PageUp", "PageDown", "Home", "End", " "].includes(event.key)) {
+        const activeEl = document.activeElement;
+        const isInsideModal = activeEl && activeEl.closest("[role='dialog']");
+        if (!isInsideModal) {
+          event.preventDefault();
+        }
+      }
     };
 
-    document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", handleEscape);
+    document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", handleEscape);
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedAchievement]);
 
@@ -250,80 +256,90 @@ const Achievements = () => {
         ))}
       </div>
 
-      {selectedAchievement && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-          onClick={() => setSelectedAchievement(null)}
-          data-lenis-prevent
-        >
-          <div
-            className="w-full max-w-5xl max-h-[85vh] flex flex-col relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-[#1F1F1F] dark:bg-[#0A0A0A]"
-            role="dialog"
-            aria-modal="true"
-            aria-label={`${selectedAchievement.title} details`}
-            onClick={(event) => event.stopPropagation()}
+      <AnimatePresence>
+        {selectedAchievement && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+            onClick={() => setSelectedAchievement(null)}
+            data-lenis-prevent
           >
-            <button
-              type="button"
-              onClick={() => setSelectedAchievement(null)}
-              className="absolute z-50 right-4 top-4 rounded-full bg-white/80 p-2 text-gray-700 shadow-sm backdrop-blur-md transition hover:bg-white hover:text-gray-900 dark:bg-[#0A0A0A]/80 dark:text-gray-300 dark:hover:bg-[#111111] dark:hover:text-white border border-gray-200 dark:border-white/10"
-              aria-label="Close achievement details"
+            <motion.div
+              initial={{ scale: 0.95, y: 15, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.95, y: 15, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="w-full max-w-5xl max-h-[85vh] flex flex-col relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-[#1F1F1F] dark:bg-[#0A0A0A]"
+              role="dialog"
+              aria-modal="true"
+              aria-label={`${selectedAchievement.title} details`}
+              onClick={(event) => event.stopPropagation()}
             >
-              <RiCloseLine size={24} />
-            </button>
-            <div className="grid grid-cols-1 md:grid-cols-2 flex-1 overflow-y-auto min-h-0">
-              <div className="flex min-h-[260px] w-full items-center justify-center bg-gray-50 p-4 dark:bg-[#050505]">
-                {selectedAchievement.imageUrl ? (
-                  <div className="relative w-full flex justify-center items-center">
-                    {!imageLoaded && (
-                      <div className="absolute inset-0 w-full h-full min-h-[260px] rounded-xl bg-gray-200 dark:bg-[#111111] animate-pulse border border-gray-200 dark:border-[#1F1F1F]" />
-                    )}
-                    <img
-                      src={selectedAchievement.imageUrl}
-                      alt={`${selectedAchievement.title} certificate`}
-                      className={`max-h-[70vh] w-full rounded-xl border border-gray-200 object-contain dark:border-[#1F1F1F] transition-opacity duration-300 ${imageLoaded ? 'opacity-100 relative z-10' : 'opacity-0'}`}
-                      loading="lazy"
-                      onLoad={() => setImageLoaded(true)}
-                    />
-                  </div>
-                ) : (
-                  <div className="w-full rounded-xl border border-dashed border-gray-300 p-6 text-center text-gray-500 dark:border-gray-700 dark:text-gray-400">
-                    Certificate image not available
-                  </div>
-                )}
+              <button
+                type="button"
+                onClick={() => setSelectedAchievement(null)}
+                className="absolute z-50 right-4 top-4 rounded-full bg-white/80 p-2 text-gray-700 shadow-sm backdrop-blur-md transition hover:bg-white hover:text-gray-900 dark:bg-[#0A0A0A]/80 dark:text-gray-300 dark:hover:bg-[#111111] dark:hover:text-white border border-gray-200 dark:border-white/10"
+                aria-label="Close achievement details"
+              >
+                <RiCloseLine size={24} />
+              </button>
+              <div className="grid grid-cols-1 md:grid-cols-2 flex-1 overflow-y-auto min-h-0">
+                <div className="flex min-h-[260px] w-full items-center justify-center bg-gray-50 p-4 dark:bg-[#050505]">
+                  {selectedAchievement.imageUrl ? (
+                    <div className="relative w-full flex justify-center items-center">
+                      {!imageLoaded && (
+                        <div className="absolute inset-0 w-full h-full min-h-[260px] rounded-xl bg-gray-200 dark:bg-[#111111] animate-pulse border border-gray-200 dark:border-[#1F1F1F]" />
+                      )}
+                      <img
+                        src={selectedAchievement.imageUrl}
+                        alt={`${selectedAchievement.title} certificate`}
+                        className={`max-h-[70vh] w-full rounded-xl border border-gray-200 object-contain dark:border-[#1F1F1F] transition-opacity duration-300 ${imageLoaded ? 'opacity-100 relative z-10' : 'opacity-0'}`}
+                        loading="lazy"
+                        onLoad={() => setImageLoaded(true)}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-full rounded-xl border border-dashed border-gray-300 p-6 text-center text-gray-500 dark:border-gray-700 dark:text-gray-400">
+                      Certificate image not available
+                    </div>
+                  )}
+                </div>
+
+                <div className="relative flex flex-col p-6 md:p-8">
+                  <h3 className="pr-16 text-2xl font-bold text-gray-900 dark:text-white">
+                    {selectedAchievement.title}
+                  </h3>
+                  <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                    {selectedAchievement.event} • {selectedAchievement.year}
+                  </p>
+
+                  <p className="mt-6 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                    {selectedAchievement.description}
+                  </p>
+
+                  {extraDetails.length > 0 && (
+                    <div className="mt-6 space-y-3 border-t border-gray-200 pt-6 dark:border-[#1F1F1F]">
+                      {extraDetails.map(([key, value]) => (
+                        <div key={key} className="flex flex-col gap-1">
+                          <span className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                            {formatLabel(key)}
+                          </span>
+                          <span className="text-sm text-gray-800 dark:text-gray-200">
+                            {value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
-
-              <div className="relative flex flex-col p-6 md:p-8">
-                <h3 className="pr-16 text-2xl font-bold text-gray-900 dark:text-white">
-                  {selectedAchievement.title}
-                </h3>
-                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                  {selectedAchievement.event} • {selectedAchievement.year}
-                </p>
-
-                <p className="mt-6 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
-                  {selectedAchievement.description}
-                </p>
-
-                {extraDetails.length > 0 && (
-                  <div className="mt-6 space-y-3 border-t border-gray-200 pt-6 dark:border-[#1F1F1F]">
-                    {extraDetails.map(([key, value]) => (
-                      <div key={key} className="flex flex-col gap-1">
-                        <span className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                          {formatLabel(key)}
-                        </span>
-                        <span className="text-sm text-gray-800 dark:text-gray-200">
-                          {value}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
