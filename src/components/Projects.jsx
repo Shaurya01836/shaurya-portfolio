@@ -18,7 +18,16 @@ function Projects() {
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedProject, setSelectedProject] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const lenis = useLenis();
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    setIsMobile(mediaQuery.matches);
+    const listener = (e) => setIsMobile(e.matches);
+    mediaQuery.addEventListener("change", listener);
+    return () => mediaQuery.removeEventListener("change", listener);
+  }, []);
 
   useEffect(() => {
     if (!lenis) return;
@@ -157,8 +166,9 @@ function Projects() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+            transition={{ duration: 0.2 }}
+            style={{ willChange: "opacity" }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 md:bg-black/60 p-4 md:backdrop-blur-sm"
             onClick={() => setSelectedProject(null)}
             data-lenis-prevent
           >
@@ -183,10 +193,11 @@ function Projects() {
 
               return (
             <motion.div
-              initial={{ scale: 0.95, y: 15, opacity: 0 }}
+              initial={isMobile ? { y: 8, opacity: 0 } : { scale: 0.95, y: 15, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.95, y: 15, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
+              exit={isMobile ? { y: 8, opacity: 0 } : { scale: 0.95, y: 15, opacity: 0 }}
+              transition={{ duration: isMobile ? 0.2 : 0.3, ease: "easeOut" }}
+              style={{ willChange: "transform, opacity" }}
               className="w-full max-w-5xl max-h-[75vh] flex flex-col relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-[#1F1F1F] dark:bg-[#0A0A0A]"
               role="dialog"
               aria-modal="true"
@@ -196,7 +207,7 @@ function Projects() {
               <button
                 type="button"
                 onClick={() => setSelectedProject(null)}
-                className="absolute z-50 right-4 top-4 rounded-full bg-white/80 p-2 text-gray-700 shadow-sm backdrop-blur-md transition hover:bg-white hover:text-gray-900 dark:bg-[#0A0A0A]/80 dark:text-gray-300 dark:hover:bg-[#111111] dark:hover:text-white border border-gray-200 dark:border-white/10"
+                className="absolute z-50 right-4 top-4 rounded-full bg-white md:bg-white/80 p-2 text-gray-700 shadow-sm md:backdrop-blur-md transition hover:bg-white hover:text-gray-900 dark:bg-[#0A0A0A] dark:md:bg-[#0A0A0A]/80 dark:text-gray-300 dark:hover:bg-[#111111] dark:hover:text-white border border-gray-200 dark:border-white/10"
                 aria-label="Close project details"
               >
                 <RiCloseLine size={24} />
