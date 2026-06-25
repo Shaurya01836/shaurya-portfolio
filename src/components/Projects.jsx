@@ -2,10 +2,6 @@ import { useEffect, useState } from "react";
 import { 
   RiExternalLinkLine, 
   RiGithubLine,
-  RiStarLine,
-  RiCodeSSlashLine,
-  RiBarChartGroupedLine,
-  RiUserStarLine,
   RiCloseLine
 } from "@remixicon/react";
 import { useLenis } from "lenis/react";

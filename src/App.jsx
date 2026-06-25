@@ -9,7 +9,6 @@ import Blogs from "./components/Blogs";
 import Loading from "./components/Loading";
 import BlogDetail from "./components/BlogDetail";
 import Navbar from "./components/Navbar";
-import MigrateBlogs from "./components/MigrateBlogs";
 
 const PageWrapper = ({ children }) => {
   return (
@@ -72,14 +71,6 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
                 element={
                   <PageWrapper>
                     <BlogDetail />
-                  </PageWrapper>
-                }
-              />
-              <Route
-                path="/migrate-blogs"
-                element={
-                  <PageWrapper>
-                    <MigrateBlogs />
                   </PageWrapper>
                 }
               />
