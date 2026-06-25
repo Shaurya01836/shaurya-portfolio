@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import Cards from "./Cards";
+import Cards from "../components/Cards";
 import { RiErrorWarningLine, RiRefreshLine } from "@remixicon/react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase.config";

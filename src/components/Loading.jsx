@@ -1,12 +1,16 @@
 import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
-const Loading = ({ onComplete }) => {
+const Loading = ({ onComplete, isDone }) => {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const updateProgress = () => {
       setProgress((prev) => {
         if (prev >= 100) return 100;
+
+        // Cap progress at 95% if the data loading is not done yet
+        if (!isDone && prev >= 95) return 95;
 
         const increment = Math.floor(Math.random() * 10) + 1;
         const nextProgress = Math.min(prev + increment, 100);
@@ -18,7 +22,14 @@ const Loading = ({ onComplete }) => {
     const intervalId = setInterval(updateProgress, 200);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [isDone]);
+
+  useEffect(() => {
+    // Fast-forward to 100% when data is fully loaded and progress was capped
+    if (isDone && progress >= 95 && progress < 100) {
+      setProgress(100);
+    }
+  }, [isDone, progress]);
 
   useEffect(() => {
     if (progress === 100) {
@@ -50,6 +61,11 @@ const Loading = ({ onComplete }) => {
       </div>
     </div>
   );
+};
+
+Loading.propTypes = {
+  onComplete: PropTypes.func.isRequired,
+  isDone: PropTypes.bool.isRequired,
 };
 
 export default Loading;

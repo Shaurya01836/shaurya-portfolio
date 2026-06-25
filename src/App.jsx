@@ -4,11 +4,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 import { ReactLenis, useLenis } from "lenis/react";
 import Profile from "./components/Profile";
-import Home from "./components/Home";
-import Blogs from "./components/Blogs";
+import Home from "./pages/Home";
+import Blogs from "./pages/Blogs";
 import Loading from "./components/Loading";
-import BlogDetail from "./components/BlogDetail";
+import BlogDetail from "./pages/BlogDetail";
 import Navbar from "./components/Navbar";
+import NotFound from "./pages/NotFound";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db } from "./firebase.config";
 
 const PageWrapper = ({ children }) => {
   return (
@@ -74,6 +77,14 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
                   </PageWrapper>
                 }
               />
+              <Route
+                path="*"
+                element={
+                  <PageWrapper>
+                    <NotFound />
+                  </PageWrapper>
+                }
+              />
             </Routes>
           </AnimatePresence>
         </main>
@@ -88,26 +99,44 @@ AnimatedRoutes.propTypes = {
 };
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [darkMode, setDarkMode] = useState(() => {
+    const theme = localStorage.getItem("theme");
+    const supportDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return theme === "dark" || (!theme && supportDarkMode);
+  });
+  const [isLoading, setIsLoading] = useState(() => {
+    return !sessionStorage.getItem("hasLoadedBefore");
+  });
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
-    if (
-      localStorage.getItem("theme") === "dark" ||
-      (!("theme" in localStorage) &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      setDarkMode(true);
-      document.documentElement.classList.add("dark");
-    } else {
-      setDarkMode(false);
-      document.documentElement.classList.remove("dark");
-    }
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+    let completed = false;
 
-    return () => clearTimeout(timer);
+    const prefetchData = async () => {
+      try {
+        await Promise.all([
+          getDocs(collection(db, "projects")),
+          getDocs(collection(db, "profile")),
+          getDocs(query(collection(db, "achievements"), orderBy("date", "desc")))
+        ]);
+      } catch (error) {
+        console.error("Error prefetching data:", error);
+      } finally {
+        if (!completed) {
+          setIsDataLoaded(true);
+        }
+      }
+    };
+
+    prefetchData();
+
+    // Fallback safety timeout (5 seconds) to prevent infinite loading
+    const fallbackTimer = setTimeout(() => {
+      completed = true;
+      setIsDataLoaded(true);
+    }, 5000);
+
+    return () => clearTimeout(fallbackTimer);
   }, []);
 
   const toggleTheme = () => {
@@ -123,11 +152,12 @@ function App() {
   };
 
   const handleLoadingComplete = () => {
+    sessionStorage.setItem("hasLoadedBefore", "true");
     setIsLoading(false);
   };
 
   if (isLoading) {
-    return <Loading onComplete={handleLoadingComplete} />;
+    return <Loading onComplete={handleLoadingComplete} isDone={isDataLoaded} />;
   }
 
   return (
