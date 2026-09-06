@@ -80,11 +80,7 @@ const Header = () => {
 
   const handleImageClick = () => {
     if (featuredItems.length <= 1) return;
-    let nextIndex;
-    do {
-      nextIndex = Math.floor(Math.random() * featuredItems.length);
-    } while (nextIndex === currentIndex);
-    setCurrentIndex(nextIndex);
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % featuredItems.length);
   };
 
   const currentItem = featuredItems[currentIndex] || {

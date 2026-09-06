@@ -44,7 +44,7 @@ function Projects() {
         const projectData = querySnapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data()
-        }));
+        })).sort((a, b) => (b.order || 0) - (a.order || 0));
         setProjects(projectData);
       } catch (error) {
         console.error("Error fetching projects: ", error);
@@ -78,6 +78,8 @@ function Projects() {
       document.removeEventListener("keydown", handleKeyDown);
     };
   }, [selectedProject]);
+
+  const [showAll, setShowAll] = useState(false);
 
   if (loading) return <div className="px-8 py-20">Loading Projects...</div>;
 
@@ -132,6 +134,8 @@ function Projects() {
     return value ? value.trim() : "";
   };
 
+  const displayedProjects = showAll ? projects : projects.slice(0, 4);
+
   return (
     <div className="flex flex-col py-20 w-full px-8 gap-2 text-black dark:text-white">
       <div className="flex items-center gap-4">
@@ -142,7 +146,7 @@ function Projects() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-6xl">
-        {projects.map((project) => (
+        {displayedProjects.map((project) => (
           <Cards
             key={project.id}
             title={project.title}
@@ -155,6 +159,33 @@ function Projects() {
           />
         ))}
       </div>
+
+      {projects.length > 4 && (
+        <div className="flex justify-center mt-6">
+          <button
+            type="button"
+            onClick={() => setShowAll((prev) => !prev)}
+            className="group relative inline-flex items-center gap-2 rounded-full border border-gray-300 dark:border-[#2A2A2A] bg-white dark:bg-[#0A0A0A] px-6 py-2.5 text-sm font-medium text-gray-800 dark:text-gray-200 shadow-sm transition-all duration-300 hover:border-gray-400 dark:hover:border-[#444444] hover:bg-gray-50 dark:hover:bg-[#141414] hover:shadow-md"
+          >
+            <span>{showAll ? "Show Less" : `Show More (${projects.length - 4} more)`}</span>
+            <svg
+              className={`w-4 h-4 transition-transform duration-300 ${
+                showAll ? "rotate-180" : ""
+              }`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 9l-7 7-7-7"
+              />
+            </svg>
+          </button>
+        </div>
+      )}
 
       <AnimatePresence>
         {selectedProject && (
