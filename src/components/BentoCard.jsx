@@ -3,22 +3,22 @@ import PropTypes from "prop-types";
 const BentoCard = ({ children, className = "", title, description, header, href, onClick, ariaLabel }) => {
   const CardContent = (
     <>
-      <div className="w-full h-full flex flex-col overflow-hidden">
-       {/* Skeleton/Illustration Area */}
-<div className="relative w-full flex-1 min-h-[160px] overflow-hidden flex items-center justify-center p-4">
-  {children || header}
-</div>
-
-        {/* Content Area */}
-        <div className="p-6 pt-0 mt-auto">
-          <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2 group-hover:text-blue-500 transition-colors">
-            {title}
-          </h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
-            {description}
-          </p>
-        </div>
+    <div className="w-full h-full flex flex-col overflow-hidden">
+      {/* Cover Image / Header Area */}
+      <div className="relative w-full h-48 sm:h-52 overflow-hidden bg-gray-100 dark:bg-[#151515]">
+        {children || header}
       </div>
+
+      {/* Content Area */}
+      <div className="p-6 flex flex-col flex-grow">
+        <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2 group-hover:text-blue-500 transition-colors">
+          {title}
+        </h3>
+        <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+          {description}
+        </p>
+      </div>
+    </div>
     </>
   );
 

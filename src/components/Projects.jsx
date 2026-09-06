@@ -105,6 +105,12 @@ function Projects() {
     "results",
     "category",
     "caseStudy",
+    "order",
+    "createdAt",
+    "created_at",
+    "updatedAt",
+    "updated_at",
+    "timestamp",
   ]);
 
   const formatLabel = (key) =>
