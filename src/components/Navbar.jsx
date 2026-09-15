@@ -41,9 +41,9 @@ Magnetic.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-const Navbar = ({ toggleTheme, isDarkMode }) => {
+const Navbar = ({ toggleTheme, isDarkMode, hasBanner }) => {
   return (
-    <nav className="fixed top-6 right-6 md:top-5 md:right-60 z-50 flex gap-4">
+    <nav className={`fixed ${hasBanner ? 'top-14 md:top-14' : 'top-6 md:top-5'} right-6 md:right-60 z-50 flex gap-4 transition-all duration-300`}>
       <Magnetic>
         <Link
           to="/"
@@ -78,6 +78,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
 Navbar.propTypes = {
   toggleTheme: PropTypes.func.isRequired,
   isDarkMode: PropTypes.bool.isRequired,
+  hasBanner: PropTypes.bool,
 };
 
 export default Navbar;

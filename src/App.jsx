@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 import { ReactLenis, useLenis } from "lenis/react";
 import Profile from "./components/Profile";
+import DomainBanner from "./components/DomainBanner";
 import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
 import Loading from "./components/Loading";
@@ -42,14 +43,16 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
   }, [location.pathname, lenis]);
 
   return (
-    <div className="bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100 sm:px-36 min-h-screen transition-colors duration-300">
-      <div className="flex flex-col lg:flex-row border-x border-solid border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] transition-colors duration-300">
-        <aside className="hidden lg:block lg:w-2/5 lg:h-screen lg:sticky lg:top-0">
-          <Profile />
-        </aside>
+    <div className="bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300 flex flex-col">
+      <DomainBanner />
+      <div className="sm:px-36 flex-1">
+        <div className="flex flex-col lg:flex-row border-x border-solid border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] transition-colors duration-300 min-h-full">
+          <aside className="hidden lg:block lg:w-2/5 lg:h-screen lg:sticky lg:top-0">
+            <Profile />
+          </aside>
 
-        <main className="lg:w-3/5 pb-20 lg:pb-0">
-          <Navbar toggleTheme={toggleTheme} isDarkMode={darkMode} />
+          <main className="lg:w-3/5 pb-20 lg:pb-0">
+            <Navbar toggleTheme={toggleTheme} isDarkMode={darkMode} hasBanner={true} />
 
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
@@ -90,7 +93,8 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
         </main>
       </div>
     </div>
-  );
+  </div>
+);
 }
 
 AnimatedRoutes.propTypes = {
