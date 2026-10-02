@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow:
 
+# Sitemap
 Sitemap: https://www.ershaurya.dev/sitemap.xml
+Sitemap: https://ershaurya.dev/sitemap.xml
