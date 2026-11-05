@@ -1,46 +1,9 @@
-import { useRef, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import PropTypes from "prop-types";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase.config";
-
-const Magnetic = ({ children, scale = 0.08 }) => {
-  const ref = useRef(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e) => {
-    const { clientX, clientY } = e;
-    const { left, top, width, height } = ref.current.getBoundingClientRect();
-    const centerX = left + width / 2;
-    const centerY = top + height / 2;
-    const distanceX = clientX - centerX;
-    const distanceY = clientY - centerY;
-
-    setPosition({ x: distanceX * scale, y: distanceY * scale });
-  };
-
-  const handleMouseLeave = () => {
-    setPosition({ x: 0, y: 0 });
-  };
-
-  return (
-    <motion.div
-      ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      animate={{ x: position.x, y: position.y }}
-      transition={{ type: "spring", stiffness: 120, damping: 14, mass: 0.1 }}
-      className="w-full"
-    >
-      {children}
-    </motion.div>
-  );
-};
-
-Magnetic.propTypes = {
-  children: PropTypes.node.isRequired,
-  scale: PropTypes.number,
-};
+import { TechCornerTicks } from "./TechGridElements";
+import { RiRefreshLine } from "@remixicon/react";
 
 const Header = () => {
   const [featuredItems, setFeaturedItems] = useState([
@@ -66,7 +29,6 @@ const Header = () => {
           });
 
           setFeaturedItems(items);
-          // Select random starting index
           const randomIndex = Math.floor(Math.random() * items.length);
           setCurrentIndex(randomIndex);
         }
@@ -88,105 +50,87 @@ const Header = () => {
     image: "https://i.ibb.co/PZt4m1GV/stpi.jpg",
   };
 
-  // Helper to get items in the stack sequence
-  const getStackItem = (offset) => {
-    const index = (currentIndex + offset) % featuredItems.length;
-    return featuredItems[index];
-  };
-
   return (
-    <div className="relative flex flex-col gap-6 text-black dark:text-white p-4 md:p-8 md:pt-20">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-        {/* Left Column - Dynamic Featured Item Stack */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-4">
-            <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold uppercase tracking-wider whitespace-nowrap">
-              {currentItem.title}
-            </h1>
-            <div className="h-[1px] flex-grow bg-gray-100 dark:bg-[#1F1F1F]"></div>
-          </div>
-          <Magnetic scale={0.04}>
-            <div className="relative w-full h-44 select-none">
-              {/* Stack Card 3 (Bottom-most) */}
-              {featuredItems.length > 2 && (
-                <div
-                  className="absolute inset-0 w-full h-full rounded-md border border-gray-200 dark:border-[#1F1F1F] bg-gray-100 dark:bg-[#121212] shadow-sm pointer-events-none transition-all duration-300 origin-bottom-right"
-                  style={{
-                    transform: "rotate(3deg) translate(6px, 6px) scale(0.95)",
-                    opacity: 0.35,
-                    zIndex: 1,
-                  }}
-                >
-                  <img
-                    src={getStackItem(2).image}
-                    alt="Stack Background 2"
-                    className="w-full h-full object-cover rounded-md grayscale-[20%] opacity-80"
-                  />
-                </div>
-              )}
+    <div className="flex flex-col w-full px-8 py-10 gap-4 text-black dark:text-white transition-colors duration-300">
+      {/* Section Header */}
+      <div className="flex items-center gap-4">
+        <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold uppercase tracking-wider">
+          Overview
+        </h1>
+        <div className="h-[1px] flex-grow bg-gray-200 dark:bg-[#1F1F1F] relative overflow-hidden">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 h-1.5 w-16 tech-ruler-ticks-x opacity-40" />
+        </div>
+      </div>
 
-              {/* Stack Card 2 (Middle) */}
-              {featuredItems.length > 1 && (
-                <div
-                  className="absolute inset-0 w-full h-full rounded-md border border-gray-200 dark:border-[#1F1F1F] bg-gray-100 dark:bg-[#121212] shadow-sm pointer-events-none transition-all duration-300 origin-bottom-left"
-                  style={{
-                    transform: "rotate(-2deg) translate(-4px, 4px) scale(0.98)",
-                    opacity: 0.65,
-                    zIndex: 2,
-                  }}
-                >
-                  <img
-                    src={getStackItem(1).image}
-                    alt="Stack Background 1"
-                    className="w-full h-full object-cover rounded-md grayscale-[10%] opacity-90"
-                  />
-                </div>
-              )}
-
-              {/* Stack Card 1 (Top / Active Clickable Card) */}
-              <div className="relative w-full h-full rounded-md border border-gray-200 dark:border-[#1F1F1F] shadow-md z-10 bg-white dark:bg-[#151515] overflow-hidden group">
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={currentItem.image}
-                    src={currentItem.image}
-                    alt={currentItem.title}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.25 }}
-                    className="w-full h-full object-cover rounded-md cursor-pointer hover:scale-[1.02] transition-transform duration-300"
-                    onClick={handleImageClick}
-                    loading="lazy"
-                  />
-                </AnimatePresence>
-                
-                {/* Floating "Click to cycle" hint on hover */}
-                {featuredItems.length > 1 && (
-                  <div className="absolute bottom-2 right-2 bg-black/60 backdrop-blur-sm text-white text-[10px] px-2 py-0.5 rounded pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    Click to swap
-                  </div>
-                )}
-              </div>
+      {/* 2-Column Grid with gap-4 matching Projects section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Card 1: Featured Highlights Spotlight */}
+        <div className="group relative flex flex-col rounded-md border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] overflow-hidden transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-700">
+          {/* Top Metadata Strip */}
+          <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50/80 dark:bg-[#121212] border-b border-gray-200 dark:border-[#1F1F1F] select-none">
+            <div className="flex items-center gap-2">
+              <h2 className="text-xs sm:text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider font-tech truncate max-w-[150px] sm:max-w-[180px]">
+                {currentItem.title}
+              </h2>
             </div>
-          </Magnetic>
+            <div className="flex items-center gap-2">
+              <span className="font-tech text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest px-2 py-0.5 rounded border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A]">
+                {currentIndex + 1}/{featuredItems.length}
+              </span>
+       
+            </div>
+          </div>
+
+          {/* Showcase Image Viewport */}
+          <div
+            onClick={handleImageClick}
+            className="relative w-full h-52 sm:h-56 bg-gray-100 dark:bg-[#0C0C0C] overflow-hidden group cursor-pointer select-none"
+          >
+            <TechCornerTicks />
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={currentItem.image}
+                src={currentItem.image}
+                alt={currentItem.title}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.25, ease: "easeOut" }}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                loading="lazy"
+              />
+            </AnimatePresence>
+
+            {/* Hover Overlay Tag */}
+            {featuredItems.length > 1 && (
+              <div className="absolute bottom-2.5 right-2.5 font-tech text-[10px] px-2 py-0.5 rounded border border-white/20 bg-black/75 backdrop-blur-sm text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                Click to swap
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Right Column - Coding Vibes */}
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-4">
-            <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold uppercase tracking-wider whitespace-nowrap">
-              Coding Vibes
-            </h1>
-            <div className="h-[1px] flex-grow bg-gray-100 dark:bg-[#1F1F1F]"></div>
+        {/* Card 2: Developer Studio / Coding Vibes */}
+        <div className="group relative flex flex-col rounded-md border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] overflow-hidden transition-all duration-300 hover:border-gray-400 dark:hover:border-gray-700">
+          {/* Top Metadata Strip */}
+          <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50/80 dark:bg-[#121212] border-b border-gray-200 dark:border-[#1F1F1F] select-none">
+            <div className="flex items-center gap-2">
+              <h2 className="text-xs sm:text-sm font-bold text-gray-800 dark:text-gray-200 uppercase tracking-wider font-tech">
+                CODING VIBES
+              </h2>
+            </div>
           </div>
-          <Magnetic scale={0.06}>
+
+          {/* GIF Viewport */}
+          <div className="relative w-full h-52 sm:h-56 bg-gray-100 dark:bg-[#0C0C0C] overflow-hidden select-none">
+            <TechCornerTicks />
             <img
               src="https://media.giphy.com/media/ZVik7pBtu9dNS/giphy.gif"
               alt="Coding GIF"
               loading="lazy"
-              className="w-full h-44 object-cover rounded-md border border-gray-200 dark:border-[#1F1F1F] shadow-sm cursor-pointer"
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
-          </Magnetic>
+          </div>
         </div>
       </div>
     </div>

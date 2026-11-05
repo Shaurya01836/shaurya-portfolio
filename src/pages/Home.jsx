@@ -15,14 +15,30 @@ const Home = ({ darkMode }) => {
       <div className="block lg:hidden">
         <Profile />
       </div>
-      <Header />
-      <Skills />
-      <Projects />
-      <CodingProfile darkMode={darkMode} />
-      <GithubGraph darkMode={darkMode} />
-      <Experience />
-      <Achievements />
-      <Contact />
+      <section id="header">
+        <Header />
+      </section>
+      <section id="skills">
+        <Skills />
+      </section>
+      <section id="projects">
+        <Projects />
+      </section>
+      <section id="coding-profile">
+        <CodingProfile darkMode={darkMode} />
+      </section>
+      <section id="github">
+        <GithubGraph darkMode={darkMode} />
+      </section>
+      <section id="experience">
+        <Experience />
+      </section>
+      <section id="achievements">
+        <Achievements />
+      </section>
+      <section id="contact">
+        <Contact />
+      </section>
     </>
   );
 };

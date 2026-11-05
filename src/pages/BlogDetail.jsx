@@ -156,7 +156,7 @@ const BlogDetail = () => {
   if (loading) {
     if (showSkeleton) {
       return (
-        <div className="flex flex-col py-20 px-4 md:px-8 w-full max-w-4xl mx-auto gap-6 text-black dark:text-white transition-colors duration-300">
+        <div className="flex flex-col pt-8 pb-20 px-4 md:px-8 w-full max-w-4xl mx-auto gap-6 text-black dark:text-white transition-colors duration-300">
           {/* Back Button Skeleton */}
           <div className="w-32 h-6 bg-gray-200 dark:bg-zinc-800 rounded animate-pulse" />
 
@@ -206,7 +206,7 @@ const BlogDetail = () => {
 
   if (isProjectShowcase) {
     return (
-      <div className="flex flex-col py-24 px-4 md:px-8 w-full max-w-5xl mx-auto gap-8 text-black dark:text-white transition-colors duration-300">
+      <div className="flex flex-col pt-8 pb-24 px-4 md:px-8 w-full max-w-5xl mx-auto gap-8 text-black dark:text-white transition-colors duration-300">
         {/* Back Button */}
         <Link
           to="/blogs"
@@ -401,7 +401,7 @@ const BlogDetail = () => {
 
   // Fallback Standard Post layout
   return (
-    <div className="flex flex-col pt-20 pb-24 px-8 w-full max-w-4xl mx-auto gap-6 text-black dark:text-white animate-fade-in-up">
+    <div className="flex flex-col pt-8 pb-24 px-8 w-full max-w-4xl mx-auto gap-6 text-black dark:text-white animate-fade-in-up">
       <Link
         to="/blogs"
         className="inline-flex items-center gap-2 text-gray-500 hover:text-black dark:hover:text-white transition-colors mb-4 w-fit"

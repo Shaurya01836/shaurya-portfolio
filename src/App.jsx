@@ -11,6 +11,7 @@ import Loading from "./components/Loading";
 import BlogDetail from "./pages/BlogDetail";
 import Navbar from "./components/Navbar";
 import NotFound from "./pages/NotFound";
+import { MagneticScrollIndicator, AmbientGutterGrid } from "./components/MagneticScrollIndicator";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "./firebase.config";
 
@@ -43,15 +44,20 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
   }, [location.pathname, lenis]);
 
   return (
-    <div className="bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300 flex flex-col">
+    <div className="bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300 flex flex-col relative">
+      {/* Ambient background lines in outer free space */}
+      <AmbientGutterGrid />
 
-      <div className="sm:px-36 flex-1">
+      {/* Interactive Magnetic Scroll Progress Indicator */}
+      <MagneticScrollIndicator />
+
+      <div className="sm:px-36 flex-1 relative z-10">
         <div className="flex flex-col lg:flex-row border-x border-solid border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] transition-colors duration-300 min-h-full">
-          <aside className="hidden lg:block lg:w-2/5 lg:h-screen lg:sticky lg:top-0">
+          <aside className="hidden lg:block lg:w-2/5 lg:h-screen lg:sticky lg:top-0 lg:overflow-hidden">
             <Profile />
           </aside>
 
-          <main className="lg:w-3/5 pb-20 lg:pb-0">
+          <main className="lg:w-3/5 pb-20 lg:pb-0 lg:border-l border-solid border-gray-200 dark:border-[#1F1F1F]">
             <Navbar toggleTheme={toggleTheme} isDarkMode={darkMode} hasBanner={false} />
 
           <AnimatePresence mode="wait">

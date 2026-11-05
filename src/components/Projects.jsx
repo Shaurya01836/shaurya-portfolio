@@ -143,18 +143,35 @@ function Projects() {
   const displayedProjects = showAll ? projects : projects.slice(0, 4);
 
   return (
-    <div className="flex flex-col py-20 w-full px-8 gap-2 text-black dark:text-white">
+    <div className="flex flex-col py-10 w-full px-8 gap-4 text-black dark:text-white">
+      {/* Section Header */}
       <div className="flex items-center gap-4">
         <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold uppercase tracking-wider">
           Recent Projects
         </h1>
-        <div className="h-[1px] flex-grow bg-gray-100 dark:bg-[#1F1F1F]"></div>
+        <div className="h-[1px] flex-grow bg-gray-200 dark:bg-[#1F1F1F] relative overflow-hidden">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 h-1.5 w-16 tech-ruler-ticks-x opacity-40" />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-6xl">
-        {displayedProjects.map((project) => (
+      {/* Sub-bar with System Metadata */}
+      <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50/80 dark:bg-[#121212] border border-gray-200 dark:border-[#1F1F1F] rounded-md select-none">
+        <div className="flex items-center gap-2">
+          <h2 className="text-xs sm:text-sm font-bold text-gray-700 dark:text-gray-200 uppercase tracking-wider font-tech">
+            Selected Works
+          </h2>
+        </div>
+        <span className="font-tech text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-widest px-2 py-0.5 rounded border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A]">
+          {displayedProjects.length} / {projects.length} Works
+        </span>
+      </div>
+
+      {/* Grid of Projects with gap in between */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
+        {displayedProjects.map((project, idx) => (
           <Cards
             key={project.id}
+            index={idx}
             title={project.title}
             description={project.description}
             techStack={project.techStack}
@@ -167,15 +184,15 @@ function Projects() {
       </div>
 
       {projects.length > 4 && (
-        <div className="flex justify-center mt-6">
+        <div className="flex justify-center mt-4">
           <button
             type="button"
             onClick={() => setShowAll((prev) => !prev)}
-            className="group relative inline-flex items-center gap-2 rounded-full border border-gray-300 dark:border-[#2A2A2A] bg-white dark:bg-[#0A0A0A] px-6 py-2.5 text-sm font-medium text-gray-800 dark:text-gray-200 shadow-sm transition-all duration-300 hover:border-gray-400 dark:hover:border-[#444444] hover:bg-gray-50 dark:hover:bg-[#141414] hover:shadow-md"
+            className="group relative inline-flex items-center gap-2 rounded border border-gray-200 dark:border-[#1F1F1F] bg-gray-50/90 dark:bg-[#121212] px-5 py-2 font-tech text-xs uppercase tracking-wider text-gray-700 dark:text-gray-300 shadow-xs transition-all duration-200 hover:border-gray-300 dark:hover:border-gray-700 hover:bg-gray-100 dark:hover:bg-[#181818]"
           >
             <span>{showAll ? "Show Less" : `Show More (${projects.length - 4} more)`}</span>
             <svg
-              className={`w-4 h-4 transition-transform duration-300 ${
+              className={`w-3.5 h-3.5 transition-transform duration-300 ${
                 showAll ? "rotate-180" : ""
               }`}
               fill="none"
@@ -231,56 +248,62 @@ function Projects() {
               exit={isMobile ? { y: 8, opacity: 0 } : { scale: 0.95, y: 15, opacity: 0 }}
               transition={{ duration: isMobile ? 0.2 : 0.3, ease: "easeOut" }}
               style={{ willChange: "transform, opacity" }}
-              className="w-full max-w-5xl max-h-[75vh] flex flex-col relative overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-[#1F1F1F] dark:bg-[#0A0A0A]"
+              className="w-full max-w-5xl max-h-[80vh] flex flex-col relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-2xl dark:border-[#1F1F1F] dark:bg-[#0A0A0A]"
               role="dialog"
               aria-modal="true"
               aria-label={`${selectedProject.title} details`}
               onClick={(event) => event.stopPropagation()}
             >
-              <button
-                type="button"
-                onClick={() => setSelectedProject(null)}
-                className="absolute z-50 right-4 top-4 rounded-full bg-white md:bg-white/80 p-2 text-gray-700 shadow-sm md:backdrop-blur-md transition hover:bg-white hover:text-gray-900 dark:bg-[#0A0A0A] dark:md:bg-[#0A0A0A]/80 dark:text-gray-300 dark:hover:bg-[#111111] dark:hover:text-white border border-gray-200 dark:border-white/10"
-                aria-label="Close project details"
-              >
-                <RiCloseLine size={24} />
-              </button>
+              {/* Modal Technical Header Strip */}
+              <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50/90 dark:bg-[#111111]/90 border-b border-gray-200 dark:border-[#1F1F1F] select-none">
+                <span className="font-tech text-xs text-gray-400 dark:text-gray-500 font-medium">
+                  SPECIFICATION : {selectedProject.title}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedProject(null)}
+                  className="rounded border border-gray-200 dark:border-[#222222] bg-white dark:bg-[#0A0A0A] p-1 text-gray-500 hover:text-black dark:hover:text-white transition-colors"
+                  aria-label="Close project details"
+                >
+                  <RiCloseLine size={18} />
+                </button>
+              </div>
 
               <div className="flex flex-col md:flex-row flex-1 overflow-y-auto md:overflow-hidden min-h-0">
-                <div className="flex min-h-[260px] md:min-h-0 md:w-1/2 items-center justify-center bg-gray-50 p-4 dark:bg-[#050505]">
+                <div className="flex min-h-[260px] md:min-h-0 md:w-1/2 items-center justify-center bg-gray-50/60 p-4 dark:bg-[#080808] border-b md:border-b-0 md:border-r border-gray-200 dark:border-[#1F1F1F]">
                   {selectedProject.image ? (
                     <img
                       src={selectedProject.image}
                       alt={`${selectedProject.title} preview`}
-                      className="max-h-[60vh] md:max-h-[70vh] w-full rounded-xl border border-gray-200 object-cover dark:border-[#1F1F1F]"
+                      className="max-h-[60vh] md:max-h-[68vh] w-full rounded border border-gray-200 object-cover dark:border-[#1F1F1F]"
                       loading="lazy"
                     />
                   ) : (
-                    <div className="w-full rounded-xl border border-dashed border-gray-300 p-6 text-center text-gray-500 dark:border-gray-700 dark:text-gray-400">
+                    <div className="w-full rounded border border-dashed border-gray-300 p-6 text-center text-gray-500 dark:border-gray-700 dark:text-gray-400">
                       Project image not available
                     </div>
                   )}
                 </div>
 
                 <div className="relative flex flex-col p-6 md:p-8 md:w-1/2 md:overflow-y-auto min-h-0">
-                  <h3 className="pr-16 text-2xl font-bold text-gray-900 dark:text-white">
+                  <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                     {selectedProject.title}
                   </h3>
 
-                  <p className="mt-6 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                  <p className="mt-4 text-xs sm:text-sm leading-relaxed text-gray-600 dark:text-gray-400">
                     {selectedProject.description}
                   </p>
 
                   {(githubUrl || liveDemoUrl) && (
-                    <div className="mt-6 flex flex-wrap gap-3 border-t border-gray-200 pt-6 dark:border-[#1F1F1F]">
+                    <div className="mt-6 flex flex-wrap gap-2.5 border-t border-gray-200 pt-5 dark:border-[#1F1F1F]">
                       {githubUrl && (
                         <a
                           href={githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-900 transition hover:border-gray-400 hover:bg-gray-100 dark:border-[#2A2A2A] dark:text-gray-100 dark:hover:border-[#3A3A3A] dark:hover:bg-[#141414]"
+                          className="inline-flex items-center gap-2 rounded border border-gray-200 dark:border-[#222222] bg-white dark:bg-[#121212] px-3.5 py-1.5 font-tech text-xs uppercase tracking-wider text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-[#181818] transition-colors"
                         >
-                          <RiGithubLine size={18} />
+                          <RiGithubLine size={16} />
                           GitHub Repo
                         </a>
                       )}
@@ -290,23 +313,23 @@ function Projects() {
                           href={liveDemoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 rounded-md bg-black px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 dark:bg-white dark:text-black"
+                          className="inline-flex items-center gap-2 rounded bg-black dark:bg-white px-3.5 py-1.5 font-tech text-xs uppercase tracking-wider text-white dark:text-black hover:opacity-90 transition-opacity"
                         >
-                          <RiExternalLinkLine size={18} />
-                          Open Live Demo
+                          <RiExternalLinkLine size={16} />
+                          Live Demo ↗
                         </a>
                       )}
                     </div>
                   )}
 
                   {stack.length > 0 && (
-                    <div className="mt-6 border-t border-gray-200 pt-6 dark:border-[#1F1F1F]">
-                      <h4 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
-                        Technologies Used
+                    <div className="mt-6 border-t border-gray-200 pt-5 dark:border-[#1F1F1F]">
+                      <h4 className="mb-2.5 font-tech text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                        Tech Stack
                       </h4>
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-1.5">
                         {stack.map((t, i) => (
-                          <span key={i} className="px-2.5 py-1 bg-gray-100 dark:bg-[#151515] text-gray-800 dark:text-gray-200 rounded-md text-xs font-medium border border-gray-200 dark:border-white/5 shadow-sm">
+                          <span key={i} className="px-2 py-0.5 bg-gray-100 dark:bg-[#141414] text-gray-700 dark:text-gray-300 rounded font-tech text-xs border border-gray-200 dark:border-[#222222]">
                             {t}
                           </span>
                         ))}
@@ -315,21 +338,21 @@ function Projects() {
                   )}
 
                   {((Array.isArray(featuresList) && featuresList.length > 0) || (typeof featuresList === "string" && featuresList.trim())) && (
-                    <div className="mt-6 border-t border-gray-200 pt-6 dark:border-[#1F1F1F]">
-                      <h4 className="mb-3 text-xs font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                    <div className="mt-6 border-t border-gray-200 pt-5 dark:border-[#1F1F1F]">
+                      <h4 className="mb-2.5 font-tech text-[11px] font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
                         Key Features
                       </h4>
                       {Array.isArray(featuresList) ? (
-                        <ul className="space-y-2.5">
+                        <ul className="space-y-2">
                           {featuresList.filter(f => typeof f === 'string' && f.trim()).map((f, i) => (
-                            <li key={i} className="flex items-start gap-2.5 text-[13px] text-gray-600 dark:text-gray-400 leading-relaxed">
-                              <span className="text-blue-500 mt-1 flex-shrink-0 text-[10px]">✦</span>
+                            <li key={i} className="flex items-start gap-2 text-xs sm:text-[13px] text-gray-600 dark:text-gray-400 leading-relaxed">
+                              <span className="text-gray-400 dark:text-gray-600 mt-0.5 flex-shrink-0 font-tech text-[10px]">+</span>
                               <span>{f}</span>
                             </li>
                           ))}
                         </ul>
                       ) : (
-                        <p className="text-[13px] leading-relaxed text-gray-600 dark:text-gray-400">{featuresList}</p>
+                        <p className="text-xs sm:text-[13px] leading-relaxed text-gray-600 dark:text-gray-400">{featuresList}</p>
                       )}
                     </div>
                   )}

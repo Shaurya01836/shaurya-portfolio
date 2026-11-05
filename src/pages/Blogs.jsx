@@ -77,14 +77,16 @@ const Blogs = () => {
   return (
     <div
       id="blogs"
-      className="flex flex-col pt-20 pb-24 w-full px-8 gap-4 text-black dark:text-white transition-colors duration-300"
+      className="flex flex-col pt-8 pb-24 w-full px-8 gap-4 text-black dark:text-white transition-colors duration-300"
     >
       {/* Header */}
       <div className="flex items-center gap-4 mb-2">
         <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold uppercase tracking-wider">
           Latest Blogs
         </h1>
-        <div className="h-[1px] flex-grow bg-gray-100 dark:bg-[#1F1F1F]"></div>
+        <div className="h-[1px] flex-grow bg-gray-200 dark:bg-[#1F1F1F] relative overflow-hidden">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 h-1.5 w-16 tech-ruler-ticks-x opacity-40" />
+        </div>
       </div>
 
       {/* 2. LOADING STATE: Skeleton Grid */}

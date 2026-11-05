@@ -1,62 +1,44 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import { motion } from "framer-motion";
 
-// eslint-disable-next-line react/prop-types
-const FlipCard = ({ isFlipped, setIsFlipped, frontContent, backContent, colorTheme }) => {
-  return (
-    <div 
-      onClick={() => setIsFlipped(!isFlipped)}
-      className="h-[120px] cursor-pointer group relative w-full [perspective:1000px] select-none"
-    >
-      <motion.div
-        animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6, ease: "easeInOut" }}
-        style={{ transformStyle: "preserve-3d" }}
-        className="w-full h-full relative"
-      >
-        {/* Front Side */}
-        <div 
-          style={{ backfaceVisibility: "hidden" }}
-          className="absolute inset-0 w-full h-full border-2 border-solid border-gray-200 dark:border-[#1F1F1F] rounded-md p-5 bg-white dark:bg-[#0A0A0A] flex flex-col items-center justify-center text-center hover:border-gray-300 dark:hover:border-[#2b2b2b] hover:shadow-[0_4px_12px_rgba(0,0,0,0.03)] dark:hover:shadow-[0_4px_12px_rgba(255,255,255,0.01)] transition-all duration-300"
-        >
-          {frontContent}
-          <span className="absolute bottom-2 right-3 text-[8px] text-gray-400 font-semibold opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-            Click to flip ↺
-          </span>
-        </div>
+// Custom hook: animates a number from 0 to `target` over `duration` ms when `trigger` becomes true
+const useCountUp = (target, duration, trigger) => {
+  const [value, setValue] = useState(0);
 
-        {/* Back Side */}
-        <div 
-          style={{ 
-            backfaceVisibility: "hidden",
-            transform: "rotateY(180deg)"
-          }}
-          className={`absolute inset-0 w-full h-full border-2 border-solid border-gray-200 dark:border-[#1F1F1F] rounded-md p-5 bg-white dark:bg-[#0A0A0A] flex flex-col items-center justify-center text-center transition-all duration-300 ${colorTheme}`}
-        >
-          {backContent}
-          <span className="absolute bottom-2 right-3 text-[8px] text-gray-400 font-semibold opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-            Click to flip ↺
-          </span>
-        </div>
-      </motion.div>
-    </div>
-  );
+  useEffect(() => {
+    if (!trigger || target === 0) {
+      setValue(target);
+      return;
+    }
+
+    let startTime = null;
+    const startValue = 0;
+
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // easeOut cubic
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.round(startValue + eased * (target - startValue)));
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    };
+
+    const rafId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(rafId);
+  }, [target, duration, trigger]);
+
+  return value;
 };
 
-FlipCard.propTypes = {
-  isFlipped: PropTypes.bool.isRequired,
-  setIsFlipped: PropTypes.func.isRequired,
-  frontContent: PropTypes.node.isRequired,
-  backContent: PropTypes.node.isRequired,
-  colorTheme: PropTypes.string,
-};
-
-// eslint-disable-next-line no-unused-vars, react/prop-types
 const CodingProfile = ({ darkMode }) => {
   const [hoveredSegment, setHoveredSegment] = useState(null);
-  const [activeDaysFlipped, setActiveDaysFlipped] = useState(false);
-  const [streakFlipped, setStreakFlipped] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const sectionRef = useRef(null);
+
   const [leetCodeStats, setLeetCodeStats] = useState({
     totalSolved: 0,
     easy: 0,
@@ -70,6 +52,27 @@ const CodingProfile = ({ darkMode }) => {
   });
 
   const LEETCODE_USERNAME = "shaurya01836";
+
+  // IntersectionObserver: trigger animations once the section enters the viewport
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setHasAnimated(true);
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const processCalendarData = (calendarRaw) => {
     if (!calendarRaw || Object.keys(calendarRaw).length === 0) {
@@ -197,6 +200,15 @@ const CodingProfile = ({ darkMode }) => {
   const hard = leetCodeStats.hard || 0;
   const totalSolved = leetCodeStats.totalSolved || 0;
 
+  // Count-up animated values (only run when hasAnimated && data loaded)
+  const animTrigger = hasAnimated && !leetCodeStats.loading;
+  const animTotalSolved = useCountUp(totalSolved, 1200, animTrigger);
+  const animEasy = useCountUp(easy, 1000, animTrigger);
+  const animMedium = useCountUp(medium, 1100, animTrigger);
+  const animHard = useCountUp(hard, 1200, animTrigger);
+  const animActiveDays = useCountUp(leetCodeStats.activeDays || 0, 1000, animTrigger);
+  const animMaxStreak = useCountUp(leetCodeStats.maxStreak || 0, 1000, animTrigger);
+
   const radius = 70;
   const circumference = 2 * Math.PI * radius;
 
@@ -215,37 +227,54 @@ const CodingProfile = ({ darkMode }) => {
   const mediumOffset = -((easyPct / 100) * circumference);
   const hardOffset = -(((easyPct + mediumPct) / 100) * circumference);
 
+  const dailyRate = leetCodeStats.activeDays > 0 ? (totalSolved / leetCodeStats.activeDays).toFixed(1) : "0";
+  const yearlyPct = Math.min(Math.round((leetCodeStats.activeDays / 365) * 100), 100);
+  const streakRatio = leetCodeStats.activeDays > 0 ? Math.round((leetCodeStats.maxStreak / leetCodeStats.activeDays) * 100) : 0;
+  const nextGoal = leetCodeStats.maxStreak < 50 ? 50 : leetCodeStats.maxStreak < 100 ? 100 : Math.ceil(leetCodeStats.maxStreak / 50) * 50;
+
   return (
-    <div className="flex flex-col w-full px-8 pb-10 gap-4 text-black dark:text-white transition-colors duration-300">
-      <div className="flex items-center gap-4 mb-2">
+    <div ref={sectionRef} className="flex flex-col w-full px-8 py-10 gap-4 text-black dark:text-white transition-colors duration-300">
+      {/* Section Header */}
+      <div className="flex items-center gap-4">
         <h1 className="text-lg text-gray-600 dark:text-gray-400 font-semibold uppercase tracking-wider">
           Coding Profile
         </h1>
-        <div className="h-[1px] flex-grow bg-gray-100 dark:bg-[#1F1F1F]"></div>
+        <div className="h-[1px] flex-grow bg-gray-200 dark:bg-[#1F1F1F] relative overflow-hidden">
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 h-1.5 w-16 tech-ruler-ticks-x opacity-40" />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full h-full">
-        <div className="col-span-1 md:col-span-2 border-2 border-solid border-gray-200 dark:border-[#1F1F1F] rounded-md p-6 bg-white dark:bg-[#0A0A0A] flex flex-col justify-between min-h-[250px]">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-2xl font-bold flex items-center gap-2">
-              LeetCode
-              <span className="text-sm font-normal text-gray-500 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded-full">
-                {leetCodeStats.loading ? "..." : `#${leetCodeStats.ranking}`}
-              </span>
-            </h2>
+      {/* Structural Telemetry Matrix Container */}
+      <div className="flex flex-col border border-gray-200 dark:border-[#1F1F1F] rounded-md overflow-hidden bg-white dark:bg-[#0A0A0A]">
+        {/* Header Strip with System Metadata */}
+        <div className="flex items-center justify-between px-4 py-2.5 bg-gray-50/80 dark:bg-[#121212] border-b border-gray-200 dark:border-[#1F1F1F] select-none">
+          <div className="flex items-center gap-2">
+            
+            <span className="hidden sm:inline font-tech text-[10px] text-gray-400 dark:text-gray-500 font-mono">
+              @{LEETCODE_USERNAME}
+            </span>
+          </div>
+          <div className="flex items-center gap-2.5">
+            <span className="font-tech text-[10px] text-gray-600 dark:text-gray-400 uppercase tracking-widest px-2 py-0.5 rounded border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A]">
+              {leetCodeStats.loading ? "..." : `Rank #${leetCodeStats.ranking}`}
+            </span>
             <a
               href={`https://leetcode.com/u/${LEETCODE_USERNAME}`}
               target="_blank"
               rel="noreferrer"
-              className="text-xs text-gray-500 hover:underline"
+              className="font-tech text-[10px] text-gray-500 hover:text-black dark:hover:text-white transition-colors"
             >
               Profile ↗
             </a>
           </div>
+        </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-around gap-8 flex-grow">
-            {/* SVG Doughnut Chart Container */}
-            <div className="relative w-44 h-44 md:w-48 md:h-48 flex items-center justify-center">
+        {/* Connected 2-Pane Technical Matrix */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-gray-200 dark:divide-[#1F1F1F]">
+          {/* Left Pane (8 cols): Interactive Doughnut Chart + Difficulty Telemetry */}
+          <div className="lg:col-span-7 xl:col-span-8 p-6 flex flex-col md:flex-row items-center justify-around gap-6 bg-white dark:bg-[#0A0A0A]">
+            {/* SVG Doughnut Chart */}
+            <div className="relative w-44 h-44 shrink-0 flex items-center justify-center">
               <svg viewBox="0 0 200 200" className="w-full h-full transform -rotate-90 select-none overflow-visible">
                 <defs>
                   <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
@@ -260,7 +289,7 @@ const CodingProfile = ({ darkMode }) => {
                   </filter>
                 </defs>
 
-                {/* Base gray ring background */}
+                {/* Base track */}
                 <circle
                   cx="100"
                   cy="100"
@@ -276,17 +305,21 @@ const CodingProfile = ({ darkMode }) => {
                     cy="100"
                     r={radius}
                     className="stroke-[#22c55e] fill-none cursor-pointer"
-                    strokeWidth={hoveredSegment === "easy" ? "16" : "12"}
+                    strokeWidth={hoveredSegment === "easy" ? "15" : "11"}
                     strokeLinecap="round"
                     initial={{ strokeDasharray: `0 ${circumference}` }}
-                    animate={{ strokeDasharray: `${easyLength} ${circumference}` }}
+                    animate={{
+                      strokeDasharray: hasAnimated
+                        ? `${easyLength} ${circumference}`
+                        : `0 ${circumference}`,
+                    }}
                     transition={{ duration: 1, ease: "easeOut" }}
                     strokeDashoffset={easyOffset}
                     onMouseEnter={() => setHoveredSegment("easy")}
                     onMouseLeave={() => setHoveredSegment(null)}
                     style={{
                       transformOrigin: "center",
-                      transition: "stroke-width 0.25s ease, opacity 0.25s ease",
+                      transition: "stroke-width 0.2s ease, opacity 0.2s ease",
                       opacity: hoveredSegment && hoveredSegment !== "easy" ? 0.35 : 1,
                       filter: hoveredSegment === "easy" ? "url(#glow)" : "none",
                     }}
@@ -300,17 +333,21 @@ const CodingProfile = ({ darkMode }) => {
                     cy="100"
                     r={radius}
                     className="stroke-[#eab308] fill-none cursor-pointer"
-                    strokeWidth={hoveredSegment === "medium" ? "16" : "12"}
+                    strokeWidth={hoveredSegment === "medium" ? "15" : "11"}
                     strokeLinecap="round"
                     initial={{ strokeDasharray: `0 ${circumference}` }}
-                    animate={{ strokeDasharray: `${mediumLength} ${circumference}` }}
+                    animate={{
+                      strokeDasharray: hasAnimated
+                        ? `${mediumLength} ${circumference}`
+                        : `0 ${circumference}`,
+                    }}
                     transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
                     strokeDashoffset={mediumOffset}
                     onMouseEnter={() => setHoveredSegment("medium")}
                     onMouseLeave={() => setHoveredSegment(null)}
                     style={{
                       transformOrigin: "center",
-                      transition: "stroke-width 0.25s ease, opacity 0.25s ease",
+                      transition: "stroke-width 0.2s ease, opacity 0.2s ease",
                       opacity: hoveredSegment && hoveredSegment !== "medium" ? 0.35 : 1,
                       filter: hoveredSegment === "medium" ? "url(#glow)" : "none",
                     }}
@@ -324,17 +361,21 @@ const CodingProfile = ({ darkMode }) => {
                     cy="100"
                     r={radius}
                     className="stroke-[#ef4444] fill-none cursor-pointer"
-                    strokeWidth={hoveredSegment === "hard" ? "16" : "12"}
+                    strokeWidth={hoveredSegment === "hard" ? "15" : "11"}
                     strokeLinecap="round"
                     initial={{ strokeDasharray: `0 ${circumference}` }}
-                    animate={{ strokeDasharray: `${hardLength} ${circumference}` }}
+                    animate={{
+                      strokeDasharray: hasAnimated
+                        ? `${hardLength} ${circumference}`
+                        : `0 ${circumference}`,
+                    }}
                     transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
                     strokeDashoffset={hardOffset}
                     onMouseEnter={() => setHoveredSegment("hard")}
                     onMouseLeave={() => setHoveredSegment(null)}
                     style={{
                       transformOrigin: "center",
-                      transition: "stroke-width 0.25s ease, opacity 0.25s ease",
+                      transition: "stroke-width 0.2s ease, opacity 0.2s ease",
                       opacity: hoveredSegment && hoveredSegment !== "hard" ? 0.35 : 1,
                       filter: hoveredSegment === "hard" ? "url(#glow)" : "none",
                     }}
@@ -342,12 +383,12 @@ const CodingProfile = ({ darkMode }) => {
                 )}
               </svg>
 
-              {/* Absolute Center Text overlay */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none leading-none">
+              {/* Center Metrics readout */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none leading-none select-none">
                 {hoveredSegment ? (
                   <>
                     <span
-                      className="text-3xl font-extrabold transition-all duration-300"
+                      className="text-2xl font-extrabold font-tech transition-all duration-200"
                       style={{
                         color:
                           hoveredSegment === "easy"
@@ -357,12 +398,12 @@ const CodingProfile = ({ darkMode }) => {
                             : "#ef4444",
                       }}
                     >
-                      {hoveredSegment === "easy" ? easy : hoveredSegment === "medium" ? medium : hard}
+                      {hoveredSegment === "easy" ? animEasy : hoveredSegment === "medium" ? animMedium : animHard}
                     </span>
-                    <span className="text-[9px] uppercase tracking-widest font-bold text-gray-500 dark:text-gray-400 mt-1.5">
+                    <span className="text-[9px] font-tech uppercase tracking-widest text-gray-500 dark:text-gray-400 mt-1">
                       {hoveredSegment}
                     </span>
-                    <span className="text-[9px] text-gray-400 mt-1">
+                    <span className="text-[9px] font-tech text-gray-400 mt-1">
                       {totalSolved > 0
                         ? `${Math.round(
                             ((hoveredSegment === "easy"
@@ -378,181 +419,155 @@ const CodingProfile = ({ darkMode }) => {
                   </>
                 ) : (
                   <>
-                    <span className="text-2xl font-bold text-gray-900 dark:text-white transition-all duration-300">
-                      {leetCodeStats.loading ? "0" : totalSolved}
+                    <span className="text-2xl font-bold font-tech text-gray-900 dark:text-white transition-all duration-200">
+                      {leetCodeStats.loading ? "0" : animTotalSolved}
                     </span>
-                    <span className="text-[9px] uppercase tracking-widest text-gray-400 font-bold mt-1.5">
-                      Solved
+                    <span className="text-[9px] font-tech uppercase tracking-widest text-gray-400 font-semibold mt-1">
+                      SOLVED
                     </span>
                   </>
                 )}
               </div>
             </div>
 
-            {/* Interactive Legend List */}
-            <div className="grid grid-cols-1 gap-3 w-full max-w-[240px]">
-              {/* Easy Card */}
+            {/* Difficulty Telemetry Bars */}
+            <div className="flex flex-col gap-2.5 w-full max-w-[260px]">
+              {/* Easy Bar */}
               <div
                 onMouseEnter={() => setHoveredSegment("easy")}
                 onMouseLeave={() => setHoveredSegment(null)}
-                className={`flex flex-col gap-2 p-3 rounded-lg border transition-all duration-300 cursor-pointer ${
+                className={`p-2.5 rounded border transition-all duration-200 cursor-pointer ${
                   hoveredSegment === "easy"
-                    ? "bg-green-50/70 border-green-300 dark:bg-green-950/10 dark:border-green-500/30 shadow-[0_4px_12px_rgba(34,197,94,0.08)] scale-[1.02]"
-                    : "bg-gray-50/50 border-gray-100 dark:bg-[#111111]/45 dark:border-white/5 hover:border-gray-200 dark:hover:border-white/10"
+                    ? "bg-green-500/10 border-green-500/40"
+                    : "bg-gray-50/70 dark:bg-[#121212] border-gray-200 dark:border-[#1F1F1F] hover:border-gray-300 dark:hover:border-gray-700"
                 }`}
               >
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-bold text-green-700 dark:text-green-400 flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#22c55e]" />
+                <div className="flex justify-between items-center mb-1.5 font-tech text-xs">
+                  <span className="font-semibold text-green-700 dark:text-green-400 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#22c55e]" />
                     Easy
                   </span>
-                  <span className="text-sm font-bold text-green-800 dark:text-green-300">
-                    {easy} <span className="text-xs font-normal text-gray-500">solved</span>
+                  <span className="font-semibold text-gray-800 dark:text-gray-200">
+                    {animEasy} <span className="font-normal text-[10px] text-gray-400">/{totalSolved}</span>
                   </span>
                 </div>
-                <div className="w-full h-1.5 bg-gray-200/70 dark:bg-zinc-800 rounded-full overflow-hidden">
+                <div className="w-full h-1 bg-gray-200 dark:bg-[#1F1F1F] rounded-full overflow-hidden">
                   <motion.div
                     className="h-full bg-[#22c55e] rounded-full"
                     initial={{ width: 0 }}
-                    animate={{ width: `${totalSolved > 0 ? (easy / totalSolved) * 100 : 0}%` }}
+                    animate={{ width: hasAnimated ? `${totalSolved > 0 ? (easy / totalSolved) * 100 : 0}%` : 0 }}
                     transition={{ duration: 1, ease: "easeOut" }}
                   />
                 </div>
               </div>
 
-              {/* Medium Card */}
+              {/* Medium Bar */}
               <div
                 onMouseEnter={() => setHoveredSegment("medium")}
                 onMouseLeave={() => setHoveredSegment(null)}
-                className={`flex flex-col gap-2 p-3 rounded-lg border transition-all duration-300 cursor-pointer ${
+                className={`p-2.5 rounded border transition-all duration-200 cursor-pointer ${
                   hoveredSegment === "medium"
-                    ? "bg-yellow-50/70 border-yellow-300 dark:bg-yellow-950/10 dark:border-yellow-500/30 shadow-[0_4px_12px_rgba(234,179,8,0.08)] scale-[1.02]"
-                    : "bg-gray-50/50 border-gray-100 dark:bg-[#111111]/45 dark:border-white/5 hover:border-gray-200 dark:hover:border-white/10"
+                    ? "bg-yellow-500/10 border-yellow-500/40"
+                    : "bg-gray-50/70 dark:bg-[#121212] border-gray-200 dark:border-[#1F1F1F] hover:border-gray-300 dark:hover:border-gray-700"
                 }`}
               >
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-bold text-yellow-700 dark:text-yellow-400 flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#eab308]" />
+                <div className="flex justify-between items-center mb-1.5 font-tech text-xs">
+                  <span className="font-semibold text-yellow-700 dark:text-yellow-400 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#eab308]" />
                     Medium
                   </span>
-                  <span className="text-sm font-bold text-yellow-800 dark:text-yellow-300">
-                    {medium} <span className="text-xs font-normal text-gray-500">solved</span>
+                  <span className="font-semibold text-gray-800 dark:text-gray-200">
+                    {animMedium} <span className="font-normal text-[10px] text-gray-400">/{totalSolved}</span>
                   </span>
                 </div>
-                <div className="w-full h-1.5 bg-gray-200/70 dark:bg-zinc-800 rounded-full overflow-hidden">
+                <div className="w-full h-1 bg-gray-200 dark:bg-[#1F1F1F] rounded-full overflow-hidden">
                   <motion.div
                     className="h-full bg-[#eab308] rounded-full"
                     initial={{ width: 0 }}
-                    animate={{ width: `${totalSolved > 0 ? (medium / totalSolved) * 100 : 0}%` }}
+                    animate={{ width: hasAnimated ? `${totalSolved > 0 ? (medium / totalSolved) * 100 : 0}%` : 0 }}
                     transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
                   />
                 </div>
               </div>
 
-              {/* Hard Card */}
+              {/* Hard Bar */}
               <div
                 onMouseEnter={() => setHoveredSegment("hard")}
                 onMouseLeave={() => setHoveredSegment(null)}
-                className={`flex flex-col gap-2 p-3 rounded-lg border transition-all duration-300 cursor-pointer ${
+                className={`p-2.5 rounded border transition-all duration-200 cursor-pointer ${
                   hoveredSegment === "hard"
-                    ? "bg-red-50/70 border-red-300 dark:bg-red-950/10 dark:border-red-500/30 shadow-[0_4px_12px_rgba(239,68,68,0.08)] scale-[1.02]"
-                    : "bg-gray-50/50 border-gray-100 dark:bg-[#111111]/45 dark:border-white/5 hover:border-gray-200 dark:hover:border-white/10"
+                    ? "bg-red-500/10 border-red-500/40"
+                    : "bg-gray-50/70 dark:bg-[#121212] border-gray-200 dark:border-[#1F1F1F] hover:border-gray-300 dark:hover:border-gray-700"
                 }`}
               >
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-bold text-red-700 dark:text-red-400 flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#ef4444]" />
+                <div className="flex justify-between items-center mb-1.5 font-tech text-xs">
+                  <span className="font-semibold text-red-700 dark:text-red-400 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-[#ef4444]" />
                     Hard
                   </span>
-                  <span className="text-sm font-bold text-red-800 dark:text-red-300">
-                    {hard} <span className="text-xs font-normal text-gray-500">solved</span>
+                  <span className="font-semibold text-gray-800 dark:text-gray-200">
+                    {animHard} <span className="font-normal text-[10px] text-gray-400">/{totalSolved}</span>
                   </span>
                 </div>
-                <div className="w-full h-1.5 bg-gray-200/70 dark:bg-zinc-800 rounded-full overflow-hidden">
+                <div className="w-full h-1 bg-gray-200 dark:bg-[#1F1F1F] rounded-full overflow-hidden">
                   <motion.div
                     className="h-full bg-[#ef4444] rounded-full"
                     initial={{ width: 0 }}
-                    animate={{ width: `${totalSolved > 0 ? (hard / totalSolved) * 100 : 0}%` }}
+                    animate={{ width: hasAnimated ? `${totalSolved > 0 ? (hard / totalSolved) * 100 : 0}%` : 0 }}
                     transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
                   />
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div className="col-span-1 flex flex-col gap-4 h-full justify-between">
-          <FlipCard
-            isFlipped={activeDaysFlipped}
-            setIsFlipped={setActiveDaysFlipped}
-            colorTheme="hover:border-blue-500/30 dark:hover:border-blue-500/25 shadow-[0_4px_12px_rgba(59,130,246,0.06)]"
-            frontContent={
-              <>
-                <span className="text-gray-500 dark:text-zinc-400 text-xs font-semibold uppercase tracking-wider mb-1">Active Days</span>
-                <span className="text-3xl font-extrabold text-blue-500">
-                  {leetCodeStats.loading ? "..." : leetCodeStats.activeDays}
-                </span>
-                <span className="text-[10px] text-gray-400 mt-1 font-medium">Total active days</span>
-              </>
-            }
-            backContent={
-              <>
-                <span className="text-gray-500 dark:text-zinc-400 text-xs font-semibold uppercase tracking-wider mb-2">Consistency Details</span>
-                <div className="flex flex-col gap-1 text-center w-full">
-                  <div className="flex justify-between items-center text-xs px-2 py-0.5 border-b border-gray-100 dark:border-zinc-800/50 pb-1">
-                    <span className="text-gray-400">Daily Average</span>
-                    <span className="font-bold text-blue-600 dark:text-blue-400">
-                      {leetCodeStats.activeDays > 0 ? (totalSolved / leetCodeStats.activeDays).toFixed(1) : "0"} / day
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs px-2 py-0.5 pt-1">
-                    <span className="text-gray-400">Yearly Active</span>
-                    <span className="font-bold text-gray-800 dark:text-gray-200">
-                      {Math.round((leetCodeStats.activeDays / 365) * 100)}%
-                    </span>
-                  </div>
+          {/* Right Pane (4 cols): Telemetry Metrics Grid (Active Days & Max Streak) */}
+          <div className="lg:col-span-5 xl:col-span-4 flex flex-col divide-y divide-gray-200 dark:divide-[#1F1F1F]">
+            {/* Metric Cell 1: Active Days */}
+            <div className="p-5 flex flex-col justify-between flex-1 bg-white dark:bg-[#0A0A0A] hover:bg-gray-50/70 dark:hover:bg-[#121212] transition-colors select-none">
+              <div>
+                <div className="flex items-center justify-between text-[11px] font-tech text-gray-400 dark:text-gray-500 mb-1">
+                  <span className="uppercase tracking-wider font-medium">ACTIVE DAYS</span>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded border border-gray-200 dark:border-[#222222] bg-gray-50 dark:bg-[#121212]">
+                    CONSISTENCY
+                  </span>
                 </div>
-              </>
-            }
-          />
+                <div className="text-3xl font-extrabold font-tech text-blue-600 dark:text-blue-400 mt-2">
+                  {leetCodeStats.loading ? "..." : animActiveDays}
+                </div>
+                <div className="text-[10px] font-tech text-gray-400 dark:text-gray-500 mt-0.5">
+                  Total submission days
+                </div>
+              </div>
+            </div>
 
-          <FlipCard
-            isFlipped={streakFlipped}
-            setIsFlipped={setStreakFlipped}
-            colorTheme="hover:border-orange-500/30 dark:hover:border-orange-500/25 shadow-[0_4px_12px_rgba(249,115,22,0.06)]"
-            frontContent={
-              <>
-                <span className="text-gray-500 dark:text-zinc-400 text-xs font-semibold uppercase tracking-wider mb-1">Max Streak</span>
-                <span className="text-3xl font-extrabold text-orange-500">
-                  {leetCodeStats.loading ? "..." : `${leetCodeStats.maxStreak} 🔥`}
-                </span>
-                <span className="text-[10px] text-gray-400 mt-1 font-medium">Consecutive days</span>
-              </>
-            }
-            backContent={
-              <>
-                <span className="text-gray-500 dark:text-zinc-400 text-xs font-semibold uppercase tracking-wider mb-2">Streak Progress</span>
-                <div className="flex flex-col gap-1 text-center w-full">
-                  <div className="flex justify-between items-center text-xs px-2 py-0.5 border-b border-gray-100 dark:border-zinc-800/50 pb-1">
-                    <span className="text-gray-400">Streak Ratio</span>
-                    <span className="font-bold text-orange-600 dark:text-orange-400">
-                      {leetCodeStats.activeDays > 0 ? Math.round((leetCodeStats.maxStreak / leetCodeStats.activeDays) * 100) : 0}% of active
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-xs px-2 py-0.5 pt-1">
-                    <span className="text-gray-400">Next Goal</span>
-                    <span className="font-bold text-gray-800 dark:text-gray-200">
-                      {leetCodeStats.maxStreak < 50 ? 50 : leetCodeStats.maxStreak < 100 ? 100 : Math.ceil(leetCodeStats.maxStreak / 50) * 50} days
-                    </span>
-                  </div>
+            {/* Metric Cell 2: Max Streak */}
+            <div className="p-5 flex flex-col justify-between flex-1 bg-white dark:bg-[#0A0A0A] hover:bg-gray-50/70 dark:hover:bg-[#121212] transition-colors select-none">
+              <div>
+                <div className="flex items-center justify-between text-[11px] font-tech text-gray-400 dark:text-gray-500 mb-1">
+                  <span className="uppercase tracking-wider font-medium">MAX STREAK</span>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded border border-gray-200 dark:border-[#222222] bg-gray-50 dark:bg-[#121212]">
+                    RECORD
+                  </span>
                 </div>
-              </>
-            }
-          />
+                <div className="text-3xl font-extrabold font-tech text-amber-600 dark:text-amber-400 mt-2 flex items-center gap-1.5">
+                  {leetCodeStats.loading ? "..." : animMaxStreak}
+                  <span className="text-xs font-normal text-amber-600/70 dark:text-amber-400/70 font-tech">days</span>
+                </div>
+                <div className="text-[10px] font-tech text-gray-400 dark:text-gray-500 mt-0.5">
+                  Consecutive daily activity
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
+};
+
+CodingProfile.propTypes = {
+  darkMode: PropTypes.bool,
 };
 
 export default CodingProfile;
