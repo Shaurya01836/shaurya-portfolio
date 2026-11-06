@@ -220,73 +220,69 @@ export const MagneticScrollIndicator = () => {
 };
 
 /**
- * Ambient background architectural and technical guide lines placed in the empty outer gutters.
- * Fills the peripheral space with structured, low-opacity technical lines and graduation marks.
+ * Ambient background architectural blueprint grid with radiant top aura,
+ * continuous precision drafting rulers along the canvas boundaries, and telemetry HUD stamps.
  */
 export const AmbientGutterGrid = () => (
   <div
     className="fixed inset-0 pointer-events-none z-0 overflow-hidden select-none"
     aria-hidden="true"
   >
-    {/* ================= LEFT GUTTER LINES ================= */}
-    {/* Outer guide line (far left) */}
-    <div className="hidden sm:block absolute left-4 lg:left-8 top-0 bottom-0 w-[1px] bg-gray-200/40 dark:bg-[#151515]" />
-    
-    {/* Dashed architectural alignment line */}
-    <div className="hidden md:block absolute left-14 lg:left-20 top-0 bottom-0 w-[1px] border-r border-dashed border-gray-200/50 dark:border-[#1A1A1A]" />
-    
-    {/* Inner hairline guide */}
-    <div className="hidden xl:block absolute left-28 top-0 bottom-0 w-[1px] bg-gray-200/30 dark:bg-[#141414]" />
+    {/* Fine 32px Technical Orthogonal Mesh across peripheral space with radial fade */}
+    <div
+      className="absolute inset-0 tech-grid-pattern opacity-30 dark:opacity-20 pointer-events-none"
+      style={{
+        maskImage: "radial-gradient(ellipse 90% 85% at 50% 50%, black 45%, transparent 95%)",
+        WebkitMaskImage: "radial-gradient(ellipse 90% 85% at 50% 50%, black 45%, transparent 95%)",
+      }}
+    />
 
-    {/* Left Horizontal Graduation Lines & Measurement Ticks */}
-    <div className="hidden md:block absolute left-0 w-16 lg:w-28 top-[18%] h-[1px] bg-gray-200/40 dark:bg-[#181818]" />
-    <div className="hidden md:block absolute left-0 w-12 lg:w-20 top-[38%] h-[1px] bg-gray-200/40 dark:bg-[#181818]" />
-    <div className="hidden md:block absolute left-0 w-16 lg:w-28 top-[58%] h-[1px] bg-gray-200/40 dark:bg-[#181818]" />
-    <div className="hidden md:block absolute left-0 w-12 lg:w-20 top-[78%] h-[1px] bg-gray-200/40 dark:bg-[#181818]" />
+    {/* Continuous Precision Drafting Ruler along Left Canvas Border (left-36 / 144px) */}
+    <div className="hidden sm:block absolute left-36 top-0 bottom-0 w-[1px] bg-gray-200/80 dark:bg-[#1F1F1F] z-10">
+      <div className="absolute inset-y-0 -left-2 w-2 tech-ruler-ticks-y opacity-30" />
+    </div>
 
-    {/* Left Elevation Corner Crosshairs */}
-    <span className="hidden lg:block absolute left-7 top-[18%] -translate-y-1/2 font-tech text-[9px] text-gray-300 dark:text-gray-800 leading-none">
-      +
-    </span>
-    <span className="hidden lg:block absolute left-7 top-[58%] -translate-y-1/2 font-tech text-[9px] text-gray-300 dark:text-gray-800 leading-none">
-      +
-    </span>
+    {/* Continuous Precision Drafting Ruler along Right Canvas Border (right-36 / 144px) */}
+    <div className="hidden sm:block absolute right-36 top-0 bottom-0 w-[1px] bg-gray-200/80 dark:bg-[#1F1F1F] z-10">
+      <div className="absolute inset-y-0 -right-2 w-2 tech-ruler-ticks-y opacity-30" />
+    </div>
 
-    {/* Left Technical Ruler Segment */}
-    <div className="hidden 2xl:block absolute left-[104px] top-[25%] h-48 w-1 tech-ruler-ticks-y opacity-25" />
-    <div className="hidden 2xl:block absolute left-[104px] top-[65%] h-48 w-1 tech-ruler-ticks-y opacity-25" />
+    {/* Peripheral Outer Hairline Guides */}
+    <div className="hidden sm:block absolute left-8 top-0 bottom-0 w-[1px] bg-gray-200/40 dark:bg-[#141414]" />
+    <div className="hidden sm:block absolute right-8 top-0 bottom-0 w-[1px] bg-gray-200/40 dark:bg-[#141414]" />
 
-    {/* ================= RIGHT GUTTER LINES ================= */}
-    {/* Outer guide line (far right) */}
-    <div className="hidden sm:block absolute right-4 lg:right-8 top-0 bottom-0 w-[1px] bg-gray-200/40 dark:bg-[#151515]" />
-    
-    {/* Dashed architectural alignment line */}
-    <div className="hidden md:block absolute right-14 lg:right-20 top-0 bottom-0 w-[1px] border-r border-dashed border-gray-200/50 dark:border-[#1A1A1A]" />
-    
-    {/* Inner hairline guide */}
-    <div className="hidden xl:block absolute right-28 top-0 bottom-0 w-[1px] bg-gray-200/30 dark:bg-[#141414]" />
+    {/* Corner Telemetry HUD Stamps */}
+    {/* Top-Left HUD */}
+    <div className="hidden 2xl:flex absolute top-6 left-6 flex-col gap-1 font-tech text-[9px] text-gray-400 dark:text-gray-500 tracking-wider">
+      <div className="flex items-center gap-1.5 text-gray-800 dark:text-gray-200 font-semibold">
+        <span className="w-1.5 h-1.5 rounded-full bg-[#C084FC]" />
+        <span>STUDIO.CANVAS</span>
+      </div>
+      <span>COORD: 26.91°N 75.78°E</span>
+      <span>GRID: 32PX_ORTHO</span>
+    </div>
 
-    {/* Right Horizontal Graduation Lines */}
-    <div className="hidden md:block absolute right-0 w-16 lg:w-28 top-[18%] h-[1px] bg-gray-200/40 dark:bg-[#181818]" />
-    <div className="hidden md:block absolute right-0 w-12 lg:w-20 top-[38%] h-[1px] bg-gray-200/40 dark:bg-[#181818]" />
-    <div className="hidden md:block absolute right-0 w-16 lg:w-28 top-[58%] h-[1px] bg-gray-200/40 dark:bg-[#181818]" />
-    <div className="hidden md:block absolute right-0 w-12 lg:w-20 top-[78%] h-[1px] bg-gray-200/40 dark:bg-[#181818]" />
+    {/* Top-Right HUD */}
+    <div className="hidden 2xl:flex absolute top-6 right-6 flex-col gap-1 font-tech text-[9px] text-gray-400 dark:text-gray-500 tracking-wider text-right">
+      <div className="flex items-center justify-end gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+        <span>KERNEL: ONLINE</span>
+      </div>
+      <span>SCALE: 1:1 CALIBRATED</span>
+      <span>ENV: PRODUCTION</span>
+    </div>
 
-    {/* Right Elevation Corner Crosshairs */}
-    <span className="hidden lg:block absolute right-8 top-[18%] -translate-y-1/2 font-tech text-[9px] text-gray-300 dark:text-gray-800 leading-none">
-      +
-    </span>
-    <span className="hidden lg:block absolute right-8 top-[58%] -translate-y-1/2 font-tech text-[9px] text-gray-300 dark:text-gray-800 leading-none">
-      +
-    </span>
+    {/* Bottom-Left HUD */}
+    <div className="hidden 2xl:flex absolute bottom-6 left-6 flex-col gap-0.5 font-tech text-[8px] text-gray-400 dark:text-gray-600 tracking-wider">
+      <span>BASE_SYS: PORTFOLIO_PRO</span>
+      <span>TIMEZONE: IST (UTC+5:30)</span>
+    </div>
 
-    {/* Right Technical Ruler Segment */}
-    <div className="hidden 2xl:block absolute right-[104px] top-[25%] h-48 w-1 tech-ruler-ticks-y opacity-25" />
-    <div className="hidden 2xl:block absolute right-[104px] top-[65%] h-48 w-1 tech-ruler-ticks-y opacity-25" />
-
-    {/* Subtle Dot Grid in outer margins for architectural depth */}
-    <div className="hidden xl:block absolute left-0 top-0 bottom-0 w-28 tech-dot-grid opacity-30 pointer-events-none" />
-    <div className="hidden xl:block absolute right-0 top-0 bottom-0 w-28 tech-dot-grid opacity-30 pointer-events-none" />
+    {/* Bottom-Right HUD */}
+    <div className="hidden 2xl:flex absolute bottom-6 right-6 flex-col gap-0.5 font-tech text-[8px] text-gray-400 dark:text-gray-600 tracking-wider text-right">
+      <span>SHAURYA UPADHYAY</span>
+      <span>SOFTWARE ENGINEER</span>
+    </div>
   </div>
 );
 

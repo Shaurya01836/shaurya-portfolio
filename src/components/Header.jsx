@@ -96,7 +96,7 @@ const Header = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.25, ease: "easeOut" }}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                className="w-full h-full object-cover transition-transform duration-300 "
                 loading="lazy"
               />
             </AnimatePresence>
@@ -128,7 +128,7 @@ const Header = () => {
               src="https://media.giphy.com/media/ZVik7pBtu9dNS/giphy.gif"
               alt="Coding GIF"
               loading="lazy"
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-contain transition-transform duration-300"
             />
           </div>
         </div>

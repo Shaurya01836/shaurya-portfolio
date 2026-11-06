@@ -7,7 +7,6 @@ import Profile from "./components/Profile";
 
 import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
-import Loading from "./components/Loading";
 import BlogDetail from "./pages/BlogDetail";
 import Navbar from "./components/Navbar";
 import NotFound from "./pages/NotFound";
@@ -53,54 +52,57 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
 
       <div className="sm:px-36 flex-1 relative z-10">
         <div className="flex flex-col lg:flex-row border-x border-solid border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] transition-colors duration-300 min-h-full">
+          {/* Fixed / Sticky Left Profile Sidebar on Desktop */}
           <aside className="hidden lg:block lg:w-2/5 lg:h-screen lg:sticky lg:top-0 lg:overflow-hidden">
             <Profile />
           </aside>
 
+          {/* Right Main Column */}
           <main className="lg:w-3/5 pb-20 lg:pb-0 lg:border-l border-solid border-gray-200 dark:border-[#1F1F1F]">
+            {/* Top Navbar */}
             <Navbar toggleTheme={toggleTheme} isDarkMode={darkMode} hasBanner={false} />
 
-          <AnimatePresence mode="wait">
-            <Routes location={location} key={location.pathname}>
-              <Route
-                path="/"
-                element={
-                  <PageWrapper>
-                    <Home darkMode={darkMode} />
-                  </PageWrapper>
-                }
-              />
-              <Route
-                path="/blogs"
-                element={
-                  <PageWrapper>
-                    <Blogs />
-                  </PageWrapper>
-                }
-              />
-              <Route
-                path="/blogs/:id"
-                element={
-                  <PageWrapper>
-                    <BlogDetail />
-                  </PageWrapper>
-                }
-              />
-              <Route
-                path="*"
-                element={
-                  <PageWrapper>
-                    <NotFound />
-                  </PageWrapper>
-                }
-              />
-            </Routes>
-          </AnimatePresence>
-        </main>
+            <AnimatePresence mode="wait">
+              <Routes location={location} key={location.pathname}>
+                <Route
+                  path="/"
+                  element={
+                    <PageWrapper>
+                      <Home darkMode={darkMode} />
+                    </PageWrapper>
+                  }
+                />
+                <Route
+                  path="/blogs"
+                  element={
+                    <PageWrapper>
+                      <Blogs />
+                    </PageWrapper>
+                  }
+                />
+                <Route
+                  path="/blogs/:id"
+                  element={
+                    <PageWrapper>
+                      <BlogDetail />
+                    </PageWrapper>
+                  }
+                />
+                <Route
+                  path="*"
+                  element={
+                    <PageWrapper>
+                      <NotFound />
+                    </PageWrapper>
+                  }
+                />
+              </Routes>
+            </AnimatePresence>
+          </main>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 }
 
 AnimatedRoutes.propTypes = {
@@ -114,39 +116,21 @@ function App() {
     const supportDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
     return theme === "dark" || (!theme && supportDarkMode);
   });
-  const [isLoading, setIsLoading] = useState(() => {
-    return !sessionStorage.getItem("hasLoadedBefore");
-  });
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
 
   useEffect(() => {
-    let completed = false;
-
     const prefetchData = async () => {
       try {
         await Promise.all([
           getDocs(collection(db, "projects")),
           getDocs(collection(db, "profile")),
-          getDocs(query(collection(db, "achievements"), orderBy("date", "desc")))
+          getDocs(query(collection(db, "achievements"), orderBy("date", "desc"))),
         ]);
       } catch (error) {
         console.error("Error prefetching data:", error);
-      } finally {
-        if (!completed) {
-          setIsDataLoaded(true);
-        }
       }
     };
 
     prefetchData();
-
-    // Fallback safety timeout (5 seconds) to prevent infinite loading
-    const fallbackTimer = setTimeout(() => {
-      completed = true;
-      setIsDataLoaded(true);
-    }, 5000);
-
-    return () => clearTimeout(fallbackTimer);
   }, []);
 
   const toggleTheme = () => {
@@ -160,15 +144,6 @@ function App() {
       setDarkMode(true);
     }
   };
-
-  const handleLoadingComplete = () => {
-    sessionStorage.setItem("hasLoadedBefore", "true");
-    setIsLoading(false);
-  };
-
-  if (isLoading) {
-    return <Loading onComplete={handleLoadingComplete} isDone={isDataLoaded} />;
-  }
 
   return (
     <ReactLenis root>
