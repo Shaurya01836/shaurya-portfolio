@@ -35,7 +35,7 @@ export const ConnectSection = ({ className = "" }) => (
       <a
         href="https://github.com/Shaurya01836"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer me"
         title="GitHub"
         className="p-2 sm:p-2.5 rounded border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-gray-400 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300 transition-all flex items-center justify-center group select-none"
       >
@@ -45,7 +45,7 @@ export const ConnectSection = ({ className = "" }) => (
       <a
         href="https://www.linkedin.com/in/this-is-shaurya-upadhyay"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer me"
         title="LinkedIn"
         className="p-2 sm:p-2.5 rounded border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-gray-400 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300 transition-all flex items-center justify-center group select-none"
       >
@@ -55,7 +55,7 @@ export const ConnectSection = ({ className = "" }) => (
       <a
         href="https://leetcode.com/u/shaurya01836/"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer me"
         title="LeetCode"
         className="p-2 sm:p-2.5 rounded border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-gray-400 dark:hover:border-gray-600 transition-all flex items-center justify-center group select-none"
       >
@@ -65,7 +65,7 @@ export const ConnectSection = ({ className = "" }) => (
       <a
         href="https://x.com/shaurya01836"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer me"
         title="Twitter / X"
         className="p-2 sm:p-2.5 rounded border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-gray-400 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300 transition-all flex items-center justify-center group select-none"
       >
@@ -75,7 +75,7 @@ export const ConnectSection = ({ className = "" }) => (
       <a
         href="https://www.geeksforgeeks.org/user/shaurya01836/"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer me"
         title="GeeksforGeeks"
         className="p-2 sm:p-2.5 rounded border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-gray-400 dark:hover:border-gray-600 transition-all flex items-center justify-center group select-none"
       >
@@ -85,7 +85,7 @@ export const ConnectSection = ({ className = "" }) => (
       <a
         href="https://www.hackerrank.com/profile/shaurya01836"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer me"
         title="HackerRank"
         className="p-2 sm:p-2.5 rounded border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-gray-400 dark:hover:border-gray-600 transition-all flex items-center justify-center group select-none"
       >
@@ -95,7 +95,7 @@ export const ConnectSection = ({ className = "" }) => (
       <a
         href="https://www.instagram.com/shaurya_mnu/profilecard/?igsh=d21qb2E1cDZ6Yjdr"
         target="_blank"
-        rel="noopener noreferrer"
+        rel="noopener noreferrer me"
         title="Instagram"
         className="p-2 sm:p-2.5 rounded border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] hover:bg-gray-50 dark:hover:bg-[#141414] hover:border-gray-400 dark:hover:border-gray-600 text-gray-700 dark:text-gray-300 transition-all flex items-center justify-center group select-none"
       >

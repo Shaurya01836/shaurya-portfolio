@@ -30,7 +30,7 @@ const GithubGraph = ({ darkMode }) => {
             <a
               href="https://github.com/Shaurya01836"
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer me"
               className="font-tech text-[10px] text-gray-500 hover:text-black dark:hover:text-white transition-colors"
             >
               GitHub ↗

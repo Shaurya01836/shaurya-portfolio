@@ -2,6 +2,5 @@ User-agent: *
 Allow: /
 Disallow:
 
-# Sitemap
+# Canonical Sitemap
 Sitemap: https://www.ershaurya.dev/sitemap.xml
-Sitemap: https://ershaurya.dev/sitemap.xml
