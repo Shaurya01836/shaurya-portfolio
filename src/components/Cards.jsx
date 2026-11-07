@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { TechImage } from "./TechImage";
 import { Link } from "react-router-dom";
 import { TechCornerTicks } from "./TechGridElements";
 
@@ -28,12 +29,12 @@ function Cards({
       )}
 
       {/* Image Container with 1px border divider */}
-      <div className="w-full h-44 sm:h-48 bg-gray-100 dark:bg-[#0D0D0D] overflow-hidden relative border-b border-gray-200 dark:border-[#1F1F1F]">
-        <img
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+      <div className="w-full h-44 sm:h-48 overflow-hidden relative border-b border-gray-200 dark:border-[#1F1F1F]">
+        <TechImage
           src={image}
           alt={`${title} project screenshot`}
-          loading="lazy"
+          tag={`MODULE: 0${(index || 0) + 1}`}
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
         />
       </div>
 

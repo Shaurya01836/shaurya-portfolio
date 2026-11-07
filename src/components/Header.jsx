@@ -1,24 +1,52 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { TechCornerTicks } from "./TechGridElements";
-import { RiRefreshLine } from "@remixicon/react";
+import { TechImage } from "./TechImage";
+
+const DEFAULT_FEATURED = [
+  {
+    title: "STPI Internship",
+    image: "https://i.ibb.co/PZt4m1GV/stpi.jpg",
+  },
+];
 
 const Header = () => {
-  const [featuredItems, setFeaturedItems] = useState([
-    {
-      title: "STPI Internship",
-      image: "https://i.ibb.co/PZt4m1GV/stpi.jpg",
-    },
-  ]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  // Synchronously initialize from local storage cache if available
+  const [featuredItems, setFeaturedItems] = useState(() => {
+    try {
+      const cached = localStorage.getItem("featured_images_cache");
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {
+      // fallback to default
+    }
+    return DEFAULT_FEATURED;
+  });
+
+  // Pick stable initial index on mount (cached or 0) - does NOT randomly jump post-render
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    try {
+      const savedIndex = sessionStorage.getItem("featured_index");
+      if (savedIndex !== null) {
+        const num = parseInt(savedIndex, 10);
+        if (!isNaN(num) && num >= 0) return num;
+      }
+    } catch {
+      // fallback to 0
+    }
+    return 0;
+  });
 
   useEffect(() => {
+    let isMounted = true;
+
     const fetchFeaturedImages = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, "featuredImages"));
-        if (!querySnapshot.empty) {
+        if (!querySnapshot.empty && isMounted) {
           const items = querySnapshot.docs.map((doc) => {
             const data = doc.data();
             return {
@@ -28,9 +56,17 @@ const Header = () => {
             };
           });
 
+          // Save to local cache for instant zero-delay render on future visits
+          try {
+            localStorage.setItem("featured_images_cache", JSON.stringify(items));
+          } catch {
+            // ignore
+          }
+
           setFeaturedItems(items);
-          const randomIndex = Math.floor(Math.random() * items.length);
-          setCurrentIndex(randomIndex);
+
+          // Keep current index stable so the image does NOT abruptly swap after page load
+          setCurrentIndex((prev) => (prev < items.length ? prev : 0));
         }
       } catch (error) {
         console.error("Error fetching featured images:", error);
@@ -38,17 +74,25 @@ const Header = () => {
     };
 
     fetchFeaturedImages();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleImageClick = () => {
     if (featuredItems.length <= 1) return;
-    setCurrentIndex((prevIndex) => (prevIndex + 1) % featuredItems.length);
+    setCurrentIndex((prevIndex) => {
+      const next = (prevIndex + 1) % featuredItems.length;
+      try {
+        sessionStorage.setItem("featured_index", next.toString());
+      } catch {
+        // ignore
+      }
+      return next;
+    });
   };
 
-  const currentItem = featuredItems[currentIndex] || {
-    title: "STPI Internship",
-    image: "https://i.ibb.co/PZt4m1GV/stpi.jpg",
-  };
+  const currentItem = featuredItems[currentIndex] || DEFAULT_FEATURED[0];
 
   return (
     <div className="flex flex-col w-full px-8 py-10 gap-4 text-black dark:text-white transition-colors duration-300">
@@ -77,33 +121,25 @@ const Header = () => {
               <span className="font-tech text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-widest px-2 py-0.5 rounded border border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A]">
                 {currentIndex + 1}/{featuredItems.length}
               </span>
-       
             </div>
           </div>
 
           {/* Showcase Image Viewport */}
           <div
             onClick={handleImageClick}
-            className="relative w-full h-52 sm:h-56 bg-gray-100 dark:bg-[#0C0C0C] overflow-hidden group cursor-pointer select-none"
+            className="relative w-full h-52 sm:h-56 overflow-hidden group cursor-pointer select-none"
           >
-            <TechCornerTicks />
-            <AnimatePresence mode="wait">
-              <motion.img
-                key={currentItem.image}
-                src={currentItem.image}
-                alt={currentItem.title}
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                className="w-full h-full object-cover transition-transform duration-300 "
-                loading="lazy"
-              />
-            </AnimatePresence>
+            <TechImage
+              src={currentItem.image}
+              alt={currentItem.title}
+              priority={true}
+              tag={`SPOTLIGHT: 0${currentIndex + 1}`}
+              className="object-cover transition-transform duration-300 group-hover:scale-105"
+            />
 
             {/* Hover Overlay Tag */}
             {featuredItems.length > 1 && (
-              <div className="absolute bottom-2.5 right-2.5 font-tech text-[10px] px-2 py-0.5 rounded border border-white/20 bg-black/75 backdrop-blur-sm text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <div className="absolute bottom-2.5 right-2.5 font-tech text-[10px] px-2 py-0.5 rounded border border-white/20 bg-black/75 backdrop-blur-sm text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
                 Click to swap
               </div>
             )}
@@ -122,13 +158,12 @@ const Header = () => {
           </div>
 
           {/* GIF Viewport */}
-          <div className="relative w-full h-52 sm:h-56 bg-gray-100 dark:bg-[#0C0C0C] overflow-hidden select-none">
-            <TechCornerTicks />
-            <img
+          <div className="relative w-full h-52 sm:h-56 overflow-hidden select-none">
+            <TechImage
               src="https://media.giphy.com/media/ZVik7pBtu9dNS/giphy.gif"
               alt="Coding GIF"
-              loading="lazy"
-              className="w-full h-full object-contain transition-transform duration-300"
+              tag="STUDIO: TELEMETRY"
+              className="object-contain transition-transform duration-300"
             />
           </div>
         </div>

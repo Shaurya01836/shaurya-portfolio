@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase.config";
 import BentoCard from "./BentoCard";
+import { TechImage } from "./TechImage";
 import { RiCloseLine } from "@remixicon/react";
 import { useLenis } from "lenis/react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -166,11 +167,11 @@ const Achievements = () => {
               description={achievement.description}
               header={
                 coverImg ? (
-                  <img
+                  <TechImage
                     src={coverImg}
                     alt={`${achievement.title} cover`}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    loading="lazy"
+                    tag={`RECORD: 0${index + 1}`}
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-gray-100 dark:bg-[#0E0E0E] text-gray-400 text-xs font-tech">

@@ -123,6 +123,7 @@ function App() {
         await Promise.all([
           getDocs(collection(db, "projects")),
           getDocs(collection(db, "profile")),
+          getDocs(collection(db, "featuredImages")),
           getDocs(query(collection(db, "achievements"), orderBy("date", "desc"))),
         ]);
       } catch (error) {
