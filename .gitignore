@@ -128,3 +128,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Local-only Admin Portal (unpublished on GitHub)
+src/pages/Admin.jsx
+src/components/admin/
+/firestore.rules

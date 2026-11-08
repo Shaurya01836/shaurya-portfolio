@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
@@ -13,6 +13,9 @@ import NotFound from "./pages/NotFound";
 import { MagneticScrollIndicator, AmbientGutterGrid } from "./components/MagneticScrollIndicator";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "./firebase.config";
+
+// Local-only admin portal (aliased via vite.config.js to NotFound if gitignored in production)
+const Admin = lazy(() => import("@admin-portal"));
 
 const PageWrapper = ({ children }) => {
   return (
@@ -42,66 +45,98 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
     }
   }, [location.pathname, lenis]);
 
+  // Check if session is on local development environment
+  const isLocalhost = Boolean(
+    typeof window !== "undefined" &&
+      (window.location.hostname === "localhost" ||
+        window.location.hostname === "127.0.0.1" ||
+        import.meta.env.DEV)
+  );
+
+  // Dedicated Full-Width Layout for Admin Portal (strictly gated to localhost)
+  if (location.pathname.startsWith("/admin")) {
+    if (!isLocalhost) {
+      return (
+        <PageWrapper>
+          <NotFound />
+        </PageWrapper>
+      );
+    }
+    return (
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center bg-white dark:bg-[#0A0A0A] text-gray-500 font-tech text-xs uppercase tracking-wider">
+            Loading Admin Console...
+          </div>
+        }
+      >
+        <Admin darkMode={darkMode} toggleTheme={toggleTheme} />
+      </Suspense>
+    );
+  }
+
   return (
-    <div className="bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300 flex flex-col relative">
-      {/* Ambient background lines in outer free space */}
-      <AmbientGutterGrid />
+    <ReactLenis root>
+      <div className="bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300 flex flex-col relative">
+        {/* Ambient background lines in outer free space */}
+        <AmbientGutterGrid />
 
-      {/* Interactive Magnetic Scroll Progress Indicator */}
-      <MagneticScrollIndicator />
+        {/* Interactive Magnetic Scroll Progress Indicator */}
+        <MagneticScrollIndicator />
 
-      <div className="sm:px-36 flex-1 relative z-10">
-        <div className="flex flex-col lg:flex-row border-x border-solid border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] transition-colors duration-300 min-h-full">
-          {/* Fixed / Sticky Left Profile Sidebar on Desktop */}
-          <aside className="hidden lg:block lg:w-2/5 lg:h-screen lg:sticky lg:top-0 lg:overflow-hidden">
-            <Profile />
-          </aside>
+        <div className="sm:px-36 flex-1 relative z-10">
+          <div className="flex flex-col lg:flex-row border-x border-solid border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] transition-colors duration-300 min-h-full">
+            {/* Fixed / Sticky Left Profile Sidebar on Desktop */}
+            <aside className="hidden lg:block lg:w-2/5 lg:h-screen lg:sticky lg:top-0 lg:overflow-hidden">
+              <Profile />
+            </aside>
 
-          {/* Right Main Column */}
-          <main className="lg:w-3/5 pb-20 lg:pb-0 lg:border-l border-solid border-gray-200 dark:border-[#1F1F1F]">
-            {/* Top Navbar */}
-            <Navbar toggleTheme={toggleTheme} isDarkMode={darkMode} hasBanner={false} />
+            {/* Right Main Column */}
+            <main className="lg:w-3/5 pb-20 lg:pb-0 lg:border-l border-solid border-gray-200 dark:border-[#1F1F1F]">
+              {/* Top Navbar */}
+              <Navbar toggleTheme={toggleTheme} isDarkMode={darkMode} hasBanner={false} />
 
-            <AnimatePresence mode="wait">
-              <Routes location={location} key={location.pathname}>
-                <Route
-                  path="/"
-                  element={
-                    <PageWrapper>
-                      <Home darkMode={darkMode} />
-                    </PageWrapper>
-                  }
-                />
-                <Route
-                  path="/blogs"
-                  element={
-                    <PageWrapper>
-                      <Blogs />
-                    </PageWrapper>
-                  }
-                />
-                <Route
-                  path="/blogs/:id"
-                  element={
-                    <PageWrapper>
-                      <BlogDetail />
-                    </PageWrapper>
-                  }
-                />
-                <Route
-                  path="*"
-                  element={
-                    <PageWrapper>
-                      <NotFound />
-                    </PageWrapper>
-                  }
-                />
-              </Routes>
-            </AnimatePresence>
-          </main>
+              <AnimatePresence mode="wait">
+                <Routes location={location} key={location.pathname}>
+                  <Route
+                    path="/"
+                    element={
+                      <PageWrapper>
+                        <Home darkMode={darkMode} />
+                      </PageWrapper>
+                    }
+                  />
+                  <Route
+                    path="/blogs"
+                    element={
+                      <PageWrapper>
+                        <Blogs />
+                      </PageWrapper>
+                    }
+                  />
+                  <Route
+                    path="/blogs/:id"
+                    element={
+                      <PageWrapper>
+                        <BlogDetail />
+                      </PageWrapper>
+                    }
+                  />
+                  <Route
+                    path="*"
+                    element={
+                      <PageWrapper>
+                        <NotFound />
+                      </PageWrapper>
+                    }
+                  />
+                </Routes>
+              </AnimatePresence>
+            </main>
+          </div>
         </div>
       </div>
-    </div>
+    </ReactLenis>
   );
 }
 
@@ -147,11 +182,9 @@ function App() {
   };
 
   return (
-    <ReactLenis root>
-      <Router>
-        <AnimatedRoutes darkMode={darkMode} toggleTheme={toggleTheme} />
-      </Router>
-    </ReactLenis>
+    <Router>
+      <AnimatedRoutes darkMode={darkMode} toggleTheme={toggleTheme} />
+    </Router>
   );
 }
 
