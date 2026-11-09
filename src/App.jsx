@@ -3,16 +3,17 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from "react-route
 import { motion, AnimatePresence } from "framer-motion";
 import PropTypes from "prop-types";
 import { ReactLenis, useLenis } from "lenis/react";
-import Profile from "./components/Profile";
 
 import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
 import BlogDetail from "./pages/BlogDetail";
 import Navbar from "./components/Navbar";
-import NotFound from "./pages/NotFound";
-import { MagneticScrollIndicator, AmbientGutterGrid } from "./components/MagneticScrollIndicator";
+import { MagneticScrollIndicator } from "./components/MagneticScrollIndicator";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "./firebase.config";
+
+// Lazy-loaded routes for optimal initial bundle performance
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 // Local-only admin portal (aliased via vite.config.js to NotFound if gitignored in production)
 const Admin = lazy(() => import("@admin-portal"));
@@ -77,64 +78,54 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
 
   return (
     <ReactLenis root>
-      <div className="bg-white dark:bg-[#0A0A0A] text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-300 flex flex-col relative">
-        {/* Ambient background lines in outer free space */}
-        <AmbientGutterGrid />
-
-        {/* Interactive Magnetic Scroll Progress Indicator */}
+      <div className="bg-[var(--bg-primary)] dark:bg-[#07070A] text-gray-900 dark:text-[#F4F4F5] min-h-screen transition-colors duration-200 flex flex-col relative selection:bg-[#CDBDFF]/25 selection:text-black dark:selection:text-[#CDBDFF]">
+        {/* Subtle, thin top scroll progress indicator */}
         <MagneticScrollIndicator />
 
-        <div className="sm:px-36 flex-1 relative z-10">
-          <div className="flex flex-col lg:flex-row border-x border-solid border-gray-200 dark:border-[#1F1F1F] bg-white dark:bg-[#0A0A0A] transition-colors duration-300 min-h-full">
-            {/* Fixed / Sticky Left Profile Sidebar on Desktop */}
-            <aside className="hidden lg:block lg:w-2/5 lg:h-screen lg:sticky lg:top-0 lg:overflow-hidden">
-              <Profile />
-            </aside>
+        {/* Top Navbar */}
+        <Navbar toggleTheme={toggleTheme} isDarkMode={darkMode} />
 
-            {/* Right Main Column */}
-            <main className="lg:w-3/5 pb-20 lg:pb-0 lg:border-l border-solid border-gray-200 dark:border-[#1F1F1F]">
-              {/* Top Navbar */}
-              <Navbar toggleTheme={toggleTheme} isDarkMode={darkMode} hasBanner={false} />
-
-              <AnimatePresence mode="wait">
-                <Routes location={location} key={location.pathname}>
-                  <Route
-                    path="/"
-                    element={
-                      <PageWrapper>
-                        <Home darkMode={darkMode} />
-                      </PageWrapper>
-                    }
-                  />
-                  <Route
-                    path="/blogs"
-                    element={
-                      <PageWrapper>
-                        <Blogs />
-                      </PageWrapper>
-                    }
-                  />
-                  <Route
-                    path="/blogs/:id"
-                    element={
-                      <PageWrapper>
-                        <BlogDetail />
-                      </PageWrapper>
-                    }
-                  />
-                  <Route
-                    path="*"
-                    element={
-                      <PageWrapper>
-                        <NotFound />
-                      </PageWrapper>
-                    }
-                  />
-                </Routes>
-              </AnimatePresence>
-            </main>
-          </div>
-        </div>
+        {/* Full-width blueprint viewport: hairlines run edge-to-edge, content is framed at max-w-[1160px] */}
+        <main className="flex-1 w-full">
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route
+                path="/"
+                element={
+                  <PageWrapper>
+                    <Home darkMode={darkMode} />
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="/blogs"
+                element={
+                  <PageWrapper>
+                    <Blogs />
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="/blogs/:id"
+                element={
+                  <PageWrapper>
+                    <BlogDetail />
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="*"
+                element={
+                  <PageWrapper>
+                    <Suspense fallback={<div className="min-h-[70vh] flex items-center justify-center text-xs font-tech text-gray-400">Loading...</div>}>
+                      <NotFound />
+                    </Suspense>
+                  </PageWrapper>
+                }
+              />
+            </Routes>
+          </AnimatePresence>
+        </main>
       </div>
     </ReactLenis>
   );

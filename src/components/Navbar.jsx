@@ -1,16 +1,10 @@
 import PropTypes from "prop-types";
-import { motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { SwitchMode } from "./watermelon/switch-mode";
+import { RiGithubLine, RiLinkedinLine, RiTwitterXLine, RiMailLine } from "@remixicon/react";
+import Crosshair from "./ui/Crosshair";
 
-const NavCornerTicks = () => (
-  <>
-    <span className="absolute -bottom-1 -left-1 font-mono text-[9px] text-gray-400 dark:text-gray-600 select-none leading-none pointer-events-none">+</span>
-    <span className="absolute -bottom-1 -right-1 font-mono text-[9px] text-gray-400 dark:text-gray-600 select-none leading-none pointer-events-none">+</span>
-  </>
-);
-
-const Navbar = ({ toggleTheme, isDarkMode, hasBanner }) => {
+const Navbar = ({ toggleTheme, isDarkMode }) => {
   const location = useLocation();
 
   const isLinkActive = (path) => {
@@ -21,82 +15,102 @@ const Navbar = ({ toggleTheme, isDarkMode, hasBanner }) => {
   };
 
   const navItems = [
-    { id: "01", label: "HOME", path: "/" },
-    { id: "02", label: "BLOGS", path: "/blogs" },
+    { id: "home", label: "HOME", path: "/" },
+    { id: "blogs", label: "BLOGS", path: "/blogs" },
   ];
 
-  const getPathBreadcrumb = () => {
-    if (location.pathname === "/") return "INDEX.ROOT";
-    if (location.pathname.startsWith("/blogs/")) return "BLOGS.DETAIL";
-    if (location.pathname === "/blogs") return "BLOGS.INDEX";
-    return location.pathname.replace(/^\//, "").toUpperCase();
-  };
-
   return (
-    <header
-      className={`sticky ${
-        hasBanner ? "top-14 md:top-14" : "top-0"
-      } z-40 w-full bg-white/85 dark:bg-[#0A0A0A]/85 backdrop-blur-md border-b border-gray-200 dark:border-[#1F1F1F] transition-colors duration-300 relative`}
-    >
-      <NavCornerTicks />
-
-      <div className="flex items-center justify-between px-3 sm:px-6 py-2.5 sm:py-3 gap-3">
-        {/* Left Telemetry: Status & Breadcrumb */}
-        <div className="flex items-center gap-2.5">
-          <div className="hidden md:flex items-center gap-1.5 font-mono text-[11px] text-gray-400 dark:text-gray-500">
-            <span className="text-gray-300 dark:text-[#2A2A2A]">|</span>
-            <span className="text-[10px] tracking-wider">LOC:</span>
-            <span className="text-gray-800 dark:text-gray-200 font-semibold tracking-wider">
-              {getPathBreadcrumb()}
-            </span>
-          </div>
+    <header className="sticky top-0 z-40 w-full border-b border-[var(--line)] bg-[var(--bg-primary)]/90 backdrop-blur-md transition-colors duration-200">
+      <div className="relative max-w-[1160px] mx-auto border-x border-[var(--line)] h-14 sm:h-16 flex items-stretch justify-between">
+        {/* Bottom Crosshairs at intersection of navbar border-b and frame border-x */}
+        <div className="absolute -bottom-[5.5px] -left-[5.5px] z-20 pointer-events-none select-none" aria-hidden="true">
+          <Crosshair />
+        </div>
+        <div className="absolute -bottom-[5.5px] -right-[5.5px] z-20 pointer-events-none select-none" aria-hidden="true">
+          <Crosshair />
         </div>
 
-        {/* Right Navigation & Mode Toggle */}
-        <div className="flex items-center gap-2.5 sm:gap-3">
-          {/* Segmented Industrial Route Switcher */}
-          <nav className="flex items-center p-0.5 rounded-md border border-gray-200 dark:border-[#222222] bg-gray-100/70 dark:bg-[#121212]">
+        {/* Left: Brand Cell */}
+        <Link
+          to="/"
+          className="flex items-center gap-2.5 px-4 sm:px-6 border-r border-[var(--line)] font-tech text-xs tracking-wider uppercase text-gray-900 dark:text-gray-100 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]"
+        >
+          <span className="font-semibold text-sm tracking-tight font-sans">Shaurya</span>
+        </Link>
+
+        {/* Center / Right: Nav Links & Actions */}
+        <div className="flex items-stretch">
+          {/* Navigation Links */}
+          <nav className="flex items-stretch border-l sm:border-l-0 border-r border-[var(--line)]">
             {navItems.map((item) => {
               const active = isLinkActive(item.path);
               return (
                 <Link
                   key={item.id}
                   to={item.path}
-                  className={`relative px-3 sm:px-3.5 py-1 sm:py-1.5 rounded text-xs font-mono font-medium transition-all duration-200 flex items-center gap-1.5 ${
+                  className={`flex items-center px-4 sm:px-6 font-tech text-xs tracking-wider transition-colors border-r last:border-r-0 border-[var(--line)] ${
                     active
-                      ? "text-gray-950 dark:text-white"
-                      : "text-gray-500 dark:text-gray-400 hover:text-black dark:hover:text-white"
+                      ? "text-gray-950 dark:text-white bg-black/[0.04] dark:bg-white/[0.04] font-medium"
+                      : "text-gray-500 dark:text-[#71717A] hover:text-gray-900 dark:hover:text-white hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
                   }`}
                 >
-                  {active && (
-                    <motion.span
-                      layoutId="nav-pill"
-                      transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                      className="absolute inset-0 rounded bg-white dark:bg-[#1F1F1F] shadow-sm border border-gray-200 dark:border-[#2F2F2F]"
-                    />
-                  )}
-                  <span className="relative z-10 tracking-wide">{item.label}</span>
+                  {item.label}
                 </Link>
               );
             })}
           </nav>
 
-          {/* Vertical Divider */}
-          <div className="h-4 w-px bg-gray-200 dark:bg-[#222222]" />
+          {/* Social Icons (Desktop) */}
+          <div className="hidden sm:flex items-stretch border-r border-[var(--line)] text-gray-500 dark:text-[#71717A]">
+            <a
+              href="https://github.com/Shaurya01836"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub Profile"
+              className="px-3.5 flex items-center hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
+            >
+              <RiGithubLine size={16} />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/this-is-shaurya-upadhyay"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn Profile"
+              className="px-3.5 flex items-center hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors border-l border-[var(--line)]"
+            >
+              <RiLinkedinLine size={16} />
+            </a>
+            <a
+              href="https://x.com/shaurya01836"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="X (Twitter) Profile"
+              className="px-3.5 flex items-center hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors border-l border-[var(--line)]"
+            >
+              <RiTwitterXLine size={15} />
+            </a>
+            <a
+              href="mailto:shaurya01836@gmail.com"
+              aria-label="Send Email"
+              className="px-3.5 flex items-center hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors border-l border-[var(--line)]"
+            >
+              <RiMailLine size={16} />
+            </a>
+          </div>
 
-          {/* Theme Switcher Housing */}
-          <div className="inline-flex items-center">
+          {/* Theme Switcher Cell */}
+          <div className="flex items-center px-4 sm:px-5">
             <SwitchMode
               isDark={isDarkMode}
               onToggle={toggleTheme}
-              width={64}
-              height={30}
-              darkColor="#121212"
-              lightColor="#F4F4F5"
+              width={52}
+              height={26}
+              darkColor="#07070A"
+              lightColor="#F0F0F4"
               knobDarkColor="#262626"
               knobLightColor="#FFFFFF"
-              borderDarkColor="#2F2F2F"
-              borderLightColor="#E2E2E5"
+              borderDarkColor="rgba(255,255,255,0.12)"
+              borderLightColor="rgba(0,0,0,0.12)"
             />
           </div>
         </div>
@@ -108,7 +122,6 @@ const Navbar = ({ toggleTheme, isDarkMode, hasBanner }) => {
 Navbar.propTypes = {
   toggleTheme: PropTypes.func.isRequired,
   isDarkMode: PropTypes.bool.isRequired,
-  hasBanner: PropTypes.bool,
 };
 
 export default Navbar;

@@ -22,6 +22,8 @@ import {
 } from "@remixicon/react";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase.config";
+import BlueprintSection from "../components/ui/BlueprintSection";
+import Footer from "../components/Footer";
 
 const formatDate = (dateValue) => {
   if (!dateValue) return "";
@@ -206,15 +208,17 @@ const BlogDetail = () => {
 
   if (isProjectShowcase) {
     return (
-      <div className="flex flex-col pt-8 pb-24 px-4 md:px-8 w-full max-w-5xl mx-auto gap-8 text-black dark:text-white transition-colors duration-300">
-        {/* Back Button */}
-        <Link
-          to="/blogs"
-          className="inline-flex items-center gap-2 text-gray-500 hover:text-black dark:hover:text-white transition-colors w-fit"
-        >
-          <RiArrowLeftLine size={20} />
-          <span>Back to Blogs</span>
-        </Link>
+      <div className="w-full flex flex-col">
+        <BlueprintSection id="blog-project-showcase" noTopBorder={true}>
+          <div className="flex flex-col py-8 px-6 sm:px-10 max-w-5xl mx-auto gap-8 text-black dark:text-white transition-colors duration-300">
+            {/* Back Button */}
+            <Link
+              to="/blogs"
+              className="inline-flex items-center gap-2 font-tech text-xs uppercase tracking-wider text-gray-500 hover:text-black dark:hover:text-[#CDBDFF] transition-colors w-fit"
+            >
+              <RiArrowLeftLine size={16} />
+              <span>Back to Blogs</span>
+            </Link>
 
         {/* Hero Section */}
         <div className="flex flex-col gap-6 border border-gray-200 dark:border-[#1F1F1F] rounded-md bg-white dark:bg-[#0A0A0A] overflow-hidden p-6 md:p-8 shadow-sm">
@@ -395,51 +399,59 @@ const BlogDetail = () => {
             </div>
           </div>
         )}
+          </div>
+        </BlueprintSection>
+        <Footer />
       </div>
     );
   }
 
   // Fallback Standard Post layout
   return (
-    <div className="flex flex-col pt-8 pb-24 px-8 w-full max-w-4xl mx-auto gap-6 text-black dark:text-white animate-fade-in-up">
-      <Link
-        to="/blogs"
-        className="inline-flex items-center gap-2 text-gray-500 hover:text-black dark:hover:text-white transition-colors mb-4 w-fit"
-      >
-        <RiArrowLeftLine size={20} />
-        <span>Back to Blogs</span>
-      </Link>
+    <div className="w-full flex flex-col">
+      <BlueprintSection id="blog-standard-post" noTopBorder={true}>
+        <div className="flex flex-col py-8 px-6 sm:px-10 w-full max-w-4xl mx-auto gap-6 text-black dark:text-white animate-fade-in-up">
+          <Link
+            to="/blogs"
+            className="inline-flex items-center gap-2 font-tech text-xs uppercase tracking-wider text-gray-500 hover:text-black dark:hover:text-[#CDBDFF] transition-colors mb-2 w-fit"
+          >
+            <RiArrowLeftLine size={16} />
+            <span>Back to Blogs</span>
+          </Link>
 
-      <div className="w-full h-64 md:h-96 rounded-md overflow-hidden shadow-sm border border-gray-200 dark:border-[#1F1F1F]">
-        <img
-          src={blog.thumbnailUrl || "https://via.placeholder.com/800x400?text=No+Image"}
-          alt={blog.title}
-          className="w-full h-full object-cover"
-        />
-      </div>
+          <div className="w-full h-64 md:h-96 rounded-none overflow-hidden border border-[var(--line)] bg-black/[0.04]">
+            <img
+              src={blog.thumbnailUrl || "https://via.placeholder.com/800x400?text=No+Image"}
+              alt={blog.title}
+              className="w-full h-full object-cover"
+            />
+          </div>
 
-      <div className="flex flex-col gap-3">
-        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight">
-          {blog.title}
-        </h1>
+          <div className="flex flex-col gap-3">
+            <h1 className="text-3xl md:text-4xl font-semibold tracking-[-0.04em] text-gray-900 dark:text-[#F4F4F5] leading-tight">
+              {blog.title}
+            </h1>
 
-        <div className="flex flex-wrap gap-4 text-sm text-gray-500 dark:text-gray-400 items-center">
-          <span className="flex items-center gap-1">
-            <RiCalendarLine size={16} />
-            {formatDate(blog.createdAt)}
-          </span>
-          <span className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded text-gray-700 dark:text-gray-300">
-            <RiPriceTag3Line size={14} />
-            {blog.category}
-          </span>
+            <div className="flex flex-wrap gap-4 font-tech text-xs text-gray-500 dark:text-[#71717A] items-center">
+              <span className="flex items-center gap-1.5">
+                <RiCalendarLine size={15} />
+                {formatDate(blog.createdAt)}
+              </span>
+              <span className="flex items-center gap-1.5 px-2 py-0.5 border border-[var(--line)] bg-[var(--surface)] text-gray-700 dark:text-gray-300">
+                <RiPriceTag3Line size={13} />
+                {blog.category}
+              </span>
+            </div>
+          </div>
+
+          <hr className="border-[var(--line)]" />
+
+          <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed">
+            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MarkdownComponents}>{blog.content || "*No content found in the `content` field for this blog post in Firestore.*"}</ReactMarkdown>
+          </div>
         </div>
-      </div>
-
-      <hr className="border-gray-200 dark:border-[#1F1F1F]" />
-
-      <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed">
-        <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MarkdownComponents}>{blog.content || "*No content found in the `content` field for this blog post in Firestore.*"}</ReactMarkdown>
-      </div>
+      </BlueprintSection>
+      <Footer />
     </div>
   );
 };

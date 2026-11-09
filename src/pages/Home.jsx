@@ -1,80 +1,51 @@
 import PropTypes from "prop-types";
-import { motion } from "framer-motion";
-import Profile from "../components/Profile";
-import Header from "../components/Header";
+import Hero from "../components/Hero";
+import Projects from "../components/Projects";
 import Skills from "../components/Skills";
 import Experience from "../components/Experience";
-import Projects from "../components/Projects";
-import Achievements from "../components/Achievements";
-import CodingProfile from "../components/CodingProfile";
-import GithubGraph from "../components/GithubGraph";
-import Contact from "../components/Contact";
-
-const SectionWrapper = ({ id, children, initialY = 24, delay = 0 }) => (
-  <motion.section
-    id={id}
-    initial={{ opacity: 0, y: initialY }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: "-40px" }}
-    transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1], delay }}
-    className="w-full"
-  >
-    {children}
-  </motion.section>
-);
-
-SectionWrapper.propTypes = {
-  id: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired,
-  initialY: PropTypes.number,
-  delay: PropTypes.number,
-};
+import CodingStats from "../components/CodingStats";
+import GithubActivity from "../components/GithubActivity";
+import AboutHighlights from "../components/AboutHighlights";
+import ContactSection from "../components/ContactSection";
+import Footer from "../components/Footer";
+import HatchBand from "../components/ui/HatchBand";
 
 const Home = ({ darkMode }) => {
   return (
-    <>
-      <div className="block lg:hidden">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <Profile />
-        </motion.div>
-      </div>
+    <div className="w-full flex flex-col">
+      {/* 1. Hero (includes StatusStrip & Hatched Band 1) */}
+      <Hero />
 
-      <SectionWrapper id="header" initialY={16} delay={0.1}>
-        <Header />
-      </SectionWrapper>
+      {/* 2. Projects */}
+      <Projects />
 
-      <SectionWrapper id="skills" delay={0.05}>
-        <Skills />
-      </SectionWrapper>
+      {/* 3. Tech Stack */}
+      <Skills />
 
-      <SectionWrapper id="projects" delay={0.05}>
-        <Projects />
-      </SectionWrapper>
+      {/* 4. Experience */}
+      <Experience />
 
-      <SectionWrapper id="coding-profile" delay={0.05}>
-        <CodingProfile darkMode={darkMode} />
-      </SectionWrapper>
+      {/* 5. Coding Stats (LeetCode) */}
+      <CodingStats />
 
-      <SectionWrapper id="github" delay={0.05}>
-        <GithubGraph darkMode={darkMode} />
-      </SectionWrapper>
+      {/* 6. GitHub Activity */}
+      <GithubActivity darkMode={darkMode} />
 
-      <SectionWrapper id="experience" delay={0.05}>
-        <Experience />
-      </SectionWrapper>
+      {/* 7. Highlights / About */}
+      <AboutHighlights />
 
-      <SectionWrapper id="achievements" delay={0.05}>
-        <Achievements />
-      </SectionWrapper>
+      {/* Hatched Band 2: Before Contact */}
+      <HatchBand />
 
-      <SectionWrapper id="contact" delay={0.05}>
-        <Contact />
-      </SectionWrapper>
-    </>
+      {/* 8. Contact */}
+      <ContactSection />
+
+      {/* Hatched Band 3: Before Footer */}
+      <HatchBand />
+
+      {/* 9. Footer */}
+      <Footer />
+    </div>
   );
 };
 
