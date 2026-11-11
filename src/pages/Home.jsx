@@ -24,12 +24,15 @@ const Home = ({ darkMode }) => {
 
       {/* 4. Experience */}
       <Experience />
+      <HatchBand />
 
       {/* 5. Coding Stats (LeetCode) */}
       <CodingStats />
 
       {/* 6. GitHub Activity */}
       <GithubActivity darkMode={darkMode} />
+
+      <HatchBand />
 
       {/* 7. Highlights / About */}
       <AboutHighlights />

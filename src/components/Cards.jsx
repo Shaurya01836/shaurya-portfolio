@@ -17,14 +17,16 @@ function Cards({
 }) {
   const CardBody = () => (
     <>
-      {/* Image Preview Container with 1px bottom border */}
-      <div className="w-full h-44 sm:h-52 overflow-hidden relative bg-black/[0.04] dark:bg-white/[0.02] border-b border-[var(--line)]">
-        <TechImage
-          src={image}
-          alt={`${title} preview`}
-          className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-[1.01]"
-        />
-      </div>
+      {/* Image Preview Container with 1px bottom border (only if image exists) */}
+      {image && (
+        <div className="w-full h-44 sm:h-52 overflow-hidden relative bg-black/[0.04] dark:bg-white/[0.02] border-b border-[var(--line)]">
+          <TechImage
+            src={image}
+            alt={`${title} preview`}
+            className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-[1.01]"
+          />
+        </div>
+      )}
 
       {/* Content Container */}
       <div className="flex flex-col flex-grow p-5 sm:p-6 gap-3 text-left">
@@ -65,21 +67,26 @@ function Cards({
           )}
         </div>
 
-        <p className="text-xs sm:text-sm text-gray-600 dark:text-[#71717A] line-clamp-2 leading-relaxed flex-grow font-normal">
-          {description}
-        </p>
+        {description && description.trim() && (
+          <p className="text-xs sm:text-sm text-gray-600 dark:text-[#71717A] line-clamp-2 leading-relaxed flex-grow font-normal">
+            {description}
+          </p>
+        )}
 
-        {/* Square Tech Chips with 1px border */}
-        {techStack && techStack.length > 0 && (
+        {/* Square Tech Chips with 1px border (only non-empty tags) */}
+        {techStack && techStack.filter((t) => t && String(t).trim().length > 0).length > 0 && (
           <div className="flex flex-wrap gap-1.5 pt-2 mt-auto">
-            {techStack.slice(0, 4).map((tech, i) => (
-              <span
-                key={i}
-                className="font-tech text-[10px] sm:text-[11px] px-2 py-0.5 rounded-none bg-black/[0.02] dark:bg-white/[0.03] text-gray-600 dark:text-[#71717A] border border-[var(--line)] uppercase tracking-wider"
-              >
-                {tech}
-              </span>
-            ))}
+            {techStack
+              .filter((t) => t && String(t).trim().length > 0)
+              .slice(0, 4)
+              .map((tech, i) => (
+                <span
+                  key={i}
+                  className="font-tech text-[10px] sm:text-[11px] px-2 py-0.5 rounded-none bg-black/[0.02] dark:bg-white/[0.03] text-gray-600 dark:text-[#71717A] border border-[var(--line)] uppercase tracking-wider"
+                >
+                  {tech}
+                </span>
+              ))}
           </div>
         )}
       </div>

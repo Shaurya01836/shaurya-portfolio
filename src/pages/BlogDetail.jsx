@@ -12,11 +12,6 @@ import {
   RiPriceTag3Line,
   RiGithubLine,
   RiExternalLinkLine,
-  RiCodeSSlashLine,
-  RiTimeLine,
-  RiUserStarLine,
-  RiAlertLine,
-  RiAwardLine,
   RiFileCopyLine,
   RiCheckLine,
 } from "@remixicon/react";
@@ -204,213 +199,14 @@ const BlogDetail = () => {
   if (error && !blog) return <div className="p-8 text-red-500">Error: {error}</div>;
   if (!blog) return <div className="p-8 text-gray-600">Blog not found</div>;
 
-  const isProjectShowcase = blog.category === "Project Showcase";
+  const formattedDate = formatDate(blog.createdAt);
+  const mainContent = (blog.content && blog.content.trim()) || (blog.introduction && blog.introduction.trim()) || "";
 
-  if (isProjectShowcase) {
-    return (
-      <div className="w-full flex flex-col">
-        <BlueprintSection id="blog-project-showcase" noTopBorder={true}>
-          <div className="flex flex-col py-8 px-6 sm:px-10 max-w-5xl mx-auto gap-8 text-black dark:text-white transition-colors duration-300">
-            {/* Back Button */}
-            <Link
-              to="/blogs"
-              className="inline-flex items-center gap-2 font-tech text-xs uppercase tracking-wider text-gray-500 hover:text-black dark:hover:text-[#CDBDFF] transition-colors w-fit"
-            >
-              <RiArrowLeftLine size={16} />
-              <span>Back to Blogs</span>
-            </Link>
-
-        {/* Hero Section */}
-        <div className="flex flex-col gap-6 border border-gray-200 dark:border-[#1F1F1F] rounded-md bg-white dark:bg-[#0A0A0A] overflow-hidden p-6 md:p-8 shadow-sm">
-          <div className="w-full h-60 md:h-96 rounded-md overflow-hidden shadow-sm border border-gray-100 dark:border-white/5">
-            <img
-              src={blog.thumbnailUrl || "https://via.placeholder.com/800x400?text=No+Image"}
-              alt={blog.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="flex items-center gap-1.5 bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-blue-100 dark:border-blue-900/30">
-                <RiAwardLine size={14} />
-                {blog.category}
-              </span>
-              <span className="flex items-center gap-1 text-sm text-gray-500">
-                <RiCalendarLine size={16} />
-                {formatDate(blog.createdAt)}
-              </span>
-            </div>
-
-            <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white leading-tight">
-              {blog.title}
-            </h1>
-
-            <div className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-4xl">
-              <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MarkdownComponents}>{blog.introduction}</ReactMarkdown>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-100 dark:border-white/5 pt-6 mt-2">
-              <div className="flex flex-col gap-1.5">
-                <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider flex items-center gap-1">
-                  <RiUserStarLine size={14} /> Role & Responsibility
-                </span>
-                <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{blog.role || "Lead Developer"}</span>
-              </div>
-              <div className="flex flex-col gap-1.5">
-                <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider flex items-center gap-1">
-                  <RiTimeLine size={14} /> Timeline
-                </span>
-                <span className="text-sm font-semibold text-gray-800 dark:text-gray-200">{blog.timeline || "4 weeks"}</span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-3 mt-4">
-              {blog.githubUrl && (
-                <a
-                  href={blog.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-md border border-gray-300 dark:border-[#2A2A2A] px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 transition hover:bg-gray-50 dark:hover:bg-[#141414]"
-                >
-                  <RiGithubLine size={18} />
-                  GitHub Repository
-                </a>
-              )}
-              {blog.liveDemoUrl && (
-                <a
-                  href={blog.liveDemoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 rounded-md bg-black dark:bg-white text-white dark:text-black px-4 py-2 text-sm font-semibold transition hover:opacity-90"
-                >
-                  <RiExternalLinkLine size={18} />
-                  Open Live Demo
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* Tech Stack Badge Section */}
-        {blog.techStack && (
-          <div className="flex flex-col gap-4 p-6 border border-gray-200 dark:border-[#1F1F1F] rounded-md bg-white dark:bg-[#0A0A0A]">
-            <h2 className="text-xs uppercase tracking-widest text-gray-400 font-bold flex items-center gap-1.5">
-              <RiCodeSSlashLine size={16} /> Tech Stack Used
-            </h2>
-            <div className="flex flex-wrap gap-2">
-              {blog.techStack.map((tech, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-gray-100 dark:bg-[#121212] text-gray-800 dark:text-gray-300 rounded-md text-xs font-semibold border border-gray-200 dark:border-white/5"
-                >
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* System Architecture Section */}
-        {blog.architecture && (
-          <div className="flex flex-col gap-6">
-            <h2 className="text-lg font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-              System Architecture & Features
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {blog.architecture.map((arch, index) => (
-                <div
-                  key={index}
-                  className="flex flex-col gap-3 p-6 border border-gray-200 dark:border-[#1F1F1F] rounded-md bg-white dark:bg-[#0A0A0A] hover:border-blue-500/20 transition-all duration-300 shadow-sm"
-                >
-                  <div className="w-10 h-10 rounded-md bg-blue-50 dark:bg-blue-950/20 flex items-center justify-center text-blue-500">
-                    <span className="font-bold">{index + 1}</span>
-                  </div>
-                  <h3 className="font-bold text-gray-900 dark:text-white mt-1">{arch.title}</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">{arch.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Two-Column split for Challenges & Timeline */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Challenges & Solutions */}
-          {blog.challenges && (
-            <div className="flex flex-col gap-6">
-              <h2 className="text-lg font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                Engineering Challenges
-              </h2>
-              <div className="flex flex-col gap-4">
-                {blog.challenges.map((challenge, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col gap-3 p-6 border border-gray-200 dark:border-[#1F1F1F] rounded-md bg-white dark:bg-[#0A0A0A] relative overflow-hidden"
-                  >
-                    <div className="absolute right-0 top-0 w-24 h-24 bg-red-500/5 rounded-full blur-xl pointer-events-none" />
-                    <h3 className="font-bold text-red-500 flex items-center gap-1.5">
-                      <RiAlertLine size={18} />
-                      {challenge.problem}
-                    </h3>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">{challenge.detail}</p>
-                    <div className="border-t border-gray-100 dark:border-white/5 pt-3 mt-1">
-                      <span className="text-xs text-emerald-500 font-bold uppercase tracking-wide">Solution:</span>
-                      <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mt-1">{challenge.solution}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Timeline & Roadmap */}
-          {blog.phases && (
-            <div className="flex flex-col gap-6">
-              <h2 className="text-lg font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
-                Development Phases
-              </h2>
-              <div className="flex flex-col gap-4 pl-4 border-l-2 border-gray-100 dark:border-[#1F1F1F]">
-                {blog.phases.map((phase, index) => (
-                  <div key={index} className="relative pl-6 pb-6 last:pb-0">
-                    <div className="absolute -left-[31px] top-1.5 w-4.5 h-4.5 rounded-full bg-white dark:bg-[#0A0A0A] border-4 border-blue-500 z-10" />
-                    <h3 className="font-bold text-gray-900 dark:text-white">{phase.title}</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mt-1.5">{phase.description}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Results & Metrics Section */}
-        {blog.metrics && (
-          <div className="flex flex-col gap-6 border border-gray-200 dark:border-[#1F1F1F] rounded-md bg-white dark:bg-[#0A0A0A] p-8 shadow-sm">
-            <h2 className="text-lg font-bold text-gray-600 dark:text-gray-400 uppercase tracking-wider text-center">
-              Project Impact & Metrics
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center mt-2">
-              {blog.metrics.map((metric, index) => (
-                <div key={index} className="flex flex-col gap-1.5">
-                  <span className="text-4xl font-extrabold text-blue-500">{metric.value}</span>
-                  <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider">{metric.label}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-          </div>
-        </BlueprintSection>
-        <Footer />
-      </div>
-    );
-  }
-
-  // Fallback Standard Post layout
   return (
     <div className="w-full flex flex-col">
-      <BlueprintSection id="blog-standard-post" noTopBorder={true}>
+      <BlueprintSection id="blog-post" noTopBorder={true}>
         <div className="flex flex-col py-8 px-6 sm:px-10 w-full max-w-4xl mx-auto gap-6 text-black dark:text-white animate-fade-in-up">
+          {/* Back Button */}
           <Link
             to="/blogs"
             className="inline-flex items-center gap-2 font-tech text-xs uppercase tracking-wider text-gray-500 hover:text-black dark:hover:text-[#CDBDFF] transition-colors mb-2 w-fit"
@@ -419,36 +215,85 @@ const BlogDetail = () => {
             <span>Back to Blogs</span>
           </Link>
 
-          <div className="w-full h-64 md:h-96 rounded-none overflow-hidden border border-[var(--line)] bg-black/[0.04]">
-            <img
-              src={blog.thumbnailUrl || "https://via.placeholder.com/800x400?text=No+Image"}
-              alt={blog.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
+          {/* Cover image (if provided) */}
+          {blog.thumbnailUrl && blog.thumbnailUrl.trim() && (
+            <div className="w-full h-64 md:h-96 overflow-hidden border border-[var(--line)] bg-black/[0.04] dark:bg-white/[0.02]">
+              <img
+                src={blog.thumbnailUrl}
+                alt={blog.title || "Blog cover"}
+                className="w-full h-full object-cover"
+              />
+            </div>
+          )}
 
+          {/* Title & Metadata */}
           <div className="flex flex-col gap-3">
-            <h1 className="text-3xl md:text-4xl font-semibold tracking-[-0.04em] text-gray-900 dark:text-[#F4F4F5] leading-tight">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-[-0.04em] text-gray-900 dark:text-[#F4F4F5] leading-tight">
               {blog.title}
             </h1>
 
-            <div className="flex flex-wrap gap-4 font-tech text-xs text-gray-500 dark:text-[#71717A] items-center">
-              <span className="flex items-center gap-1.5">
-                <RiCalendarLine size={15} />
-                {formatDate(blog.createdAt)}
-              </span>
-              <span className="flex items-center gap-1.5 px-2 py-0.5 border border-[var(--line)] bg-[var(--surface)] text-gray-700 dark:text-gray-300">
-                <RiPriceTag3Line size={13} />
-                {blog.category}
-              </span>
-            </div>
+            {(Boolean(formattedDate) || Boolean(blog.category?.trim())) && (
+              <div className="flex flex-wrap gap-4 font-tech text-xs text-gray-500 dark:text-[#71717A] items-center">
+                {formattedDate && (
+                  <span className="flex items-center gap-1.5">
+                    <RiCalendarLine size={15} />
+                    {formattedDate}
+                  </span>
+                )}
+                {blog.category && blog.category.trim() && (
+                  <span className="flex items-center gap-1.5 px-2 py-0.5 border border-[var(--line)] bg-[var(--surface)] text-gray-700 dark:text-gray-300">
+                    <RiPriceTag3Line size={13} />
+                    {blog.category}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Optional Links if present */}
+            {(Boolean(blog.githubUrl?.trim()) || Boolean(blog.liveDemoUrl?.trim())) && (
+              <div className="flex flex-wrap gap-3 pt-2">
+                {blog.githubUrl?.trim() && (
+                  <a
+                    href={blog.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 border border-[var(--line)] bg-[var(--surface)] hover:bg-black/[0.04] dark:hover:bg-white/[0.04] px-3.5 py-1.5 font-tech text-xs tracking-wider uppercase text-gray-700 dark:text-gray-200 transition-colors"
+                  >
+                    <RiGithubLine size={15} />
+                    GitHub
+                  </a>
+                )}
+                {blog.liveDemoUrl?.trim() && (
+                  <a
+                    href={blog.liveDemoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-[#CDBDFF] hover:bg-[#b8a2ff] text-black px-3.5 py-1.5 font-tech text-xs font-semibold tracking-wider uppercase transition-colors"
+                  >
+                    <RiExternalLinkLine size={15} />
+                    Live Demo
+                  </a>
+                )}
+              </div>
+            )}
           </div>
 
           <hr className="border-[var(--line)]" />
 
-          <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed">
-            <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]} components={MarkdownComponents}>{blog.content || "*No content found in the `content` field for this blog post in Firestore.*"}</ReactMarkdown>
-          </div>
+          {/* Markdown Content */}
+          {mainContent ? (
+            <div className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 leading-relaxed">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                rehypePlugins={[rehypeRaw]}
+                components={MarkdownComponents}
+              >
+                {mainContent}
+              </ReactMarkdown>
+            </div>
+          ) : (
+            <p className="font-tech text-xs text-gray-500 italic">No content available for this post.</p>
+          )}
         </div>
       </BlueprintSection>
       <Footer />

@@ -34,13 +34,39 @@ const Blogs = () => {
 
     try {
       const blogsRef = collection(db, "blogs");
-      const q = query(blogsRef, orderBy("createdAt", "desc"));
-      const querySnapshot = await getDocs(q);
-      
-      const blogsData = querySnapshot.docs.map(doc => ({
+      let querySnapshot;
+
+      try {
+        const q = query(blogsRef, orderBy("createdAt", "desc"));
+        querySnapshot = await getDocs(q);
+      } catch (orderErr) {
+        console.warn("Ordered query failed, falling back to direct collection fetch:", orderErr);
+        querySnapshot = await getDocs(blogsRef);
+      }
+
+      // If ordered query returned 0 documents, also try direct getDocs in case documents lack createdAt
+      if (querySnapshot.empty) {
+        querySnapshot = await getDocs(blogsRef);
+      }
+
+      const blogsData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
+
+      // Sort client-side safely so that blogs with missing or varying date formats still sort properly
+      blogsData.sort((a, b) => {
+        const getTime = (val) => {
+          if (!val) return 0;
+          if (typeof val.toDate === "function") return val.toDate().getTime();
+          if (val.seconds) return val.seconds * 1000;
+          const d = new Date(val);
+          return isNaN(d.getTime()) ? 0 : d.getTime();
+        };
+        const timeA = getTime(a.createdAt || a.updatedAt);
+        const timeB = getTime(b.createdAt || b.updatedAt);
+        return timeB - timeA;
+      });
 
       setBlogs(blogsData);
       setLoading(false);
@@ -89,8 +115,8 @@ const Blogs = () => {
         <div className="p-6 sm:p-8 md:p-10 min-h-[60vh]">
           {/* Skeleton state */}
           {showSkeleton && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-              {[...Array(4)].map((_, i) => (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+              {[...Array(6)].map((_, i) => (
                 <BlogSkeleton key={i} />
               ))}
             </div>
@@ -132,24 +158,31 @@ const Blogs = () => {
 
           {/* Success state */}
           {!loading && !error && blogs.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-              {blogs.map((blog) => (
-                <Cards
-                  key={blog.id}
-                  title={blog.title}
-                  description={
-                    blog.content.length > 110
-                      ? blog.content.substring(0, 110) + "..."
-                      : blog.content
-                  }
-                  techStack={[blog.category]}
-                  image={
-                    blog.thumbnailUrl ||
-                    "https://via.placeholder.com/600x400?text=No+Image"
-                  }
-                  to={`/blogs/${blog.id}`}
-                />
-              ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+              {blogs.map((blog) => {
+                const rawSnippet = (blog.introduction || blog.content || blog.description || "")
+                  .replace(/^[#\s*`_~>-]+/gm, "")
+                  .replace(/\n+/g, " ")
+                  .trim();
+                const description = rawSnippet.length > 120
+                  ? rawSnippet.substring(0, 120) + "..."
+                  : rawSnippet;
+
+                const tags = (blog.category && blog.category.trim())
+                  ? [blog.category.trim()]
+                  : (Array.isArray(blog.techStack) ? blog.techStack.filter(Boolean).slice(0, 2) : []);
+
+                return (
+                  <Cards
+                    key={blog.id}
+                    title={blog.title}
+                    description={description}
+                    techStack={tags}
+                    image={blog.thumbnailUrl || ""}
+                    to={`/blogs/${blog.id}`}
+                  />
+                );
+              })}
             </div>
           )}
         </div>
