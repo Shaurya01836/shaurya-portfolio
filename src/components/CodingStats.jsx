@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from "react";
 import BlueprintSection from "./ui/BlueprintSection";
 import SectionHeader from "./ui/SectionHeader";
 import { RiExternalLinkLine } from "@remixicon/react";
+import { playClickSound } from "../utils/sound";
 
 const LEETCODE_USERNAME = "shaurya01836";
-
 
 const CodingStats = () => {
   const [stats, setStats] = useState({
@@ -92,22 +92,7 @@ const CodingStats = () => {
     }
   };
 
-  // Math for Circular SVG Donut Chart
-  const radius = 48;
-  const circumference = 2 * Math.PI * radius; // ~301.59
   const totalSolved = stats.totalSolved || 556;
-
-  const easyRatio = totalSolved > 0 ? stats.easy / totalSolved : 0.34;
-  const mediumRatio = totalSolved > 0 ? stats.medium / totalSolved : 0.62;
-  const hardRatio = totalSolved > 0 ? stats.hard / totalSolved : 0.04;
-
-  const easyLen = Math.max(0, easyRatio * circumference - 3);
-  const mediumLen = Math.max(0, mediumRatio * circumference - 3);
-  const hardLen = Math.max(0, hardRatio * circumference - 3);
-
-  const easyOffset = 0;
-  const mediumOffset = -easyRatio * circumference;
-  const hardOffset = -(easyRatio + mediumRatio) * circumference;
 
   return (
     <BlueprintSection id="coding-stats" ariaLabel="LeetCode Statistics">
@@ -118,92 +103,50 @@ const CodingStats = () => {
           label="LEETCODE"
           title="LeetCode"
           accentWord="Profile"
-          description="Verified algorithmic problem-solving distribution, difficulty breakdown & contest streak"
+          description="Problem-solving stats, difficulty breakdown & contest streak"
         />
 
-        {/* Authentic LeetCode Visual Grid */}
+        {/* LeetCode Visual Grid */}
         <div className="grid grid-cols-1 md:grid-cols-12 border-b border-[var(--line)]">
-          {/* Left Pane: Radial Donut Progress Gauge */}
-          <div className="md:col-span-5 p-6 sm:p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-[var(--line)] bg-[var(--surface)] gap-4">
-            
-
-            {/* SVG Donut Ring */}
-            <div className="relative w-44 h-44 flex items-center justify-center my-2">
-              <svg className="w-full h-full -rotate-90 transform" viewBox="0 0 120 120">
-                {/* Background Ring */}
-                <circle
-                  cx="60"
-                  cy="60"
-                  r={radius}
-                  stroke="currentColor"
-                  strokeWidth="7"
-                  className="text-black/[0.06] dark:text-white/[0.08]"
-                  fill="none"
-                />
-                {/* Easy Segment (#00B8A3) */}
-                <circle
-                  cx="60"
-                  cy="60"
-                  r={radius}
-                  stroke="#00B8A3"
-                  strokeWidth="7"
-                  strokeDasharray={`${easyLen} ${circumference - easyLen}`}
-                  strokeDashoffset={easyOffset}
-                  strokeLinecap="round"
-                  fill="none"
-                  className="transition-all duration-700"
-                />
-                {/* Medium Segment (#FFC01E) */}
-                <circle
-                  cx="60"
-                  cy="60"
-                  r={radius}
-                  stroke="#FFC01E"
-                  strokeWidth="7"
-                  strokeDasharray={`${mediumLen} ${circumference - mediumLen}`}
-                  strokeDashoffset={mediumOffset}
-                  strokeLinecap="round"
-                  fill="none"
-                  className="transition-all duration-700"
-                />
-                {/* Hard Segment (#FF375F) */}
-                <circle
-                  cx="60"
-                  cy="60"
-                  r={radius}
-                  stroke="#FF375F"
-                  strokeWidth="7"
-                  strokeDasharray={`${hardLen} ${circumference - hardLen}`}
-                  strokeDashoffset={hardOffset}
-                  strokeLinecap="round"
-                  fill="none"
-                  className="transition-all duration-700"
-                />
-              </svg>
-
-              {/* Inside Donut Text */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-center font-tech select-none">
-                <span className="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-[#F4F4F5]">
+          {/* Left Pane: Total Solved Summary & Distribution Ratio */}
+          <div className="md:col-span-5 p-6 sm:p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-[var(--line)] bg-[var(--surface)] gap-6 text-left">
+            <div className="flex flex-col gap-2">
+              <span className="font-tech text-[10px] tracking-widest text-[#CDBDFF] uppercase font-semibold">
+                [OVERALL STATS]
+              </span>
+              <div className="flex flex-col gap-1 pt-1">
+                <span className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-[#F4F4F5]">
                   {stats.totalSolved}
                 </span>
-                <span className="text-[10px] text-gray-400 dark:text-[#71717A] uppercase tracking-widest font-medium mt-0.5">
-                  Solved
+                <span className="font-tech text-xs text-gray-500 dark:text-[#71717A] uppercase tracking-wider">
+                  Total Problems Solved
                 </span>
               </div>
             </div>
 
-            {/* Subtext */}
-            <div className="font-tech text-xs text-gray-500 dark:text-[#71717A] text-center">
-              <span>{stats.totalSolved}</span>
-              <span className="opacity-40"> / </span>
-              <span>{stats.totalQuestions} Questions</span>
+            {/* Metric Breakdown Chips */}
+            <div className="flex flex-col gap-2.5 pt-2 border-t border-[var(--line)] font-tech text-xs">
+              <div className="flex items-center justify-between text-gray-600 dark:text-gray-300">
+                <span className="text-[11px] text-gray-400 uppercase tracking-wide">Total Questions:</span>
+                <span className="font-semibold text-gray-900 dark:text-gray-100">{stats.totalQuestions}</span>
+              </div>
+              <div className="flex items-center justify-between text-gray-600 dark:text-gray-300">
+                <span className="text-[11px] text-gray-400 uppercase tracking-wide">Medium+ Solved:</span>
+                <span className="font-semibold text-emerald-500">
+                  {Math.round(((stats.medium + stats.hard) / totalSolved) * 100)}%
+                </span>
+              </div>
+              <div className="flex items-center justify-between text-gray-600 dark:text-gray-300">
+                <span className="text-[11px] text-gray-400 uppercase tracking-wide">Consistency:</span>
+                <span className="font-semibold text-[#CDBDFF]">{stats.maxStreak} Days Streak</span>
+              </div>
             </div>
           </div>
 
           {/* Right Pane: Difficulty Breakdown (Easy / Medium / Hard) */}
-          <div className="md:col-span-7 p-6 sm:p-8 flex flex-col justify-center gap-4 bg-black/[0.015] dark:bg-white/[0.01]">
+          <div className="md:col-span-7 p-6 sm:p-8 flex flex-col justify-center gap-4 bg-black/[0.015] dark:bg-white/[0.01] text-left">
             <div className="font-tech text-xs tracking-wider uppercase text-gray-500 dark:text-[#71717A] pb-1">
-              [Difficulty Distribution]
+              [Difficulty Breakdown]
             </div>
 
             {/* Easy Card */}
@@ -216,7 +159,7 @@ const CodingStats = () => {
                 <div className="flex items-baseline gap-1.5 font-tech text-xs text-gray-900 dark:text-gray-100 font-semibold">
                   <span className="text-sm">{stats.easy}</span>
                   <span className="text-[10px] text-gray-400 font-normal">
-                    ({Math.round((stats.easy / stats.totalSolved) * 100)}%)
+                    ({Math.round((stats.easy / totalSolved) * 100)}%)
                   </span>
                 </div>
               </div>
@@ -224,7 +167,7 @@ const CodingStats = () => {
               <div className="w-full h-1.5 bg-black/[0.05] dark:bg-white/[0.08] overflow-hidden">
                 <div
                   className="h-full bg-[#00B8A3] transition-all duration-700"
-                  style={{ width: `${(stats.easy / stats.totalSolved) * 100}%` }}
+                  style={{ width: `${(stats.easy / totalSolved) * 100}%` }}
                 />
               </div>
             </div>
@@ -239,7 +182,7 @@ const CodingStats = () => {
                 <div className="flex items-baseline gap-1.5 font-tech text-xs text-gray-900 dark:text-gray-100 font-semibold">
                   <span className="text-sm">{stats.medium}</span>
                   <span className="text-[10px] text-gray-400 font-normal">
-                    ({Math.round((stats.medium / stats.totalSolved) * 100)}%)
+                    ({Math.round((stats.medium / totalSolved) * 100)}%)
                   </span>
                 </div>
               </div>
@@ -247,7 +190,7 @@ const CodingStats = () => {
               <div className="w-full h-1.5 bg-black/[0.05] dark:bg-white/[0.08] overflow-hidden">
                 <div
                   className="h-full bg-[#FFC01E] transition-all duration-700"
-                  style={{ width: `${(stats.medium / stats.totalSolved) * 100}%` }}
+                  style={{ width: `${(stats.medium / totalSolved) * 100}%` }}
                 />
               </div>
             </div>
@@ -262,7 +205,7 @@ const CodingStats = () => {
                 <div className="flex items-baseline gap-1.5 font-tech text-xs text-gray-900 dark:text-gray-100 font-semibold">
                   <span className="text-sm">{stats.hard}</span>
                   <span className="text-[10px] text-gray-400 font-normal">
-                    ({Math.round((stats.hard / stats.totalSolved) * 100)}%)
+                    ({Math.round((stats.hard / totalSolved) * 100)}%)
                   </span>
                 </div>
               </div>
@@ -270,19 +213,19 @@ const CodingStats = () => {
               <div className="w-full h-1.5 bg-black/[0.05] dark:bg-white/[0.08] overflow-hidden">
                 <div
                   className="h-full bg-[#FF375F] transition-all duration-700"
-                  style={{ width: `${(stats.hard / stats.totalSolved) * 100}%` }}
+                  style={{ width: `${(stats.hard / totalSolved) * 100}%` }}
                 />
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Row: 3 Telemetry Metrics (Global Rank, Streak, Live Profile) */}
+        {/* Bottom Row: 3 Overview Metrics (Global Rank, Streak, Live Profile) */}
         <div className="grid grid-cols-1 sm:grid-cols-3 border-b border-[var(--line)] font-tech text-xs">
           {/* Cell 1: Global Ranking */}
-          <div className="p-5 border-b sm:border-b-0 sm:border-r border-[var(--line)] bg-[var(--surface)] flex flex-col justify-between gap-2">
+          <div className="p-5 border-b sm:border-b-0 sm:border-r border-[var(--line)] bg-[var(--surface)] flex flex-col justify-between gap-2 text-left">
             <span className="text-[10px] text-gray-400 dark:text-[#71717A] uppercase tracking-wider">
-              [GLOBAL RANKING]
+              [GLOBAL RANK]
             </span>
             <div className="text-2xl font-bold tracking-tight text-gray-900 dark:text-[#F4F4F5]">
               {stats.ranking}
@@ -293,7 +236,7 @@ const CodingStats = () => {
           </div>
 
           {/* Cell 2: Max Streak */}
-          <div className="p-5 border-b sm:border-b-0 sm:border-r border-[var(--line)] bg-[var(--surface)] flex flex-col justify-between gap-2">
+          <div className="p-5 border-b sm:border-b-0 sm:border-r border-[var(--line)] bg-[var(--surface)] flex flex-col justify-between gap-2 text-left">
             <span className="text-[10px] text-gray-400 dark:text-[#71717A] uppercase tracking-wider">
               [MAX STREAK]
             </span>
@@ -311,10 +254,11 @@ const CodingStats = () => {
             href={`https://leetcode.com/${LEETCODE_USERNAME}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-5 bg-[var(--surface)] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] flex flex-col justify-between gap-2 transition-colors group"
+            onClick={playClickSound}
+            className="p-5 bg-[var(--surface)] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] flex flex-col justify-between gap-2 transition-colors group text-left"
           >
             <div className="flex items-center justify-between text-[10px] text-gray-400 dark:text-[#71717A] uppercase tracking-wider">
-              <span>[OFFICIAL PROFILE]</span>
+              <span>[LEETCODE PROFILE]</span>
               <RiExternalLinkLine size={13} className="group-hover:text-black dark:group-hover:text-[#CDBDFF] transition-colors" />
             </div>
             <div className="text-base font-semibold text-gray-900 dark:text-[#F4F4F5] group-hover:text-black dark:group-hover:text-white transition-colors">

@@ -14,6 +14,7 @@ function Cards({
   className = "",
   onClick,
   ariaLabel,
+  metricStrip,
 }) {
   const CardBody = () => (
     <>
@@ -25,6 +26,21 @@ function Cards({
             alt={`${title} preview`}
             className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-[1.01]"
           />
+        </div>
+      )}
+
+      {/* Optional Production Telemetry Strip */}
+      {metricStrip && (
+        <div className="px-4 sm:px-5 py-2 border-b border-[var(--line)] bg-black/[0.03] dark:bg-white/[0.02] flex items-center justify-between font-tech text-[10px] tracking-wider uppercase">
+          <span className="text-[#CDBDFF] font-semibold flex items-center gap-1.5">
+            <span className="w-1.5 h-1.5 bg-emerald-400 animate-pulse shrink-0" aria-hidden="true" />
+            <span>{metricStrip.left}</span>
+          </span>
+          {metricStrip.right && (
+            <span className="text-gray-500 dark:text-gray-400 font-medium">
+              {metricStrip.right}
+            </span>
+          )}
         </div>
       )}
 
@@ -138,6 +154,10 @@ Cards.propTypes = {
   className: PropTypes.string,
   onClick: PropTypes.func,
   ariaLabel: PropTypes.string,
+  metricStrip: PropTypes.shape({
+    left: PropTypes.node.isRequired,
+    right: PropTypes.node,
+  }),
 };
 
 export default Cards;

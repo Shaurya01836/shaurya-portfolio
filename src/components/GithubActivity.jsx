@@ -7,7 +7,9 @@ import {
   RiGitCommitLine, 
   RiGitRepositoryLine, 
   RiFireLine, 
-  RiPulseLine 
+  RiPulseLine,
+  RiStarLine,
+  RiGitForkLine
 } from "@remixicon/react";
 import BlueprintSection from "./ui/BlueprintSection";
 import SectionHeader from "./ui/SectionHeader";
@@ -198,7 +200,7 @@ const GithubActivity = ({ darkMode }) => {
           label="CONTRIBUTIONS"
           title="Open-Source"
           accentWord="Activity"
-          description="Live public contributions, repository commits, code velocity & open-source telemetry"
+          description="Live public contributions, repository commits, and open-source activity"
         />
 
         {/* 4-Cell Telemetry Stats Row */}
@@ -293,6 +295,78 @@ const GithubActivity = ({ darkMode }) => {
                 Synchronizing GitHub Activity Heatmap...
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Pinned Flagship Open-Source Repository (CrickAuction) */}
+        <div className="border-t border-[var(--line)] p-5 sm:p-6 bg-black/[0.01] dark:bg-white/[0.01] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-tech text-left">
+          <div className="flex flex-col gap-1.5 max-w-xl">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="font-semibold text-xs tracking-wider uppercase text-[#CDBDFF] flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 bg-emerald-400 animate-pulse shrink-0" aria-hidden="true" />
+                PINNED FLAGSHIP REPOSITORY
+              </span>
+              <span className="opacity-30">·</span>
+              <span className="text-[11px] text-gray-500 uppercase tracking-wide">
+                2.41M+ Monthly Views
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <RiGithubLine size={18} className="text-gray-800 dark:text-gray-200 shrink-0" />
+              <a
+                href={`https://github.com/${GITHUB_USERNAME}/ipl-auction`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold text-gray-900 dark:text-white hover:text-[#CDBDFF] transition-colors"
+              >
+                {GITHUB_USERNAME}/ipl-auction
+              </a>
+              <span className="text-[10px] px-1.5 py-0.5 border border-[var(--line)] bg-[var(--surface)] text-gray-500 uppercase">
+                Public
+              </span>
+            </div>
+            <p className="text-xs text-gray-600 dark:text-gray-400 font-sans leading-relaxed">
+              Real-time IPL auction simulator replicating broadcast auctions with sub-second synchronization, enterprise bidding engine, and squad analytics.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5 shrink-0 self-start md:self-auto">
+            {/* Stars */}
+            <a
+              href={`https://github.com/${GITHUB_USERNAME}/ipl-auction/stargazers`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-[var(--line)] bg-[var(--surface)] text-xs text-gray-800 dark:text-gray-200 hover:border-gray-400 dark:hover:border-white/30 transition-colors"
+              title="GitHub Stargazers"
+            >
+              <RiStarLine size={14} className="text-amber-400" />
+              <span className="font-semibold">43</span>
+              <span className="text-[10px] text-gray-500 uppercase">Stars</span>
+            </a>
+
+            {/* Forks */}
+            <a
+              href={`https://github.com/${GITHUB_USERNAME}/ipl-auction/network/members`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3 py-1.5 border border-[var(--line)] bg-[var(--surface)] text-xs text-gray-800 dark:text-gray-200 hover:border-gray-400 dark:hover:border-white/30 transition-colors"
+              title="GitHub Forks"
+            >
+              <RiGitForkLine size={14} className="text-[#CDBDFF]" />
+              <span className="font-semibold">18</span>
+              <span className="text-[10px] text-gray-500 uppercase">Forks</span>
+            </a>
+
+            {/* Live Demo */}
+            <a
+              href="https://crickauction.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gray-950 dark:bg-white text-white dark:text-black font-semibold text-xs uppercase tracking-wider transition-colors hover:bg-gray-800 dark:hover:bg-gray-200"
+            >
+              <span>crickauction.in</span>
+              <RiExternalLinkLine size={13} />
+            </a>
           </div>
         </div>
 

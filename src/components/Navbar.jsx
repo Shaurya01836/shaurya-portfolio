@@ -1,11 +1,39 @@
+import { useState } from "react";
 import PropTypes from "prop-types";
 import { Link, useLocation } from "react-router-dom";
 import { SwitchMode } from "./watermelon/switch-mode";
-import { RiGithubLine, RiLinkedinLine, RiTwitterXLine, RiMailLine } from "@remixicon/react";
+import {
+  RiGithubLine,
+  RiLinkedinLine,
+  RiTwitterXLine,
+  RiMailLine,
+  RiVolumeUpLine,
+  RiVolumeMuteLine,
+} from "@remixicon/react";
 import Crosshair from "./ui/Crosshair";
+import {
+  playClickSound,
+  playToggleSound,
+  getSoundMuted,
+  toggleSoundMuted,
+} from "../utils/sound";
 
 const Navbar = ({ toggleTheme, isDarkMode }) => {
   const location = useLocation();
+  const [soundMuted, setSoundMutedState] = useState(getSoundMuted());
+
+  const handleSoundToggle = () => {
+    const nextMuted = toggleSoundMuted();
+    setSoundMutedState(nextMuted);
+    if (!nextMuted) {
+      playClickSound();
+    }
+  };
+
+  const handleThemeToggle = () => {
+    playToggleSound(!isDarkMode);
+    toggleTheme();
+  };
 
   const isLinkActive = (path) => {
     if (path === "/") {
@@ -33,6 +61,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
         {/* Left: Brand Cell */}
         <Link
           to="/"
+          onClick={playClickSound}
           className="flex items-center gap-2.5 px-4 sm:px-6 border-r border-[var(--line)] font-tech text-xs tracking-wider uppercase text-gray-900 dark:text-gray-100 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]"
         >
           <span className="font-semibold text-sm tracking-tight font-sans">Shaurya</span>
@@ -48,6 +77,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
                 <Link
                   key={item.id}
                   to={item.path}
+                  onClick={playClickSound}
                   className={`flex items-center px-4 sm:px-6 font-tech text-xs tracking-wider transition-colors border-r last:border-r-0 border-[var(--line)] ${
                     active
                       ? "text-gray-950 dark:text-white bg-black/[0.04] dark:bg-white/[0.04] font-medium"
@@ -67,6 +97,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub Profile"
+              onClick={playClickSound}
               className="px-3.5 flex items-center hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
             >
               <RiGithubLine size={16} />
@@ -76,6 +107,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn Profile"
+              onClick={playClickSound}
               className="px-3.5 flex items-center hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors border-l border-[var(--line)]"
             >
               <RiLinkedinLine size={16} />
@@ -85,6 +117,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="X (Twitter) Profile"
+              onClick={playClickSound}
               className="px-3.5 flex items-center hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors border-l border-[var(--line)]"
             >
               <RiTwitterXLine size={15} />
@@ -92,17 +125,29 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
             <a
               href="mailto:shaurya01836@gmail.com"
               aria-label="Send Email"
+              onClick={playClickSound}
               className="px-3.5 flex items-center hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors border-l border-[var(--line)]"
             >
               <RiMailLine size={16} />
             </a>
           </div>
 
+          {/* Sound Mute/Unmute Toggle Button */}
+          <button
+            type="button"
+            onClick={handleSoundToggle}
+            title={soundMuted ? "Enable tactile sounds" : "Mute UI sounds"}
+            aria-label={soundMuted ? "Enable tactile sounds" : "Mute UI sounds"}
+            className="px-3 sm:px-3.5 flex items-center border-r border-[var(--line)] text-gray-500 dark:text-[#71717A] hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]"
+          >
+            {soundMuted ? <RiVolumeMuteLine size={16} /> : <RiVolumeUpLine size={16} />}
+          </button>
+
           {/* Theme Switcher Cell */}
           <div className="flex items-center px-4 sm:px-5">
             <SwitchMode
               isDark={isDarkMode}
-              onToggle={toggleTheme}
+              onToggle={handleThemeToggle}
               width={52}
               height={26}
               darkColor="#07070A"

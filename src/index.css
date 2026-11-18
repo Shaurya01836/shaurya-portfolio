@@ -92,6 +92,32 @@ body {
   display: none;
 }
 
+/* Custom scrollbar utility for scrollable modals and panels */
+.custom-scrollbar {
+  -ms-overflow-style: auto !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(205, 189, 255, 0.4) transparent !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px !important;
+  height: 5px !important;
+  display: block !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--line) !important;
+  border-radius: 0px !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #cdbdff !important;
+}
+
 /* Remove Tailwind typography default backticks around inline code */
 .prose code::before {
   content: "" !important;
