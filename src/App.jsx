@@ -78,14 +78,14 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
 
   return (
     <ReactLenis root>
-      <div className="bg-[var(--bg-primary)] dark:bg-[#07070A] text-gray-900 dark:text-[#F4F4F5] min-h-screen transition-colors duration-200 flex flex-col relative selection:bg-[#CDBDFF]/25 selection:text-black dark:selection:text-[#CDBDFF]">
+      <div className="bg-[var(--bg-primary)] dark:bg-[#07070A] text-gray-900 dark:text-[#F4F4F5] min-h-screen transition-colors duration-200 flex flex-col relative selection:bg-[#CDBDFF]/25 selection:text-black dark:selection:text-[#CDBDFF] overflow-x-clip">
         {/* Subtle, thin top scroll progress indicator */}
         <MagneticScrollIndicator />
 
         {/* Top Navbar */}
         <Navbar toggleTheme={toggleTheme} isDarkMode={darkMode} />
 
-        {/* Full-width blueprint viewport: hairlines run edge-to-edge, content is framed at max-w-[1160px] */}
+        {/* Full-width blueprint viewport: hairlines run edge-to-edge, content is framed at max-w-5xl mx-auto */}
         <main className="flex-1 w-full">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>

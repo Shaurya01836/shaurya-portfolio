@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { TechImage } from "./TechImage";
 import { Link } from "react-router-dom";
-import { RiExternalLinkLine, RiGithubLine } from "@remixicon/react";
+import { ExternalLinkSquareIcon, GithubIcon } from "./icons";
 
 function Cards({
   title,
@@ -29,7 +29,7 @@ function Cards({
         </div>
       )}
 
-      {/* Optional Production Telemetry Strip */}
+      {/* Optional Highlight Strip */}
       {metricStrip && (
         <div className="px-4 sm:px-5 py-2 border-b border-[var(--line)] bg-black/[0.03] dark:bg-white/[0.02] flex items-center justify-between font-tech text-[10px] tracking-wider uppercase">
           <span className="text-[#CDBDFF] font-semibold flex items-center gap-1.5">
@@ -65,7 +65,7 @@ function Cards({
                   aria-label={`View ${title} source on GitHub`}
                   className="p-1 text-gray-400 hover:text-black dark:hover:text-[#CDBDFF] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]"
                 >
-                  <RiGithubLine size={16} />
+                  <GithubIcon width={16} height={16} aria-hidden />
                 </a>
               )}
               {liveDemo && (
@@ -76,7 +76,7 @@ function Cards({
                   aria-label={`Open ${title} live demo`}
                   className="p-1 text-gray-400 hover:text-black dark:hover:text-[#CDBDFF] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]"
                 >
-                  <RiExternalLinkLine size={16} />
+                  <ExternalLinkSquareIcon width={16} height={16} aria-hidden />
                 </a>
               )}
             </div>

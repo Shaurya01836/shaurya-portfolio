@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import BlueprintSection from "./ui/BlueprintSection";
 import SectionHeader from "./ui/SectionHeader";
-import { RiExternalLinkLine } from "@remixicon/react";
+import { ExternalLinkSquareIcon } from "./icons";
 import { playClickSound } from "../utils/sound";
 
 const LEETCODE_USERNAME = "shaurya01836";
@@ -95,7 +95,14 @@ const CodingStats = () => {
   const totalSolved = stats.totalSolved || 556;
 
   return (
-    <BlueprintSection id="coding-stats" ariaLabel="LeetCode Statistics">
+    <BlueprintSection
+      id="coding-stats"
+      ariaLabel="LeetCode Statistics"
+      leftAnnotation={{
+        lines: ["550+ solved", "mostly medium & hard"],
+        arrow: "down-right",
+      }}
+    >
       <div ref={sectionRef}>
         {/* 2-cell Section Header */}
         <SectionHeader
@@ -112,7 +119,7 @@ const CodingStats = () => {
           <div className="md:col-span-5 p-6 sm:p-8 flex flex-col justify-between border-b md:border-b-0 md:border-r border-[var(--line)] bg-[var(--surface)] gap-6 text-left">
             <div className="flex flex-col gap-2">
               <span className="font-tech text-[10px] tracking-widest text-[#CDBDFF] uppercase font-semibold">
-                [OVERALL STATS]
+                [Solved Problems]
               </span>
               <div className="flex flex-col gap-1 pt-1">
                 <span className="text-4xl sm:text-5xl font-extrabold tracking-tight text-gray-900 dark:text-[#F4F4F5]">
@@ -146,7 +153,7 @@ const CodingStats = () => {
           {/* Right Pane: Difficulty Breakdown (Easy / Medium / Hard) */}
           <div className="md:col-span-7 p-6 sm:p-8 flex flex-col justify-center gap-4 bg-black/[0.015] dark:bg-white/[0.01] text-left">
             <div className="font-tech text-xs tracking-wider uppercase text-gray-500 dark:text-[#71717A] pb-1">
-              [Difficulty Breakdown]
+              [By Difficulty]
             </div>
 
             {/* Easy Card */}
@@ -225,7 +232,7 @@ const CodingStats = () => {
           {/* Cell 1: Global Ranking */}
           <div className="p-5 border-b sm:border-b-0 sm:border-r border-[var(--line)] bg-[var(--surface)] flex flex-col justify-between gap-2 text-left">
             <span className="text-[10px] text-gray-400 dark:text-[#71717A] uppercase tracking-wider">
-              [GLOBAL RANK]
+              [Global Rank]
             </span>
             <div className="text-2xl font-bold tracking-tight text-gray-900 dark:text-[#F4F4F5]">
               {stats.ranking}
@@ -238,7 +245,7 @@ const CodingStats = () => {
           {/* Cell 2: Max Streak */}
           <div className="p-5 border-b sm:border-b-0 sm:border-r border-[var(--line)] bg-[var(--surface)] flex flex-col justify-between gap-2 text-left">
             <span className="text-[10px] text-gray-400 dark:text-[#71717A] uppercase tracking-wider">
-              [MAX STREAK]
+              [Best Streak]
             </span>
             <div className="text-2xl font-bold tracking-tight text-gray-900 dark:text-[#F4F4F5] flex items-baseline gap-1.5">
               <span>{stats.maxStreak}</span>
@@ -258,8 +265,8 @@ const CodingStats = () => {
             className="p-5 bg-[var(--surface)] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] flex flex-col justify-between gap-2 transition-colors group text-left"
           >
             <div className="flex items-center justify-between text-[10px] text-gray-400 dark:text-[#71717A] uppercase tracking-wider">
-              <span>[LEETCODE PROFILE]</span>
-              <RiExternalLinkLine size={13} className="group-hover:text-black dark:group-hover:text-[#CDBDFF] transition-colors" />
+              <span>[LeetCode Profile]</span>
+              <ExternalLinkSquareIcon width={13} height={13} className="group-hover:text-black dark:group-hover:text-[#CDBDFF] transition-colors" aria-hidden />
             </div>
             <div className="text-base font-semibold text-gray-900 dark:text-[#F4F4F5] group-hover:text-black dark:group-hover:text-white transition-colors">
               @{LEETCODE_USERNAME}

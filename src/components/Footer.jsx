@@ -1,10 +1,10 @@
-import { RiGithubLine, RiLinkedinLine, RiTwitterXLine, RiMailLine } from "@remixicon/react";
+import { GithubIcon, LinkedinIcon, XComIcon, EnvelopeIcon } from "./icons";
 import Crosshair from "./ui/Crosshair";
 
 const Footer = () => {
   return (
     <footer className="relative w-full border-t border-[var(--line)] bg-[var(--bg-primary)]">
-      <div className="relative max-w-[1160px] mx-auto border-x border-[var(--line)] py-8 px-6 sm:px-8">
+      <div className="relative max-w-5xl mx-auto border-x border-[var(--line)] py-8 px-6 sm:px-8">
         {/* Top-Left & Right Crosshairs */}
         <div className="absolute -top-[5.5px] -left-[5.5px] z-20 pointer-events-none select-none" aria-hidden="true">
           <Crosshair />
@@ -32,7 +32,7 @@ const Footer = () => {
               aria-label="GitHub"
               className="hover:text-black dark:hover:text-[#CDBDFF] transition-colors"
             >
-              <RiGithubLine size={16} />
+              <GithubIcon width={16} height={16} aria-hidden />
             </a>
             <a
               href="https://www.linkedin.com/in/this-is-shaurya-upadhyay"
@@ -41,7 +41,7 @@ const Footer = () => {
               aria-label="LinkedIn"
               className="hover:text-black dark:hover:text-[#CDBDFF] transition-colors"
             >
-              <RiLinkedinLine size={16} />
+              <LinkedinIcon width={16} height={16} aria-hidden />
             </a>
             <a
               href="https://x.com/shaurya01836"
@@ -50,14 +50,14 @@ const Footer = () => {
               aria-label="X (Twitter)"
               className="hover:text-black dark:hover:text-[#CDBDFF] transition-colors"
             >
-              <RiTwitterXLine size={15} />
+              <XComIcon width={16} height={16} aria-hidden />
             </a>
             <a
               href="mailto:shaurya01836@gmail.com"
               aria-label="Email"
               className="hover:text-black dark:hover:text-[#CDBDFF] transition-colors"
             >
-              <RiMailLine size={16} />
+              <EnvelopeIcon width={16} height={16} aria-hidden />
             </a>
           </div>
         </div>

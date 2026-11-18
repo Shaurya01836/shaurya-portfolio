@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import Cards from "../components/Cards";
-import { RiErrorWarningLine, RiRefreshLine } from "@remixicon/react";
+import { AlertTriangleIcon, RefreshIcon } from "../components/icons";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase.config";
 import BlueprintSection from "../components/ui/BlueprintSection";
@@ -126,10 +126,10 @@ const Blogs = () => {
           {error && !loading && (
             <div className="flex flex-col items-center justify-center py-16 text-center border border-red-500/20 bg-red-500/[0.03] p-8 max-w-md mx-auto">
               <div className="p-3 bg-red-500/10 text-red-500 mb-3">
-                <RiErrorWarningLine size={32} />
+                <AlertTriangleIcon width={32} height={32} aria-hidden />
               </div>
               <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-1">
-                Database Sync Error
+                Unable to Load Articles
               </h3>
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 font-tech">
                 {error}
@@ -138,8 +138,8 @@ const Blogs = () => {
                 onClick={handleRetry} 
                 className="flex items-center gap-2 px-5 py-2.5 bg-gray-950 dark:bg-white text-white dark:text-black font-tech text-xs tracking-wider uppercase"
               >
-                <RiRefreshLine size={16} />
-                <span>Retry Transmission</span>
+                <RefreshIcon width={16} height={16} aria-hidden />
+                <span>Try Again</span>
               </button>
             </div>
           )}
@@ -148,7 +148,7 @@ const Blogs = () => {
           {!loading && !error && blogs.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 text-center border border-[var(--line)] bg-[var(--surface)] p-8 max-w-lg mx-auto">
               <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-2">
-                No Publications Found
+                No Articles Yet
               </h3>
               <p className="text-xs font-tech text-gray-500 dark:text-gray-400 max-w-md leading-relaxed">
                 Articles are currently in draft. Check back soon for deep dives into Java backends, React optimization, and distributed systems.

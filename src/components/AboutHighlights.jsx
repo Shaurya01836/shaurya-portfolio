@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "../firebase.config";
-import { RiAwardLine, RiCloseLine } from "@remixicon/react";
+import { AwardMedalIcon, MultipleCrossCancelIcon } from "./icons";
 import { motion, AnimatePresence } from "framer-motion";
 import BlueprintSection from "./ui/BlueprintSection";
 import SectionHeader from "./ui/SectionHeader";
@@ -30,21 +30,28 @@ const AboutHighlights = () => {
   }, []);
 
   return (
-    <BlueprintSection id="about" ariaLabel="About and Highlights">
+    <BlueprintSection
+      id="about"
+      ariaLabel="About and Highlights"
+      rightAnnotation={{
+        lines: ["verified credentials", "& hackathon wins"],
+        arrow: "down-left",
+      }}
+    >
       {/* 2-cell Section Header */}
       <SectionHeader
         number="06"
         label="HIGHLIGHTS"
         title="Personal"
         accentWord="Background"
-        description="Philosophy, hackathon competitions, and verified industry credentials"
+        description="Background, hackathons, and certifications"
       />
 
       {/* Engineering Profile & Background */}
       <div className="p-6 sm:p-10 md:p-12 border-b border-[var(--line)] flex flex-col gap-5 text-left">
         <div className="flex flex-col gap-1.5">
           <span className="font-tech text-[10px] tracking-widest text-[#CDBDFF] uppercase font-semibold">
-            [ENGINEERING PROFILE &amp; PHILOSOPHY]
+            [About My Work]
           </span>
           <h3 className="text-xl sm:text-2xl font-semibold tracking-tight text-gray-900 dark:text-[#F4F4F5]">
             Building Resilient, Scalable Systems
@@ -71,7 +78,7 @@ const AboutHighlights = () => {
       {achievements.length > 0 && (
         <div className="border-b border-[var(--line)]">
           <div className="px-6 py-3 border-b border-[var(--line)] font-tech text-[10px] tracking-wider uppercase text-gray-500 dark:text-[#71717A]">
-            Verified Certifications &amp; Awards
+            Certifications &amp; Awards
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
             {achievements.map((item, idx) => (
@@ -84,7 +91,7 @@ const AboutHighlights = () => {
                 className="p-5 border-b sm:border-b-0 border-r border-[var(--line)] last:border-r-0 bg-[var(--surface)] hover:bg-black/[0.015] dark:hover:bg-white/[0.015] cursor-pointer transition-colors flex items-start gap-3"
               >
                 <div className="w-8 h-8 shrink-0 border border-[var(--line)] flex items-center justify-center text-gray-500">
-                  <RiAwardLine size={16} />
+                  <AwardMedalIcon width={16} height={16} aria-hidden />
                 </div>
                 <div className="flex flex-col gap-1 min-w-0">
                   <h4 className="text-xs sm:text-sm font-semibold text-gray-900 dark:text-[#F4F4F5] truncate">
@@ -124,7 +131,7 @@ const AboutHighlights = () => {
               <div className="flex items-start justify-between gap-4 border-b border-[var(--line)] pb-4">
                 <div className="flex flex-col gap-1">
                   <span className="font-tech text-[10px] tracking-widest text-[#CDBDFF] uppercase">
-                    [ARCHIVE SPEC]
+                    [Certificate Details]
                   </span>
                   <h3 className="text-lg sm:text-xl font-semibold tracking-tight text-gray-900 dark:text-[#F4F4F5]">
                     {selectedItem.title}
@@ -139,7 +146,7 @@ const AboutHighlights = () => {
                   className="p-1 border border-[var(--line)] hover:bg-black/[0.04] dark:hover:bg-white/[0.04] text-gray-400 hover:text-black dark:hover:text-white transition-colors"
                   aria-label="Close dialog"
                 >
-                  <RiCloseLine size={18} />
+                  <MultipleCrossCancelIcon width={18} height={18} aria-hidden />
                 </button>
               </div>
 

@@ -7,14 +7,14 @@ import rehypeRaw from "rehype-raw";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import {
-  RiArrowLeftLine,
-  RiCalendarLine,
-  RiPriceTag3Line,
-  RiGithubLine,
-  RiExternalLinkLine,
-  RiFileCopyLine,
-  RiCheckLine,
-} from "@remixicon/react";
+  ArrowLeftIcon,
+  CalendarIcon,
+  TagIcon,
+  GithubIcon,
+  ExternalLinkSquareIcon,
+  CopyIcon,
+  CheckTickCircleIcon,
+} from "../components/icons";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase.config";
 import BlueprintSection from "../components/ui/BlueprintSection";
@@ -56,9 +56,9 @@ const CopyButton = ({ text }) => {
       title="Copy to clipboard"
     >
       {copied ? (
-        <RiCheckLine size={16} className="text-emerald-400" />
+        <CheckTickCircleIcon width={16} height={16} className="text-emerald-400" aria-hidden />
       ) : (
-        <RiFileCopyLine size={16} />
+        <CopyIcon width={16} height={16} aria-hidden />
       )}
     </button>
   );
@@ -211,7 +211,7 @@ const BlogDetail = () => {
             to="/blogs"
             className="inline-flex items-center gap-2 font-tech text-xs uppercase tracking-wider text-gray-500 hover:text-black dark:hover:text-[#CDBDFF] transition-colors mb-2 w-fit"
           >
-            <RiArrowLeftLine size={16} />
+            <ArrowLeftIcon width={16} height={16} aria-hidden />
             <span>Back to Blogs</span>
           </Link>
 
@@ -236,13 +236,13 @@ const BlogDetail = () => {
               <div className="flex flex-wrap gap-4 font-tech text-xs text-gray-500 dark:text-[#71717A] items-center">
                 {formattedDate && (
                   <span className="flex items-center gap-1.5">
-                    <RiCalendarLine size={15} />
+                    <CalendarIcon width={15} height={15} aria-hidden />
                     {formattedDate}
                   </span>
                 )}
                 {blog.category && blog.category.trim() && (
                   <span className="flex items-center gap-1.5 px-2 py-0.5 border border-[var(--line)] bg-[var(--surface)] text-gray-700 dark:text-gray-300">
-                    <RiPriceTag3Line size={13} />
+                    <TagIcon width={13} height={13} aria-hidden />
                     {blog.category}
                   </span>
                 )}
@@ -259,7 +259,7 @@ const BlogDetail = () => {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 border border-[var(--line)] bg-[var(--surface)] hover:bg-black/[0.04] dark:hover:bg-white/[0.04] px-3.5 py-1.5 font-tech text-xs tracking-wider uppercase text-gray-700 dark:text-gray-200 transition-colors"
                   >
-                    <RiGithubLine size={15} />
+                    <GithubIcon width={15} height={15} aria-hidden />
                     GitHub
                   </a>
                 )}
@@ -270,7 +270,7 @@ const BlogDetail = () => {
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-[#CDBDFF] hover:bg-[#b8a2ff] text-black px-3.5 py-1.5 font-tech text-xs font-semibold tracking-wider uppercase transition-colors"
                   >
-                    <RiExternalLinkLine size={15} />
+                    <ExternalLinkSquareIcon width={15} height={15} aria-hidden />
                     Live Demo
                   </a>
                 )}

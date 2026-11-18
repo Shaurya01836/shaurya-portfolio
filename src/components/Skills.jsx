@@ -65,8 +65,8 @@ const Skills = () => {
         number="02"
         label="STACK"
         title="Technical"
-        accentWord="Capabilities"
-        description="Core languages, enterprise frameworks, databases & infrastructure"
+        accentWord="Stack"
+        description="Languages, frameworks, databases, and tools"
       />
 
       {/* Grid of Square Cells with 1px borders */}

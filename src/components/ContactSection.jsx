@@ -1,14 +1,14 @@
 import { useState } from "react";
 import {
-  RiMailLine,
-  RiGithubLine,
-  RiLinkedinLine,
-  RiTwitterXLine,
-  RiSendPlaneLine,
-  RiLoader4Line,
-  RiCheckLine,
-  RiExternalLinkLine,
-} from "@remixicon/react";
+  EnvelopeIcon,
+  GithubIcon,
+  LinkedinIcon,
+  XComIcon,
+  SendPlaneHorizontalIcon,
+  RefreshIcon,
+  CheckTickCircleIcon,
+  ExternalLinkSquareIcon,
+} from "./icons";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase.config";
 import emailjs from "@emailjs/browser";
@@ -21,25 +21,25 @@ const socialChannels = [
   {
     name: "GitHub",
     href: "https://github.com/Shaurya01836",
-    icon: RiGithubLine,
+    icon: GithubIcon,
     handle: "@Shaurya01836",
   },
   {
     name: "LinkedIn",
     href: "https://www.linkedin.com/in/this-is-shaurya-upadhyay",
-    icon: RiLinkedinLine,
+    icon: LinkedinIcon,
     handle: "Shaurya Upadhyay",
   },
   {
     name: "X (Twitter)",
     href: "https://x.com/shaurya01836",
-    icon: RiTwitterXLine,
+    icon: XComIcon,
     handle: "@shaurya01836",
   },
   {
     name: "Email Direct",
     href: "mailto:shaurya01836@gmail.com",
-    icon: RiMailLine,
+    icon: EnvelopeIcon,
     handle: "shaurya01836@gmail.com",
   },
 ];
@@ -96,8 +96,8 @@ const ContactSection = () => {
         number="07"
         label="CONTACT"
         title="Direct"
-        accentWord="Transmission"
-        description="Available for full-time engineering roles, high-throughput systems, and consulting"
+        accentWord="Message"
+        description="Available for full-time engineering roles, backend systems, and web projects"
       />
 
       {/* Main Grid: Left side Email + Actions, Right side Social Cells */}
@@ -109,7 +109,7 @@ const ContactSection = () => {
               Let&apos;s build together.
             </h3>
             <p className="text-xs sm:text-sm text-gray-600 dark:text-[#71717A] leading-relaxed">
-              Have an open position, an ambitious web product, or need a robust Java / React architecture? Reach out directly or initiate a transmission below.
+              Have an open position, an ambitious project, or want to collaborate? Reach out directly or send a message below.
             </p>
           </div>
 
@@ -118,13 +118,13 @@ const ContactSection = () => {
             <CopyField text="shaurya01836@gmail.com" label="EMAIL" />
 
             <div className="flex flex-wrap items-center gap-3">
-              {/* Primary Email Button: Solid White / Near-black */}
+              {/* Primary Email Button */}
               <a
                 href="mailto:shaurya01836@gmail.com"
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-none bg-gray-950 dark:bg-[#F4F4F5] text-white dark:text-[#07070A] font-medium text-xs font-tech tracking-wider uppercase transition-colors hover:bg-gray-800 dark:hover:bg-white focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]"
               >
-                <RiMailLine size={16} />
-                <span>OPEN MAIL CLIENT</span>
+                <EnvelopeIcon width={16} height={16} aria-hidden />
+                <span>OPEN EMAIL</span>
                 <span className="text-xs">↗</span>
               </a>
 
@@ -156,8 +156,8 @@ const ContactSection = () => {
                 }`}
               >
                 <div className="flex items-center justify-between text-gray-400 dark:text-[#71717A] group-hover:text-black dark:group-hover:text-[#CDBDFF] transition-colors">
-                  <Icon size={20} />
-                  <RiExternalLinkLine size={14} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <Icon width={20} height={20} aria-hidden />
+                  <ExternalLinkSquareIcon width={14} height={14} className="opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden />
                 </div>
                 <div className="flex flex-col gap-0.5">
                   <span className="font-tech text-xs font-medium text-gray-900 dark:text-[#F4F4F5] uppercase tracking-wider">
@@ -186,9 +186,9 @@ const ContactSection = () => {
             <form onSubmit={handleSubmit} className="p-6 sm:p-10 flex flex-col gap-5 max-w-2xl mx-auto">
               <div className="flex items-center justify-between border-b border-[var(--line)] pb-3">
                 <span className="font-tech text-xs tracking-wider uppercase text-gray-400 dark:text-[#71717A]">
-                  [Direct Message Transmission]
+                  [Send a Message]
                 </span>
-                <span className="font-tech text-[10px] text-gray-400">ENCRYPTED / FIRESTORE</span>
+                <span className="font-tech text-[10px] text-gray-400">Direct Message</span>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -246,25 +246,25 @@ const ContactSection = () => {
                 >
                   {status === "loading" ? (
                     <>
-                      <RiLoader4Line size={15} className="animate-spin" />
-                      <span>Transmitting...</span>
+                      <RefreshIcon width={15} height={15} className="animate-spin" aria-hidden />
+                      <span>Sending...</span>
                     </>
                   ) : status === "success" ? (
                     <>
-                      <RiCheckLine size={15} className="text-emerald-500" />
-                      <span>Message Transmitted!</span>
+                      <CheckTickCircleIcon width={15} height={15} className="text-emerald-500" aria-hidden />
+                      <span>Message Sent!</span>
                     </>
                   ) : (
                     <>
-                      <RiSendPlaneLine size={14} />
-                      <span>Transmit Message</span>
+                      <SendPlaneHorizontalIcon width={14} height={14} aria-hidden />
+                      <span>Send Message</span>
                     </>
                   )}
                 </button>
 
                 {status === "error" && (
                   <span className="text-xs font-tech text-rose-500">
-                    Transmission failed. Please use direct email.
+                    Could not send message. Please email directly.
                   </span>
                 )}
               </div>

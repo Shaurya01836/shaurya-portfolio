@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { RiFileTextLine, RiGithubLine } from "@remixicon/react";
+import { FileIcon, GithubIcon } from "./icons";
 import { collection, getDocs, limit, query } from "firebase/firestore";
 import { db } from "../firebase.config";
 import { NameSelectionDoodle } from "./Doodles";
@@ -86,7 +86,7 @@ const Hero = () => {
               onClick={playClickSound}
               className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-none bg-gray-950 dark:bg-[#F4F4F5] text-white dark:text-[#07070A] font-medium text-xs sm:text-sm tracking-wide transition-colors duration-150 hover:bg-gray-800 dark:hover:bg-white focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]"
             >
-              <RiFileTextLine size={16} />
+              <FileIcon width={16} height={16} aria-hidden />
               <span>VIEW RESUME</span>
               <span className="text-xs">↗</span>
             </a>
@@ -98,7 +98,7 @@ const Hero = () => {
               onClick={playClickSound}
               className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 rounded-none border border-[var(--line)] bg-[var(--surface)] text-gray-800 dark:text-gray-200 hover:bg-black/[0.04] dark:hover:bg-white/[0.04] font-medium text-xs sm:text-sm tracking-wide transition-colors duration-150 focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]"
             >
-              <RiGithubLine size={16} />
+              <GithubIcon width={16} height={16} aria-hidden />
               <span>GITHUB</span>
             </a>
           </div>
@@ -108,7 +108,7 @@ const Hero = () => {
         <div className="p-6 sm:p-8 md:p-10 flex flex-col gap-6 text-left">
           <div className="flex flex-col gap-3 max-w-3xl">
             <span className="font-tech text-[10px] tracking-widest text-[#CDBDFF] uppercase font-semibold">
-              [SYSTEM PROFILE &amp; SPECIALIZATION]
+              [About Me]
             </span>
             <p className="text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed font-normal">
               Creator of{" "}

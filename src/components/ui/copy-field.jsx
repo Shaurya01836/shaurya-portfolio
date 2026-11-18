@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import PropTypes from "prop-types";
-import { RiFileCopyLine, RiCheckLine } from "@remixicon/react";
+import { CopyIcon, CheckTickCircleIcon } from "../icons";
 import { motion, AnimatePresence } from "framer-motion";
 
 /**
@@ -72,7 +72,7 @@ export const CopyField = ({ text, label = "EMAIL", className = "" }) => {
               transition={{ duration: 0.15 }}
               className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400 text-xs font-tech font-medium"
             >
-              <RiCheckLine size={15} />
+              <CheckTickCircleIcon width={15} height={15} aria-hidden />
               <span>COPIED!</span>
             </motion.div>
           ) : (
@@ -84,7 +84,7 @@ export const CopyField = ({ text, label = "EMAIL", className = "" }) => {
               transition={{ duration: 0.15 }}
               className="flex items-center gap-1 text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-200 text-xs font-tech transition-colors"
             >
-              <RiFileCopyLine size={15} />
+              <CopyIcon width={15} height={15} aria-hidden />
               <span className="hidden sm:inline text-[11px] uppercase tracking-wider">COPY</span>
             </motion.div>
           )}

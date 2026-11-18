@@ -1,0 +1,168 @@
+{
+  "framework": "react-jsx",
+  "dir": "src/components/icons",
+  "importAlias": null,
+  "variant": "stroke",
+  "icons": {
+    "alert-triangle": {
+      "name": "alert-triangle",
+      "variant": "stroke"
+    },
+    "arrow-left": {
+      "name": "arrow-left",
+      "variant": "stroke"
+    },
+    "award-medal": {
+      "name": "award-medal",
+      "variant": "stroke"
+    },
+    "calendar-default": {
+      "name": "calendar-default",
+      "variant": "stroke"
+    },
+    "check-tick-circle": {
+      "name": "check-tick-circle",
+      "variant": "stroke"
+    },
+    "code": {
+      "name": "code",
+      "variant": "stroke"
+    },
+    "copy-copied": {
+      "name": "copy-copied",
+      "variant": "stroke"
+    },
+    "copy-default": {
+      "name": "copy-default",
+      "variant": "stroke"
+    },
+    "delete-dustbin-01": {
+      "name": "delete-dustbin-01",
+      "variant": "stroke"
+    },
+    "envelope-default": {
+      "name": "envelope-default",
+      "variant": "stroke"
+    },
+    "external-link-square": {
+      "name": "external-link-square",
+      "variant": "stroke"
+    },
+    "eye-off": {
+      "name": "eye-off",
+      "variant": "stroke"
+    },
+    "eye-on": {
+      "name": "eye-on",
+      "variant": "stroke"
+    },
+    "file-default": {
+      "name": "file-default",
+      "variant": "stroke"
+    },
+    "fire-default": {
+      "name": "fire-default",
+      "variant": "stroke"
+    },
+    "floppy-default": {
+      "name": "floppy-default",
+      "variant": "stroke"
+    },
+    "folder-default": {
+      "name": "folder-default",
+      "variant": "stroke"
+    },
+    "git-branch": {
+      "name": "git-branch",
+      "variant": "stroke"
+    },
+    "github": {
+      "name": "github",
+      "variant": "stroke"
+    },
+    "graph-trend-line": {
+      "name": "graph-trend-line",
+      "variant": "stroke"
+    },
+    "home-default": {
+      "name": "home-default",
+      "variant": "stroke"
+    },
+    "link-slant": {
+      "name": "link-slant",
+      "variant": "stroke"
+    },
+    "linkedin": {
+      "name": "linkedin",
+      "variant": "stroke"
+    },
+    "lock-close": {
+      "name": "lock-close",
+      "variant": "stroke"
+    },
+    "log-out-right": {
+      "name": "log-out-right",
+      "variant": "stroke"
+    },
+    "moon": {
+      "name": "moon",
+      "variant": "stroke"
+    },
+    "multiple-cross-cancel-default": {
+      "name": "multiple-cross-cancel-default",
+      "variant": "stroke"
+    },
+    "notification-bell-off": {
+      "name": "notification-bell-off",
+      "variant": "stroke"
+    },
+    "pencil-edit": {
+      "name": "pencil-edit",
+      "variant": "stroke"
+    },
+    "photo-image-default": {
+      "name": "photo-image-default",
+      "variant": "stroke"
+    },
+    "plus-default": {
+      "name": "plus-default",
+      "variant": "stroke"
+    },
+    "refresh": {
+      "name": "refresh",
+      "variant": "stroke"
+    },
+    "search-default": {
+      "name": "search-default",
+      "variant": "stroke"
+    },
+    "send-plane-horizontal": {
+      "name": "send-plane-horizontal",
+      "variant": "stroke"
+    },
+    "shield-check": {
+      "name": "shield-check",
+      "variant": "stroke"
+    },
+    "star": {
+      "name": "star",
+      "variant": "stroke"
+    },
+    "sun": {
+      "name": "sun",
+      "variant": "stroke"
+    },
+    "tag": {
+      "name": "tag",
+      "variant": "stroke"
+    },
+    "volume-two": {
+      "name": "volume-two",
+      "variant": "stroke"
+    },
+    "x-com": {
+      "name": "x-com",
+      "variant": "stroke"
+    }
+  }
+}

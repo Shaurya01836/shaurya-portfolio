@@ -16,14 +16,21 @@ const experienceData = [
 
 const Experience = () => {
   return (
-    <BlueprintSection id="experience" ariaLabel="Work Experience">
+    <BlueprintSection
+      id="experience"
+      ariaLabel="Work Experience"
+      leftAnnotation={{
+        lines: ["go on, shoot", "down my timeline"],
+        arrow: "down-right",
+      }}
+    >
       {/* 2-cell Section Header */}
       <SectionHeader
         number="03"
         label="CAREER"
         title="Professional"
         accentWord="Experience"
-        description="Engineering milestones, roles, and institutional internships"
+        description="Work history, roles, and internships"
       />
 
       {/* Accordion Rows */}

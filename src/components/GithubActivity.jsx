@@ -2,15 +2,11 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import PropTypes from "prop-types";
 import { GitHubCalendar } from "react-github-calendar";
 import { 
-  RiGithubLine, 
-  RiExternalLinkLine, 
-  RiGitCommitLine, 
-  RiGitRepositoryLine, 
-  RiFireLine, 
-  RiPulseLine,
-  RiStarLine,
-  RiGitForkLine
-} from "@remixicon/react";
+  GithubIcon, 
+  ExternalLinkSquareIcon, 
+  StarIcon,
+  GitBranchIcon
+} from "./icons";
 import BlueprintSection from "./ui/BlueprintSection";
 import SectionHeader from "./ui/SectionHeader";
 
@@ -165,28 +161,24 @@ const GithubActivity = ({ darkMode }) => {
       label: "TOTAL CONTRIBUTIONS",
       value: stats.totalContributions,
       sub: selectedYear === "last" ? "Past 365 Days" : `Year ${selectedYear}`,
-      icon: RiGitCommitLine,
       color: "text-emerald-500",
     },
     {
       label: "PUBLIC REPOSITORIES",
       value: userProfile.publicRepos,
-      sub: "Verified Codebases",
-      icon: RiGitRepositoryLine,
+      sub: "Public Repos",
       color: "text-blue-500",
     },
     {
       label: "LONGEST STREAK",
       value: `${stats.maxStreak}d`,
-      sub: "Consecutive Commit Days",
-      icon: RiFireLine,
+      sub: "Days in a Row",
       color: "text-amber-500",
     },
     {
-      label: "ACTIVE VELOCITY",
+      label: "ACTIVITY RATE",
       value: `${stats.activeRate}%`,
-      sub: `${stats.activeDays} Days with Activity`,
-      icon: RiPulseLine,
+      sub: `${stats.activeDays} Active Days`,
       color: "text-[#CDBDFF]",
     },
   ];
@@ -203,10 +195,9 @@ const GithubActivity = ({ darkMode }) => {
           description="Live public contributions, repository commits, and open-source activity"
         />
 
-        {/* 4-Cell Telemetry Stats Row */}
+        {/* 4-Cell Stats Row */}
         <div className="grid grid-cols-2 lg:grid-cols-4 border-b border-[var(--line)]">
           {statCards.map((card, idx) => {
-            const Icon = card.icon;
             return (
               <div
                 key={card.label}
@@ -216,7 +207,7 @@ const GithubActivity = ({ darkMode }) => {
               >
                 <div className="flex items-center justify-between font-tech text-[10px] tracking-wider uppercase text-gray-500 dark:text-[#71717A]">
                   <span>{card.label}</span>
-                  <Icon size={14} className={card.color} />
+                
                 </div>
                 <div className="font-tech text-3xl sm:text-4xl font-semibold tracking-tight text-gray-900 dark:text-[#F4F4F5]">
                   {card.value}
@@ -234,12 +225,8 @@ const GithubActivity = ({ darkMode }) => {
           {/* Left: User Identity & Live Status */}
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-1.5 font-medium text-gray-900 dark:text-gray-100">
-              <RiGithubLine size={16} />
+              <GithubIcon width={16} height={16} aria-hidden />
               <span>github.com/{GITHUB_USERNAME}</span>
-            </div>
-            <div className="hidden sm:flex items-center gap-1.5 px-2 py-0.5 border border-[var(--line)] bg-emerald-500/[0.08] text-emerald-600 dark:text-emerald-400 text-[10px] uppercase tracking-wider font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Active Contributor</span>
             </div>
           </div>
 
@@ -302,17 +289,12 @@ const GithubActivity = ({ darkMode }) => {
         <div className="border-t border-[var(--line)] p-5 sm:p-6 bg-black/[0.01] dark:bg-white/[0.01] flex flex-col md:flex-row items-start md:items-center justify-between gap-4 font-tech text-left">
           <div className="flex flex-col gap-1.5 max-w-xl">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="font-semibold text-xs tracking-wider uppercase text-[#CDBDFF] flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 bg-emerald-400 animate-pulse shrink-0" aria-hidden="true" />
-                PINNED FLAGSHIP REPOSITORY
-              </span>
-              <span className="opacity-30">·</span>
               <span className="text-[11px] text-gray-500 uppercase tracking-wide">
                 2.41M+ Monthly Views
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <RiGithubLine size={18} className="text-gray-800 dark:text-gray-200 shrink-0" />
+              <GithubIcon width={18} height={18} className="text-gray-800 dark:text-gray-200 shrink-0" aria-hidden />
               <a
                 href={`https://github.com/${GITHUB_USERNAME}/ipl-auction`}
                 target="_blank"
@@ -321,9 +303,6 @@ const GithubActivity = ({ darkMode }) => {
               >
                 {GITHUB_USERNAME}/ipl-auction
               </a>
-              <span className="text-[10px] px-1.5 py-0.5 border border-[var(--line)] bg-[var(--surface)] text-gray-500 uppercase">
-                Public
-              </span>
             </div>
             <p className="text-xs text-gray-600 dark:text-gray-400 font-sans leading-relaxed">
               Real-time IPL auction simulator replicating broadcast auctions with sub-second synchronization, enterprise bidding engine, and squad analytics.
@@ -339,7 +318,7 @@ const GithubActivity = ({ darkMode }) => {
               className="flex items-center gap-1.5 px-3 py-1.5 border border-[var(--line)] bg-[var(--surface)] text-xs text-gray-800 dark:text-gray-200 hover:border-gray-400 dark:hover:border-white/30 transition-colors"
               title="GitHub Stargazers"
             >
-              <RiStarLine size={14} className="text-amber-400" />
+              <StarIcon width={14} height={14} className="text-amber-400" aria-hidden />
               <span className="font-semibold">43</span>
               <span className="text-[10px] text-gray-500 uppercase">Stars</span>
             </a>
@@ -352,7 +331,7 @@ const GithubActivity = ({ darkMode }) => {
               className="flex items-center gap-1.5 px-3 py-1.5 border border-[var(--line)] bg-[var(--surface)] text-xs text-gray-800 dark:text-gray-200 hover:border-gray-400 dark:hover:border-white/30 transition-colors"
               title="GitHub Forks"
             >
-              <RiGitForkLine size={14} className="text-[#CDBDFF]" />
+              <GitBranchIcon width={14} height={14} className="text-[#CDBDFF]" aria-hidden />
               <span className="font-semibold">18</span>
               <span className="text-[10px] text-gray-500 uppercase">Forks</span>
             </a>
@@ -365,14 +344,14 @@ const GithubActivity = ({ darkMode }) => {
               className="flex items-center gap-1.5 px-3.5 py-1.5 bg-gray-950 dark:bg-white text-white dark:text-black font-semibold text-xs uppercase tracking-wider transition-colors hover:bg-gray-800 dark:hover:bg-gray-200"
             >
               <span>crickauction.in</span>
-              <RiExternalLinkLine size={13} />
+              <ExternalLinkSquareIcon width={13} height={13} aria-hidden />
             </a>
           </div>
         </div>
 
-        {/* Advanced Telemetry Footer Bar */}
+        {/* Activity Footer Bar */}
         <div className="px-6 py-3.5 flex flex-col md:flex-row items-start md:items-center justify-between gap-3 font-tech text-xs text-gray-500 dark:text-[#71717A] bg-black/[0.015] dark:bg-white/[0.01]">
-          {/* Busiest Day & Telemetry */}
+          {/* Busiest Day & Details */}
           <div className="flex flex-wrap items-center gap-3 text-[11px]">
             <div className="flex items-center gap-1.5">
               <span className="text-gray-400">Peak Day:</span>
@@ -398,7 +377,7 @@ const GithubActivity = ({ darkMode }) => {
             className="inline-flex items-center gap-1.5 text-xs text-gray-800 dark:text-gray-200 hover:text-black dark:hover:text-[#CDBDFF] transition-colors self-start md:self-auto"
           >
             <span>View All Repositories ({userProfile.publicRepos})</span>
-            <RiExternalLinkLine size={13} />
+            <ExternalLinkSquareIcon width={13} height={13} aria-hidden />
           </a>
         </div>
       </div>

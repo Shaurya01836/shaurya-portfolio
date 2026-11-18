@@ -1,15 +1,17 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { Link, useLocation } from "react-router-dom";
-import { SwitchMode } from "./watermelon/switch-mode";
+import { motion } from "framer-motion";
 import {
-  RiGithubLine,
-  RiLinkedinLine,
-  RiTwitterXLine,
-  RiMailLine,
-  RiVolumeUpLine,
-  RiVolumeMuteLine,
-} from "@remixicon/react";
+  GithubIcon,
+  LinkedinIcon,
+  XComIcon,
+  EnvelopeIcon,
+  VolumeTwoIcon,
+  NotificationBellOffIcon,
+  SunIcon,
+  MoonIcon,
+} from "./icons";
 import Crosshair from "./ui/Crosshair";
 import {
   playClickSound,
@@ -49,7 +51,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
 
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[var(--line)] bg-[var(--bg-primary)]/90 backdrop-blur-md transition-colors duration-200">
-      <div className="relative max-w-[1160px] mx-auto border-x border-[var(--line)] h-14 sm:h-16 flex items-stretch justify-between">
+      <div className="relative max-w-5xl mx-auto border-x border-[var(--line)] h-14 sm:h-16 flex items-stretch justify-between">
         {/* Bottom Crosshairs at intersection of navbar border-b and frame border-x */}
         <div className="absolute -bottom-[5.5px] -left-[5.5px] z-20 pointer-events-none select-none" aria-hidden="true">
           <Crosshair />
@@ -100,7 +102,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
               onClick={playClickSound}
               className="px-3.5 flex items-center hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors"
             >
-              <RiGithubLine size={16} />
+              <GithubIcon width={16} height={16} aria-hidden />
             </a>
             <a
               href="https://www.linkedin.com/in/this-is-shaurya-upadhyay"
@@ -110,7 +112,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
               onClick={playClickSound}
               className="px-3.5 flex items-center hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors border-l border-[var(--line)]"
             >
-              <RiLinkedinLine size={16} />
+              <LinkedinIcon width={16} height={16} aria-hidden />
             </a>
             <a
               href="https://x.com/shaurya01836"
@@ -120,7 +122,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
               onClick={playClickSound}
               className="px-3.5 flex items-center hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors border-l border-[var(--line)]"
             >
-              <RiTwitterXLine size={15} />
+              <XComIcon width={16} height={16} aria-hidden />
             </a>
             <a
               href="mailto:shaurya01836@gmail.com"
@@ -128,7 +130,7 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
               onClick={playClickSound}
               className="px-3.5 flex items-center hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors border-l border-[var(--line)]"
             >
-              <RiMailLine size={16} />
+              <EnvelopeIcon width={16} height={16} aria-hidden />
             </a>
           </div>
 
@@ -140,24 +142,31 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
             aria-label={soundMuted ? "Enable tactile sounds" : "Mute UI sounds"}
             className="px-3 sm:px-3.5 flex items-center border-r border-[var(--line)] text-gray-500 dark:text-[#71717A] hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]"
           >
-            {soundMuted ? <RiVolumeMuteLine size={16} /> : <RiVolumeUpLine size={16} />}
+            {soundMuted ? <NotificationBellOffIcon width={16} height={16} aria-hidden /> : <VolumeTwoIcon width={16} height={16} aria-hidden />}
           </button>
 
-          {/* Theme Switcher Cell */}
-          <div className="flex items-center px-4 sm:px-5">
-            <SwitchMode
-              isDark={isDarkMode}
-              onToggle={handleThemeToggle}
-              width={52}
-              height={26}
-              darkColor="#07070A"
-              lightColor="#F0F0F4"
-              knobDarkColor="#262626"
-              knobLightColor="#FFFFFF"
-              borderDarkColor="rgba(255,255,255,0.12)"
-              borderLightColor="rgba(0,0,0,0.12)"
-            />
-          </div>
+          {/* Dark / Light Mode Shift Button */}
+          <button
+            type="button"
+            onClick={handleThemeToggle}
+            title={isDarkMode ? "Shift to Light Mode" : "Shift to Dark Mode"}
+            aria-label={isDarkMode ? "Shift to Light Mode" : "Shift to Dark Mode"}
+            className="px-3.5 sm:px-4 flex items-center text-gray-500 dark:text-[#71717A] hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF] cursor-pointer"
+          >
+            <motion.div
+              key={isDarkMode ? "dark" : "light"}
+              initial={{ rotate: -45, scale: 0.85, opacity: 0 }}
+              animate={{ rotate: 0, scale: 1, opacity: 1 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="flex items-center justify-center"
+            >
+              {isDarkMode ? (
+                <SunIcon width={16} height={16} aria-hidden />
+              ) : (
+                <MoonIcon width={16} height={16} aria-hidden />
+              )}
+            </motion.div>
+          </button>
         </div>
       </div>
     </header>

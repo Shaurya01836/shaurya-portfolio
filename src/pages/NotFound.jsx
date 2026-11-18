@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { RiArrowLeftLine } from "@remixicon/react";
+import { ArrowLeftIcon } from "../components/icons";
 import BlueprintSection from "../components/ui/BlueprintSection";
 import Footer from "../components/Footer";
 
@@ -15,26 +15,26 @@ const NotFound = () => {
                 404
               </div>
               <div className="font-tech text-xs tracking-widest uppercase text-gray-400 dark:text-[#71717A] mt-2">
-                [COORDINATE_NOT_FOUND]
+                [PAGE NOT FOUND]
               </div>
               <div className="absolute top-3 left-3 font-tech text-[10px] text-gray-400 dark:text-[#71717A]">
-                +0.00, -0.00
+                Error 404
               </div>
               <div className="absolute bottom-3 right-3 font-tech text-[10px] text-gray-400 dark:text-[#71717A]">
-                STATUS: 404
+                Status: 404
               </div>
             </div>
 
             {/* Messaging */}
             <div className="flex flex-col gap-2 max-w-sm">
               <div className="font-tech text-xs tracking-widest uppercase text-[#CDBDFF]">
-                [ERROR // 404]
+                [Error 404]
               </div>
               <h1 className="text-xl sm:text-2xl font-semibold tracking-[-0.04em] text-gray-900 dark:text-[#F4F4F5]">
-                Route Not Found
+                Page Not Found
               </h1>
               <p className="text-xs sm:text-sm text-gray-500 dark:text-[#71717A] leading-relaxed font-tech">
-                The requested coordinate does not exist in this blueprint workspace.
+                The page you are looking for does not exist or has been moved.
               </p>
             </div>
 
@@ -44,7 +44,7 @@ const NotFound = () => {
                 to="/"
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-none bg-gray-950 dark:bg-[#F4F4F5] text-white dark:text-[#07070A] font-tech text-xs tracking-wider uppercase transition-colors hover:bg-gray-800 dark:hover:bg-white focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]"
               >
-                <RiArrowLeftLine size={15} />
+                <ArrowLeftIcon width={15} height={15} aria-hidden />
                 <span>Return to Home</span>
               </Link>
             </div>

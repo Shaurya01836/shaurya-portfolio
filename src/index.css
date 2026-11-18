@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -29,6 +30,15 @@
 
 .font-tech {
   font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.font-handwriting {
+  font-family: "Caveat", cursive, sans-serif;
+}
+
+.bg-dot-grid {
+  background-image: radial-gradient(var(--line) 1.25px, transparent 1.25px);
+  background-size: 20px 20px;
 }
 
 html, body {

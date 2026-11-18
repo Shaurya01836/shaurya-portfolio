@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { 
-  RiExternalLinkLine, 
-  RiGithubLine,
-  RiCloseLine
-} from "@remixicon/react";
+  ExternalLinkSquareIcon, 
+  GithubIcon,
+  MultipleCrossCancelIcon
+} from "./icons";
 import { useLenis } from "lenis/react";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../firebase.config";
@@ -86,14 +86,21 @@ function Projects() {
   const displayedProjects = showAll ? projects : projects.slice(0, 3);
 
   return (
-    <BlueprintSection id="projects" ariaLabel="Selected Projects">
+    <BlueprintSection
+      id="projects"
+      ariaLabel="Selected Projects"
+      rightAnnotation={{
+        lines: ["crickauction is", "the 2.4M+ hits one"],
+        arrow: "down-left",
+      }}
+    >
       {/* 2-cell Section Header */}
       <SectionHeader
         number="01"
         label="PROJECTS"
         title="Featured"
         accentWord="Works"
-        description="Interactive applications & scalable backend systems"
+        description="Web applications &amp; backend projects"
       />
 
       {/* Content Area */}
@@ -125,7 +132,6 @@ function Projects() {
                       isAuction
                         ? {
                             left: "2.41M 30D VIEWS · 480.7K VISITS",
-                            right: "★ 43 · ⑂ 18",
                           }
                         : null
                     }
@@ -177,7 +183,7 @@ function Projects() {
               <div className="flex items-start justify-between gap-4 border-b border-[var(--line)] pb-4">
                 <div className="flex flex-col gap-1">
                   <span className="font-tech text-[10px] tracking-widest text-[#CDBDFF] uppercase">
-                    [PROJECT SPEC]
+                    [Project Overview]
                   </span>
                   <h3 className="text-xl sm:text-2xl font-semibold tracking-tight text-gray-900 dark:text-[#F4F4F5]">
                     {selectedProject.title}
@@ -192,20 +198,20 @@ function Projects() {
                   className="p-1 border border-[var(--line)] hover:bg-black/[0.04] dark:hover:bg-white/[0.04] text-gray-400 hover:text-black dark:hover:text-white transition-colors"
                   aria-label="Close dialog"
                 >
-                  <RiCloseLine size={18} />
+                  <MultipleCrossCancelIcon width={18} height={18} aria-hidden />
                 </button>
               </div>
 
-              {/* Verified Production Scale Telemetry (CrickAuction / IPL Auction Simulator) */}
+              {/* Live App Stats (CrickAuction) */}
               {isCrickAuction(selectedProject) && (
                 <div className="border border-[var(--line)] bg-black/[0.02] dark:bg-white/[0.02] p-4 sm:p-5 flex flex-col gap-3">
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[var(--line)] pb-2.5">
                     <span className="font-tech text-[10px] tracking-widest text-[#CDBDFF] uppercase flex items-center gap-1.5 font-semibold">
                       <span className="w-1.5 h-1.5 bg-emerald-400 animate-pulse shrink-0" aria-hidden="true" />
-                      VERIFIED LIVE STATS · CLOUDFLARE &amp; GITHUB
+                      LIVE TRAFFIC &amp; GITHUB STATS
                     </span>
                     <span className="font-tech text-[10px] text-gray-500 uppercase tracking-wider">
-                      LIVE METRICS
+                      Live Stats
                     </span>
                   </div>
 
@@ -218,7 +224,7 @@ function Projects() {
                         30D Pageviews
                       </span>
                       <span className="text-[9px] font-tech text-emerald-500 font-semibold tracking-wide mt-0.5">
-                        +9.94% 24h velocity
+                        +9.94% in last 24h
                       </span>
                     </div>
 
@@ -230,7 +236,7 @@ function Projects() {
                         30D Unique Visits
                       </span>
                       <span className="text-[9px] font-tech text-emerald-500 font-semibold tracking-wide mt-0.5">
-                        +5.66% 24h velocity
+                        +5.66% in last 24h
                       </span>
                     </div>
 
@@ -254,14 +260,14 @@ function Projects() {
                         GitHub Forks
                       </span>
                       <span className="text-[9px] font-tech text-gray-400 tracking-wide mt-0.5">
-                        Community Builders
+                        Forks
                       </span>
                     </div>
                   </div>
 
                   <div className="flex items-center justify-between pt-1 font-tech text-[10px] text-gray-500 dark:text-gray-400">
                     <span>Last 24h: 53.39k views · 16.23k unique visits</span>
-                    <span className="text-emerald-500 font-medium">Cloudflare Analytics Verified</span>
+                    <span className="text-emerald-500 font-medium">Verified by Cloudflare</span>
                   </div>
                 </div>
               )}
@@ -296,7 +302,7 @@ function Projects() {
                     className="inline-flex items-center gap-2 px-4 py-2.5 rounded-none bg-gray-950 dark:bg-[#F4F4F5] text-white dark:text-[#07070A] font-medium text-xs font-tech tracking-wider uppercase transition-colors hover:bg-gray-800 dark:hover:bg-white"
                   >
                     <span>LIVE DEMO</span>
-                    <RiExternalLinkLine size={14} />
+                    <ExternalLinkSquareIcon width={14} height={14} aria-hidden />
                   </a>
                 )}
                 {resolveFirstUrl(selectedProject, ["githubUrl", "github", "sourceCode", "repoUrl"]) && (
@@ -307,7 +313,7 @@ function Projects() {
                     onClick={playClickSound}
                     className="inline-flex items-center gap-2 px-4 py-2.5 rounded-none border border-[var(--line)] bg-[var(--surface)] text-gray-800 dark:text-gray-200 font-medium text-xs font-tech tracking-wider uppercase transition-colors hover:bg-black/[0.04] dark:hover:bg-white/[0.04]"
                   >
-                    <RiGithubLine size={15} />
+                    <GithubIcon width={15} height={15} aria-hidden />
                     <span>SOURCE CODE</span>
                   </a>
                 )}

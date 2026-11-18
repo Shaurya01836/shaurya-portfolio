@@ -28,7 +28,6 @@ export const StatusStrip = ({ className = "" }) => {
         className="flex items-center gap-2 px-6 py-3.5 text-gray-500 dark:text-[#71717A] text-[11px] tracking-wider uppercase hover:text-black dark:hover:text-[#CDBDFF] transition-colors"
         title="View live production app CrickAuction (2.41M+ 30-day pageviews)"
       >
-        <span className="opacity-40">[Traction]</span>
         <span className="text-gray-900 dark:text-gray-200 font-medium">2.41M+ Views</span>
         <span className="opacity-40">·</span>
         <span>CrickAuction ↗</span>
