@@ -103,13 +103,13 @@ const Blogs = () => {
 
   return (
     <div className="w-full flex flex-col">
-      <BlueprintSection id="blogs" ariaLabel="Technical Publications" noTopBorder={true}>
+      <BlueprintSection id="blogs" ariaLabel="Articles and Tutorials" noTopBorder={true}>
         <SectionHeader
           number="00"
           label="ARTICLES"
-          title="Engineering"
-          accentWord="Dispatches"
-          description="In-depth technical publications, design patterns & system architecture"
+          title="All"
+          accentWord="Articles"
+          description="Tutorials, guides, and notes on software development"
         />
 
         <div className="p-6 sm:p-8 md:p-10 min-h-[60vh]">
@@ -151,7 +151,7 @@ const Blogs = () => {
                 No Articles Yet
               </h3>
               <p className="text-xs font-tech text-gray-500 dark:text-gray-400 max-w-md leading-relaxed">
-                Articles are currently in draft. Check back soon for deep dives into Java backends, React optimization, and distributed systems.
+                Articles are currently in draft. Check back soon for new guides on React, Java, and building web applications.
               </p>
             </div>
           )}

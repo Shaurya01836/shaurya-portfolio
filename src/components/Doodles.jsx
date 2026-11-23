@@ -8,52 +8,58 @@ import { motion } from "framer-motion";
 export const NameSelectionDoodle = () => {
   return (
     <div className="absolute inset-0 pointer-events-none select-none overflow-visible">
-      {/* Selection Outline */}
+      {/* 1. Selection Marquee & Fill - Sweeps from left to right covering the name */}
       <motion.div
-        initial={{ opacity: 0, scale: 0.98 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.45, ease: "easeOut" }}
-        className="absolute -inset-1 sm:-inset-1.5 border border-[#CDBDFF] rounded-[1px]"
+        initial={{ clipPath: "inset(0 100% 0 0)", opacity: 0 }}
+        animate={{ clipPath: "inset(0 0% 0 0)", opacity: 1 }}
+        transition={{
+          duration: 0.7,
+          delay: 0.15,
+          ease: [0.16, 1, 0.3, 1],
+        }}
+        className="absolute -inset-1 sm:-inset-1.5 border border-[#CDBDFF] bg-[#CDBDFF]/10 rounded-[1px]"
       />
 
-      {/* 4 Corner Bounding Box Handles */}
+      {/* 2. Top-Left & Bottom-Left Handles (pop in at start of selection) */}
       <motion.span
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        transition={{ delay: 0.25, type: "spring", stiffness: 350, damping: 25 }}
+        transition={{ delay: 0.15, type: "spring", stiffness: 380, damping: 25 }}
         className="absolute -top-1.5 -left-1.5 sm:-top-2 sm:-left-2 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[var(--bg-primary)] border border-[#CDBDFF] rounded-[0.5px] z-10"
       />
       <motion.span
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        transition={{ delay: 0.3, type: "spring", stiffness: 350, damping: 25 }}
+        transition={{ delay: 0.22, type: "spring", stiffness: 380, damping: 25 }}
+        className="absolute -bottom-1.5 -left-1.5 sm:-bottom-2 sm:-left-2 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[var(--bg-primary)] border border-[#CDBDFF] rounded-[0.5px] z-10"
+      />
+
+      {/* 3. Top-Right & Bottom-Right Handles (pop in as marquee finishes covering the name) */}
+      <motion.span
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ delay: 0.68, type: "spring", stiffness: 380, damping: 25 }}
         className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[var(--bg-primary)] border border-[#CDBDFF] rounded-[0.5px] z-10"
       />
       <motion.span
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
-        transition={{ delay: 0.35, type: "spring", stiffness: 350, damping: 25 }}
-        className="absolute -bottom-1.5 -left-1.5 sm:-bottom-2 sm:-left-2 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[var(--bg-primary)] border border-[#CDBDFF] rounded-[0.5px] z-10"
-      />
-      <motion.span
-        initial={{ scale: 0 }}
-        animate={{ scale: 1 }}
-        transition={{ delay: 0.4, type: "spring", stiffness: 350, damping: 25 }}
+        transition={{ delay: 0.74, type: "spring", stiffness: 380, damping: 25 }}
         className="absolute -bottom-1.5 -right-1.5 sm:-bottom-2 sm:-right-2 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-[var(--bg-primary)] border border-[#CDBDFF] rounded-[0.5px] z-10"
       />
 
-      {/* Animated Figma Cursor with role tag at bottom-right */}
+      {/* 4. Animated Figma Cursor with role tag - Slides in as selection locks in */}
       <motion.div
-        initial={{ x: 14, y: 14, opacity: 0 }}
-        animate={{ x: 0, y: 0, opacity: 1 }}
+        initial={{ opacity: 0, scale: 0.75, x: -16, y: -8 }}
+        animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
         transition={{
           duration: 0.45,
-          delay: 0.25,
+          delay: 0.7,
           type: "spring",
-          stiffness: 220,
+          stiffness: 240,
           damping: 20,
         }}
-        className="absolute -bottom-6 sm:-bottom-8 -right-14 z-20 flex items-center gap-1 pointer-events-none"
+        className="absolute top-6 -right-14 sm:top-auto sm:-bottom-8 sm:-right-14 z-20 flex items-center gap-1 pointer-events-none"
       >
         {/* Figma Pointer Cursor */}
         <svg

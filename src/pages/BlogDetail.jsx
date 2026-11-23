@@ -6,6 +6,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeftIcon,
   CalendarIcon,
@@ -19,6 +20,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebase.config";
 import BlueprintSection from "../components/ui/BlueprintSection";
 import Footer from "../components/Footer";
+import BlueprintParticles from "../components/ui/BlueprintParticles";
+import { playCopySuccessChime } from "../utils/sound";
 
 const formatDate = (dateValue) => {
   if (!dateValue) return "";
@@ -37,11 +40,14 @@ const formatDate = (dateValue) => {
 
 const CopyButton = ({ text }) => {
   const [copied, setCopied] = useState(false);
+  const [burstCount, setBurstCount] = useState(0);
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(text);
       setCopied(true);
+      setBurstCount((c) => c + 1);
+      playCopySuccessChime();
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy text: ", err);
@@ -52,14 +58,41 @@ const CopyButton = ({ text }) => {
     <button
       type="button"
       onClick={handleCopy}
-      className="absolute top-3 right-3 p-1.5 rounded-md bg-[#161616]/80 hover:bg-[#202020]/90 border border-gray-800 dark:border-white/5 text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 focus:opacity-100 z-10"
+      className="absolute top-3 right-3 p-1.5 rounded-none bg-[#161616]/90 hover:bg-[#202020] border border-gray-800 dark:border-white/10 text-gray-400 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 focus:opacity-100 z-10"
       title="Copy to clipboard"
+      aria-label="Copy code to clipboard"
     >
-      {copied ? (
-        <CheckTickCircleIcon width={16} height={16} className="text-emerald-400" aria-hidden />
-      ) : (
-        <CopyIcon width={16} height={16} aria-hidden />
-      )}
+      <BlueprintParticles trigger={burstCount} count={12} />
+      <AnimatePresence mode="wait">
+        {copied ? (
+          <motion.div
+            key="copied"
+            initial={{ scale: 0, rotate: -25, opacity: 0 }}
+            animate={{ scale: 1, rotate: 0, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{
+              type: "spring",
+              stiffness: 500,
+              damping: 24,
+              mass: 0.6,
+            }}
+            className="flex items-center gap-1 text-emerald-400 font-tech text-xs"
+          >
+            <CheckTickCircleIcon width={15} height={15} aria-hidden />
+            <span className="text-[10px] font-semibold">COPIED</span>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="copy"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex items-center"
+          >
+            <CopyIcon width={15} height={15} aria-hidden />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </button>
   );
 };

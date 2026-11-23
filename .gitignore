@@ -133,3 +133,8 @@ dist
 src/pages/Admin.jsx
 src/components/admin/
 /firestore.rules
+
+# Claude
+.claude/
+.claude*
+

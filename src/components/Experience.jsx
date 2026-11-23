@@ -20,7 +20,7 @@ const Experience = () => {
       id="experience"
       ariaLabel="Work Experience"
       leftAnnotation={{
-        lines: ["go on, shoot", "down my timeline"],
+        lines: ["go on, shoot", "down my year"],
         arrow: "down-right",
       }}
     >
@@ -34,7 +34,7 @@ const Experience = () => {
       />
 
       {/* Accordion Rows */}
-      <div className="flex flex-col">
+      <div className="flex flex-col" data-cursor="CAREER">
         {experienceData.map((job, idx) => (
           <SquareToggleRow
             key={idx}

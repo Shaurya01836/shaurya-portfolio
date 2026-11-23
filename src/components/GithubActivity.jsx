@@ -201,6 +201,7 @@ const GithubActivity = ({ darkMode }) => {
             return (
               <div
                 key={card.label}
+                data-cursor="LIVE METRICS"
                 className={`p-6 sm:p-7 flex flex-col justify-between gap-3 border-r border-b lg:border-b-0 border-[var(--line)] bg-[var(--surface)] hover:bg-black/[0.015] dark:hover:bg-white/[0.015] transition-colors ${
                   idx === statCards.length - 1 ? "border-r-0" : ""
                 }`}

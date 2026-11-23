@@ -8,6 +8,7 @@ import {
   RefreshIcon,
   CheckTickCircleIcon,
   ExternalLinkSquareIcon,
+  CopyIcon,
 } from "./icons";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebase.config";
@@ -16,6 +17,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import CopyField from "./ui/copy-field";
 import BlueprintSection from "./ui/BlueprintSection";
 import SectionHeader from "./ui/SectionHeader";
+import BlueprintParticles from "./ui/BlueprintParticles";
+import { playCopySuccessChime } from "../utils/sound";
 
 const socialChannels = [
   {
@@ -23,24 +26,28 @@ const socialChannels = [
     href: "https://github.com/Shaurya01836",
     icon: GithubIcon,
     handle: "@Shaurya01836",
+    copyValue: "https://github.com/Shaurya01836",
   },
   {
     name: "LinkedIn",
     href: "https://www.linkedin.com/in/this-is-shaurya-upadhyay",
     icon: LinkedinIcon,
     handle: "Shaurya Upadhyay",
+    copyValue: "https://www.linkedin.com/in/this-is-shaurya-upadhyay",
   },
   {
     name: "X (Twitter)",
     href: "https://x.com/shaurya01836",
     icon: XComIcon,
     handle: "@shaurya01836",
+    copyValue: "https://x.com/shaurya01836",
   },
   {
     name: "Email Direct",
     href: "mailto:shaurya01836@gmail.com",
     icon: EnvelopeIcon,
     handle: "shaurya01836@gmail.com",
+    copyValue: "shaurya01836@gmail.com",
   },
 ];
 
@@ -48,6 +55,30 @@ const ContactSection = () => {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState("idle");
+  const [copiedChannel, setCopiedChannel] = useState(null);
+  const [channelBurst, setChannelBurst] = useState({});
+
+  const handleCopySocial = async (e, channel) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const textToCopy = channel.copyValue || channel.handle;
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+    } catch {
+      const textArea = document.createElement("textarea");
+      textArea.value = textToCopy;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textArea);
+    }
+    playCopySuccessChime();
+    setCopiedChannel(channel.name);
+    setChannelBurst((prev) => ({ ...prev, [channel.name]: (prev[channel.name] || 0) + 1 }));
+    setTimeout(() => {
+      setCopiedChannel((curr) => (curr === channel.name ? null : curr));
+    }, 2000);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -93,7 +124,7 @@ const ContactSection = () => {
     <BlueprintSection id="contact" ariaLabel="Contact Information">
       {/* 2-cell Section Header */}
       <SectionHeader
-        number="07"
+        number="08"
         label="CONTACT"
         title="Direct"
         accentWord="Message"
@@ -145,20 +176,66 @@ const ContactSection = () => {
         <div className="md:col-span-5 grid grid-cols-1 sm:grid-cols-2 bg-black/[0.015] dark:bg-white/[0.01]">
           {socialChannels.map((channel, i) => {
             const Icon = channel.icon;
+            const isCopied = copiedChannel === channel.name;
             return (
               <a
                 key={channel.name}
                 href={channel.href}
                 target={channel.href.startsWith("http") ? "_blank" : undefined}
                 rel={channel.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className={`p-6 flex flex-col justify-between gap-4 border-b border-r last:border-r-0 border-[var(--line)] hover:bg-black/[0.03] dark:hover:bg-white/[0.025] transition-colors group ${
+                className={`relative p-6 flex flex-col justify-between gap-4 border-b border-r last:border-r-0 border-[var(--line)] hover:bg-black/[0.03] dark:hover:bg-white/[0.025] transition-colors group ${
                   i % 2 === 1 ? "sm:border-r-0" : ""
                 }`}
               >
                 <div className="flex items-center justify-between text-gray-400 dark:text-[#71717A] group-hover:text-black dark:group-hover:text-[#CDBDFF] transition-colors">
                   <Icon width={20} height={20} aria-hidden />
-                  <ExternalLinkSquareIcon width={14} height={14} className="opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden />
+
+                  <div className="flex items-center gap-1.5">
+                    {/* Tactile Blueprint Copy Button */}
+                    <button
+                      type="button"
+                      onClick={(e) => handleCopySocial(e, channel)}
+                      title={`Copy ${channel.name} link`}
+                      aria-label={`Copy ${channel.name} link`}
+                      className="relative p-1 rounded-none border border-transparent hover:border-[var(--line)] bg-transparent hover:bg-black/[0.04] dark:hover:bg-white/[0.08] text-gray-400 hover:text-black dark:hover:text-[#CDBDFF] transition-all focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]"
+                    >
+                      <BlueprintParticles trigger={channelBurst[channel.name] || 0} count={12} />
+                      <AnimatePresence mode="wait">
+                        {isCopied ? (
+                          <motion.div
+                            key="copied"
+                            initial={{ scale: 0, rotate: -25, opacity: 0 }}
+                            animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 500,
+                              damping: 24,
+                              mass: 0.6,
+                            }}
+                            className="flex items-center gap-1 text-emerald-500 text-[10px] font-tech font-semibold"
+                          >
+                            <CheckTickCircleIcon width={13} height={13} aria-hidden />
+                            <span className="hidden sm:inline">COPIED</span>
+                          </motion.div>
+                        ) : (
+                          <motion.div
+                            key="copy"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="flex items-center gap-1"
+                          >
+                            <CopyIcon width={13} height={13} aria-hidden />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </button>
+
+                    <ExternalLinkSquareIcon width={14} height={14} className="opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden />
+                  </div>
                 </div>
+
                 <div className="flex flex-col gap-0.5">
                   <span className="font-tech text-xs font-medium text-gray-900 dark:text-[#F4F4F5] uppercase tracking-wider">
                     {channel.name}

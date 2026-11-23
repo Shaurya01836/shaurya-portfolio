@@ -111,23 +111,12 @@ function Cards({
 
   const containerClasses = `group relative flex flex-col rounded-none border border-[var(--line)] bg-[var(--surface)] overflow-hidden transition-colors duration-150 hover:border-gray-400 dark:hover:border-white/30 hover:bg-black/[0.015] dark:hover:bg-white/[0.015] ${className}`;
 
-  if (onClick) {
-    return (
-      <button
-        type="button"
-        onClick={onClick}
-        aria-label={ariaLabel || `Open details for ${title}`}
-        className={`${containerClasses} text-left w-full h-full focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]`}
-      >
-        <CardBody />
-      </button>
-    );
-  }
-
   if (to) {
     return (
       <Link
         to={to}
+        onClick={onClick}
+        data-cursor="READ ↗"
         aria-label={ariaLabel || `View ${title}`}
         className={`${containerClasses} block w-full h-full focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]`}
       >
@@ -136,8 +125,22 @@ function Cards({
     );
   }
 
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        data-cursor="EXPLORE ↗"
+        aria-label={ariaLabel || `Open details for ${title}`}
+        className={`${containerClasses} text-left w-full h-full focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]`}
+      >
+        <CardBody />
+      </button>
+    );
+  }
+
   return (
-    <div className={containerClasses}>
+    <div className={containerClasses} data-cursor="EXPLORE ↗">
       <CardBody />
     </div>
   );

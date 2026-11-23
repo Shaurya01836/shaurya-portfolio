@@ -11,16 +11,17 @@ import {
   NotificationBellOffIcon,
   SunIcon,
   MoonIcon,
+  CodeIcon,
 } from "./icons";
-import Crosshair from "./ui/Crosshair";
 import {
   playClickSound,
   playToggleSound,
+  playDevModeToggleSound,
   getSoundMuted,
   toggleSoundMuted,
 } from "../utils/sound";
 
-const Navbar = ({ toggleTheme, isDarkMode }) => {
+const Navbar = ({ toggleTheme, isDarkMode, isDevMode = false, toggleDevMode }) => {
   const location = useLocation();
   const [soundMuted, setSoundMutedState] = useState(getSoundMuted());
 
@@ -52,21 +53,15 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
   return (
     <header className="sticky top-0 z-40 w-full border-b border-[var(--line)] bg-[var(--bg-primary)]/90 backdrop-blur-md transition-colors duration-200">
       <div className="relative max-w-5xl mx-auto border-x border-[var(--line)] h-14 sm:h-16 flex items-stretch justify-between">
-        {/* Bottom Crosshairs at intersection of navbar border-b and frame border-x */}
-        <div className="absolute -bottom-[5.5px] -left-[5.5px] z-20 pointer-events-none select-none" aria-hidden="true">
-          <Crosshair />
-        </div>
-        <div className="absolute -bottom-[5.5px] -right-[5.5px] z-20 pointer-events-none select-none" aria-hidden="true">
-          <Crosshair />
-        </div>
-
-        {/* Left: Brand Cell */}
+        {/* Left: Brand Cell (Handwritten Signature) */}
         <Link
           to="/"
           onClick={playClickSound}
-          className="flex items-center gap-2.5 px-4 sm:px-6 border-r border-[var(--line)] font-tech text-xs tracking-wider uppercase text-gray-900 dark:text-gray-100 hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF]"
+          className="flex items-center px-4 sm:px-6 border-r border-[var(--line)] text-gray-900 dark:text-[#F4F4F5] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF] group"
         >
-          <span className="font-semibold text-sm tracking-tight font-sans">Shaurya</span>
+          <span className="font-handwriting text-xl sm:text-2xl tracking-wide text-gray-900 dark:text-gray-100 group-hover:text-black dark:group-hover:text-[#CDBDFF] transition-colors leading-none">
+            shaurya Upadhyay
+          </span>
         </Link>
 
         {/* Center / Right: Nav Links & Actions */}
@@ -145,6 +140,27 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
             {soundMuted ? <NotificationBellOffIcon width={16} height={16} aria-hidden /> : <VolumeTwoIcon width={16} height={16} aria-hidden />}
           </button>
 
+          {/* Figma Dev Mode / Measure Inspector Toggle */}
+          <button
+            type="button"
+            onClick={() => {
+              playDevModeToggleSound(!isDevMode);
+              if (toggleDevMode) toggleDevMode();
+            }}
+            title={isDevMode ? "Turn off Figma Dev Mode (Esc)" : "Turn on Figma Dev Mode (Alt+D)"}
+            aria-label="Toggle Figma Dev Mode Measure Inspector"
+            className={`px-3 sm:px-3.5 flex items-center gap-1.5 border-r border-[var(--line)] transition-colors focus:outline-none focus-visible:ring-1 focus-visible:ring-[#CDBDFF] ${
+              isDevMode
+                ? "text-black dark:text-white bg-[#CDBDFF]/25 font-semibold"
+                : "text-gray-500 dark:text-[#71717A] hover:text-black dark:hover:text-[#CDBDFF] hover:bg-black/[0.02] dark:hover:bg-white/[0.02]"
+            }`}
+          >
+            <CodeIcon width={15} height={15} aria-hidden />
+            <span className="font-tech text-[10px] tracking-wider uppercase hidden md:inline-block">
+              {isDevMode ? "DEV ON" : "DEV"}
+            </span>
+          </button>
+
           {/* Dark / Light Mode Shift Button */}
           <button
             type="button"
@@ -176,6 +192,8 @@ const Navbar = ({ toggleTheme, isDarkMode }) => {
 Navbar.propTypes = {
   toggleTheme: PropTypes.func.isRequired,
   isDarkMode: PropTypes.bool.isRequired,
+  isDevMode: PropTypes.bool,
+  toggleDevMode: PropTypes.func,
 };
 
 export default Navbar;

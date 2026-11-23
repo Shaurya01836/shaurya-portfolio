@@ -74,6 +74,7 @@ const Skills = () => {
         {techList.map((skill) => (
           <div
             key={skill.name}
+            data-cursor="TECH STACK"
             className="group relative flex flex-col items-center justify-center p-6 border sm:border-b-0 border-[var(--line)] bg-[var(--surface)] hover:bg-black/[0.02] dark:hover:bg-white/[0.02] transition-colors duration-150 cursor-default select-none"
           >
             <div className="w-8 h-8 flex items-center justify-center mb-3">

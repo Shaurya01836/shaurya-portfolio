@@ -9,6 +9,8 @@ import Blogs from "./pages/Blogs";
 import BlogDetail from "./pages/BlogDetail";
 import Navbar from "./components/Navbar";
 import { MagneticScrollIndicator } from "./components/MagneticScrollIndicator";
+import DevModeInspector from "./components/ui/DevModeInspector";
+import ContextualCursor from "./components/ui/ContextualCursor";
 import { collection, getDocs, query, orderBy } from "firebase/firestore";
 import { db } from "./firebase.config";
 
@@ -39,6 +41,7 @@ PageWrapper.propTypes = {
 function AnimatedRoutes({ darkMode, toggleTheme }) {
   const location = useLocation();
   const lenis = useLenis();
+  const [isDevMode, setIsDevMode] = useState(false);
 
   useEffect(() => {
     if (lenis) {
@@ -83,7 +86,12 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
         <MagneticScrollIndicator />
 
         {/* Top Navbar */}
-        <Navbar toggleTheme={toggleTheme} isDarkMode={darkMode} />
+        <Navbar
+          toggleTheme={toggleTheme}
+          isDarkMode={darkMode}
+          isDevMode={isDevMode}
+          toggleDevMode={() => setIsDevMode((prev) => !prev)}
+        />
 
         {/* Full-width blueprint viewport: hairlines run edge-to-edge, content is framed at max-w-5xl mx-auto */}
         <main className="flex-1 w-full">
@@ -126,6 +134,12 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
             </Routes>
           </AnimatePresence>
         </main>
+
+        {/* Blueprint Figma Dev Mode Inspector & Code Drawer */}
+        <DevModeInspector isDevMode={isDevMode} setIsDevMode={setIsDevMode} />
+
+        {/* Blueprint Contextual Cursor Badges */}
+        <ContextualCursor />
       </div>
     </ReactLenis>
   );

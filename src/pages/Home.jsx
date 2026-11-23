@@ -6,6 +6,7 @@ import Experience from "../components/Experience";
 import CodingStats from "../components/CodingStats";
 import GithubActivity from "../components/GithubActivity";
 import AboutHighlights from "../components/AboutHighlights";
+import LatestBlogs from "../components/LatestBlogs";
 import ContactSection from "../components/ContactSection";
 import Footer from "../components/Footer";
 import HatchBand from "../components/ui/HatchBand";
@@ -37,10 +38,16 @@ const Home = ({ darkMode }) => {
       {/* 7. Highlights / About */}
       <AboutHighlights />
 
-      {/* Hatched Band 2: Before Contact */}
+      {/* Hatched Band: Before Latest Blogs */}
       <HatchBand />
 
-      {/* 8. Contact */}
+      {/* 8. Latest Publications / Blogs */}
+      <LatestBlogs />
+
+      {/* Hatched Band: Before Contact */}
+      <HatchBand />
+
+      {/* 9. Contact */}
       <ContactSection />
 
       {/* Hatched Band 3: Before Footer */}
