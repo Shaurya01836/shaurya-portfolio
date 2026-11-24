@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import PropTypes from "prop-types";
 import { motion, AnimatePresence } from "framer-motion";
 import { MultipleCrossCancelIcon } from "../icons";
-import { playPopSound, playCloseSound } from "../../utils/sound";
+import { playPaperTapSound, playRustleSound } from "../../utils/sound";
 
 /**
  * Curated Behind-the-Scenes Easter Eggs
@@ -105,14 +105,14 @@ export const HandwrittenAnnotation = ({
 
     const handleClickOutside = (e) => {
       if (noteRef.current && !noteRef.current.contains(e.target)) {
-        playCloseSound();
+        playRustleSound();
         setIsOpen(false);
       }
     };
 
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
-        playCloseSound();
+        playRustleSound();
         setIsOpen(false);
       }
     };
@@ -128,10 +128,10 @@ export const HandwrittenAnnotation = ({
   const handleToggleNote = (e) => {
     e.stopPropagation();
     if (!isOpen) {
-      playPopSound();
+      playPaperTapSound();
       setIsOpen(true);
     } else {
-      playCloseSound();
+      playRustleSound();
       setIsOpen(false);
     }
   };
@@ -149,7 +149,7 @@ export const HandwrittenAnnotation = ({
       tabIndex={0}
       onClick={handleToggleNote}
       onKeyDown={handleKeyDown}
-      data-cursor="SECRET NOTE ✏️"
+      data-cursor="SECRET NOTE"
       aria-label={`Read behind-the-scenes note: ${renderedLines.join(" ")}`}
       className={`group relative inline-flex flex-col ${
         isRightAligned ? "items-end text-right" : "items-start text-left"
@@ -286,7 +286,7 @@ export const HandwrittenAnnotation = ({
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  playCloseSound();
+                  playRustleSound();
                   setIsOpen(false);
                 }}
                 className="p-1 text-zinc-400 hover:text-zinc-800 dark:hover:text-white transition-colors focus:outline-none"

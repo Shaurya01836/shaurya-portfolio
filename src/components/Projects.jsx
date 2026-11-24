@@ -12,10 +12,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import BlueprintSection from "./ui/BlueprintSection";
 import SectionHeader from "./ui/SectionHeader";
 import { playClickSound, playPopSound, playCloseSound } from "../utils/sound";
+import { cachedFetch, getCachedData, CACHE_TTL } from "../utils/cache";
 
 function Projects() {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [projects, setProjects] = useState(() => {
+    const cached = getCachedData("firestore_projects");
+    return (cached && cached.data) || [];
+  });
+  const [loading, setLoading] = useState(() => {
+    const cached = getCachedData("firestore_projects");
+    return !cached || !cached.data || cached.data.length === 0;
+  });
   const [selectedProject, setSelectedProject] = useState(null);
   const [showAll, setShowAll] = useState(false);
   const lenis = useLenis();
@@ -37,13 +44,20 @@ function Projects() {
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, "projects"));
-        const projectData = querySnapshot.docs
-          .map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-          }))
-          .sort((a, b) => (b.order || 0) - (a.order || 0));
+        const projectData = await cachedFetch(
+          "firestore_projects",
+          async () => {
+            const querySnapshot = await getDocs(collection(db, "projects"));
+            return querySnapshot.docs
+              .map((doc) => ({
+                id: doc.id,
+                ...doc.data(),
+              }))
+              .sort((a, b) => (b.order || 0) - (a.order || 0));
+          },
+          CACHE_TTL.FIRESTORE
+        );
+
         setProjects(projectData);
       } catch (error) {
         console.error("Error fetching projects: ", error);

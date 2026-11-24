@@ -9,6 +9,7 @@ import {
 } from "./icons";
 import BlueprintSection from "./ui/BlueprintSection";
 import SectionHeader from "./ui/SectionHeader";
+import { cachedFetch, getCachedData, CACHE_TTL } from "../utils/cache";
 
 const GITHUB_USERNAME = "Shaurya01836";
 
@@ -80,10 +81,14 @@ const GithubActivity = ({ darkMode }) => {
   const [shouldRender, setShouldRender] = useState(false);
   const [selectedYear, setSelectedYear] = useState("last");
   const [stats, setStats] = useState(DEFAULT_GITHUB_STATS);
-  const [userProfile, setUserProfile] = useState({
-    publicRepos: 27,
-    followers: 21,
-    following: 17,
+  const [userProfile, setUserProfile] = useState(() => {
+    const cached = getCachedData(`api_github_${GITHUB_USERNAME}`);
+    if (cached && cached.data) return cached.data;
+    return {
+      publicRepos: 27,
+      followers: 21,
+      following: 17,
+    };
   });
 
   const containerRef = useRef(null);
@@ -114,9 +119,15 @@ const GithubActivity = ({ darkMode }) => {
   useEffect(() => {
     const fetchUserMetrics = async () => {
       try {
-        const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
-        if (!res.ok) return;
-        const data = await res.json();
+        const data = await cachedFetch(
+          `api_github_${GITHUB_USERNAME}`,
+          async () => {
+            const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}`);
+            if (!res.ok) throw new Error("GitHub user API response not ok");
+            return await res.json();
+          },
+          CACHE_TTL.EXTERNAL_API
+        );
         setUserProfile({
           publicRepos: data.public_repos ?? 27,
           followers: data.followers ?? 21,

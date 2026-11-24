@@ -6,20 +6,31 @@ import { motion, AnimatePresence } from "framer-motion";
 import BlueprintSection from "./ui/BlueprintSection";
 import SectionHeader from "./ui/SectionHeader";
 import { playPopSound, playCloseSound } from "../utils/sound";
+import { cachedFetch, getCachedData, CACHE_TTL } from "../utils/cache";
 
 const AboutHighlights = () => {
-  const [achievements, setAchievements] = useState([]);
+  const [achievements, setAchievements] = useState(() => {
+    const cached = getCachedData("firestore_achievements");
+    return (cached && cached.data) || [];
+  });
   const [selectedItem, setSelectedItem] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const achQ = query(collection(db, "achievements"), orderBy("year", "desc"));
-        const achSnap = await getDocs(achQ);
-        const achList = achSnap.docs.map((d) => ({
-          id: d.id,
-          ...d.data(),
-        }));
+        const achList = await cachedFetch(
+          "firestore_achievements",
+          async () => {
+            const achQ = query(collection(db, "achievements"), orderBy("year", "desc"));
+            const achSnap = await getDocs(achQ);
+            return achSnap.docs.map((d) => ({
+              id: d.id,
+              ...d.data(),
+            }));
+          },
+          CACHE_TTL.FIRESTORE
+        );
+
         setAchievements(achList);
       } catch (err) {
         console.error("Error fetching about/highlights data:", err);

@@ -77,7 +77,7 @@ const Footer = () => {
                   strokeWidth="1.2"
                 />
               </pattern>
-              <linearGradient id="footer-fade-gradient" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="footer-fade-gradient" x1="0%" y1="0%" x2="0%" y2="1">
                 <stop offset="0%" stopColor="#ffffff" stopOpacity="0.85" />
                 <stop offset="35%" stopColor="#ffffff" stopOpacity="0.5" />
                 <stop offset="70%" stopColor="#ffffff" stopOpacity="0.15" />

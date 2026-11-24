@@ -6,47 +6,65 @@ import Cards from "./Cards";
 import BlueprintSection from "./ui/BlueprintSection";
 import SectionHeader from "./ui/SectionHeader";
 import { playClickSound, playPopSound } from "../utils/sound";
+import { cachedFetch, getCachedData, CACHE_TTL } from "../utils/cache";
 
 const LatestBlogs = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [totalCount, setTotalCount] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState(() => {
+    const cached = getCachedData("firestore_blogs");
+    return cached && cached.data ? cached.data.slice(0, 3) : [];
+  });
+  const [totalCount, setTotalCount] = useState(() => {
+    const cached = getCachedData("firestore_blogs");
+    return cached && cached.data ? cached.data.length : 0;
+  });
+  const [loading, setLoading] = useState(() => {
+    const cached = getCachedData("firestore_blogs");
+    return !cached || !cached.data || cached.data.length === 0;
+  });
 
   useEffect(() => {
     const fetchLatestBlogs = async () => {
       try {
-        const blogsRef = collection(db, "blogs");
-        let querySnapshot;
+        const blogsData = await cachedFetch(
+          "firestore_blogs",
+          async () => {
+            const blogsRef = collection(db, "blogs");
+            let querySnapshot;
 
-        try {
-          const q = query(blogsRef, orderBy("createdAt", "desc"), limit(6));
-          querySnapshot = await getDocs(q);
-        } catch {
-          querySnapshot = await getDocs(blogsRef);
-        }
+            try {
+              const q = query(blogsRef, orderBy("createdAt", "desc"));
+              querySnapshot = await getDocs(q);
+            } catch {
+              querySnapshot = await getDocs(blogsRef);
+            }
 
-        if (querySnapshot.empty) {
-          querySnapshot = await getDocs(blogsRef);
-        }
+            if (querySnapshot.empty) {
+              querySnapshot = await getDocs(blogsRef);
+            }
 
-        const blogsData = querySnapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
+            const data = querySnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
 
-        // Sort client-side safely
-        blogsData.sort((a, b) => {
-          const getTime = (val) => {
-            if (!val) return 0;
-            if (typeof val.toDate === "function") return val.toDate().getTime();
-            if (val.seconds) return val.seconds * 1000;
-            const d = new Date(val);
-            return isNaN(d.getTime()) ? 0 : d.getTime();
-          };
-          const timeA = getTime(a.createdAt || a.updatedAt);
-          const timeB = getTime(b.createdAt || b.updatedAt);
-          return timeB - timeA;
-        });
+            // Sort client-side safely
+            data.sort((a, b) => {
+              const getTime = (val) => {
+                if (!val) return 0;
+                if (typeof val.toDate === "function") return val.toDate().getTime();
+                if (val.seconds) return val.seconds * 1000;
+                const d = new Date(val);
+                return isNaN(d.getTime()) ? 0 : d.getTime();
+              };
+              const timeA = getTime(a.createdAt || a.updatedAt);
+              const timeB = getTime(b.createdAt || b.updatedAt);
+              return timeB - timeA;
+            });
+
+            return data;
+          },
+          CACHE_TTL.FIRESTORE
+        );
 
         setTotalCount(blogsData.length);
         setBlogs(blogsData.slice(0, 3));

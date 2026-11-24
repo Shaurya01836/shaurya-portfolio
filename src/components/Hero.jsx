@@ -6,25 +6,41 @@ import { NameSelectionDoodle } from "./Doodles";
 import StatusStrip from "./ui/StatusStrip";
 import HatchBand from "./ui/HatchBand";
 import BlueprintSection from "./ui/BlueprintSection";
+import GlassBubble from "./ui/GlassBubble";
 import { playClickSound } from "../utils/sound";
+import { cachedFetch, getCachedData, CACHE_TTL } from "../utils/cache";
 
 const DEFAULT_RESUME_URL =
   "https://drive.google.com/file/d/1s6AgfIBqO-MFrqpWgc69Oj_Ojb7g9mBH/view?usp=sharing";
 
 const Hero = () => {
-  const [resumeUrl, setResumeUrl] = useState(DEFAULT_RESUME_URL);
+  const [resumeUrl, setResumeUrl] = useState(() => {
+    const cached = getCachedData("firestore_profile_resume");
+    return (cached && cached.data) || DEFAULT_RESUME_URL;
+  });
 
   useEffect(() => {
     const fetchHeroData = async () => {
       try {
-        const q = query(collection(db, "profile"), limit(1));
-        const snapshot = await getDocs(q);
-        if (!snapshot.empty) {
-          const data = snapshot.docs[0].data();
-          const dbResume = data.resumeUrl || data.resumeLink || data.reusmeUrl;
-          if (typeof dbResume === "string" && dbResume.trim()) {
-            setResumeUrl(dbResume.trim());
-          }
+        const resume = await cachedFetch(
+          "firestore_profile_resume",
+          async () => {
+            const q = query(collection(db, "profile"), limit(1));
+            const snapshot = await getDocs(q);
+            if (!snapshot.empty) {
+              const data = snapshot.docs[0].data();
+              const dbResume = data.resumeUrl || data.resumeLink || data.reusmeUrl;
+              if (typeof dbResume === "string" && dbResume.trim()) {
+                return dbResume.trim();
+              }
+            }
+            return null;
+          },
+          CACHE_TTL.FIRESTORE
+        );
+
+        if (typeof resume === "string" && resume.trim()) {
+          setResumeUrl(resume.trim());
         }
       } catch (err) {
         console.error("Error fetching hero data:", err);
@@ -44,16 +60,31 @@ const Hero = () => {
         {/* 1. Profile Identity Bar (DP + Identity Info + Actions) */}
         <div className="p-4 sm:p-8 md:p-10 border-b border-[var(--line)] flex flex-col md:flex-row md:items-center justify-between gap-5 sm:gap-6">
           <div className="flex flex-row items-center gap-3.5 sm:gap-6 min-w-0">
-            {/* Square Avatar with Rounded Corners */}
-            <div className="shrink-0 w-16 h-16 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-xl sm:rounded-2xl border-2 border-[var(--line)] bg-[var(--surface)] shadow-lg relative overflow-hidden group">
+            {/* Square Avatar with Rounded Corners & Interactive Liquid Glass Lens on Hover */}
+            <div
+              className="shrink-0 w-16 h-16 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-xl sm:rounded-2xl border-2 border-[var(--line)] bg-[var(--surface)] shadow-lg relative overflow-hidden group select-none"
+              title="Hover to inspect with Bencho Liquid Glass Lens"
+            >
+              {/* Static Profile Image (Base) */}
               <img
                 src="/profile-portrait.webp"
                 alt="Shaurya Upadhyay"
                 className="w-full h-full object-cover object-top rounded-[10px] sm:rounded-xl transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute bottom-1 right-1 sm:bottom-1.5 sm:right-1.5 px-1 sm:px-1.5 py-0.5 bg-[var(--surface)]/90 backdrop-blur-xs border border-[var(--line)] rounded-full font-tech text-[7px] sm:text-[8px] uppercase tracking-wider text-emerald-400 font-semibold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                <span>ON</span>
+
+              {/* Bencho Liquid Glass Lens: Glides & Magnifies on Hover */}
+              <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-auto cursor-grab active:cursor-grabbing">
+                <GlassBubble
+                  image="/profile-portrait.webp"
+                  pad={0}
+                  size={140}
+                  bend={65}
+                  fringe={32}
+                  corner={20}
+                  followPointer={true}
+                  dither={1.0}
+                  className="w-full h-full"
+                />
               </div>
             </div>
 

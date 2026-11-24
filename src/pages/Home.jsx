@@ -7,6 +7,7 @@ import CodingStats from "../components/CodingStats";
 import GithubActivity from "../components/GithubActivity";
 import AboutHighlights from "../components/AboutHighlights";
 import LatestBlogs from "../components/LatestBlogs";
+import AnalyticsSection from "../components/AnalyticsSection";
 import ContactSection from "../components/ContactSection";
 import Footer from "../components/Footer";
 import HatchBand from "../components/ui/HatchBand";
@@ -44,16 +45,22 @@ const Home = ({ darkMode }) => {
       {/* 8. Latest Publications / Blogs */}
       <LatestBlogs />
 
+      {/* Hatched Band: Before Telemetry */}
+      <HatchBand />
+
+      {/* 9. Live Website Telemetry / Analytics */}
+      <AnalyticsSection />
+
       {/* Hatched Band: Before Contact */}
       <HatchBand />
 
-      {/* 9. Contact */}
+      {/* 10. Contact */}
       <ContactSection />
 
-      {/* Hatched Band 3: Before Footer */}
+      {/* Hatched Band: Before Footer */}
       <HatchBand />
 
-      {/* 9. Footer */}
+      {/* 11. Footer */}
       <Footer />
     </div>
   );

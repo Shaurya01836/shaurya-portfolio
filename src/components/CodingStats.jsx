@@ -3,19 +3,26 @@ import BlueprintSection from "./ui/BlueprintSection";
 import SectionHeader from "./ui/SectionHeader";
 import { ExternalLinkSquareIcon } from "./icons";
 import { playClickSound } from "../utils/sound";
+import { cachedFetch, getCachedData, CACHE_TTL } from "../utils/cache";
 
 const LEETCODE_USERNAME = "shaurya01836";
 
 const CodingStats = () => {
-  const [stats, setStats] = useState({
-    totalSolved: 556,
-    easy: 190,
-    medium: 345,
-    hard: 21,
-    ranking: "174,231",
-    maxStreak: 45,
-    totalQuestions: 3420,
-    loading: true,
+  const [stats, setStats] = useState(() => {
+    const cached = getCachedData(`api_leetcode_${LEETCODE_USERNAME}`);
+    if (cached && cached.data) {
+      return { ...cached.data, loading: false };
+    }
+    return {
+      totalSolved: 556,
+      easy: 190,
+      medium: 345,
+      hard: 21,
+      ranking: "174,231",
+      maxStreak: 45,
+      totalQuestions: 3420,
+      loading: true,
+    };
   });
 
   const sectionRef = useRef(null);
@@ -43,13 +50,20 @@ const CodingStats = () => {
 
   const fetchStats = async () => {
     try {
-      const response = await fetch(
-        `https://leetcode-stats.tashif.codes/${LEETCODE_USERNAME}`
-      );
-      if (!response.ok) throw new Error("API response not ok");
+      const data = await cachedFetch(
+        `api_leetcode_${LEETCODE_USERNAME}`,
+        async () => {
+          const response = await fetch(
+            `https://leetcode-stats.tashif.codes/${LEETCODE_USERNAME}`
+          );
+          if (!response.ok) throw new Error("API response not ok");
 
-      const data = await response.json();
-      if (data.status !== "success") throw new Error("API returned failure status");
+          const json = await response.json();
+          if (json.status !== "success") throw new Error("API returned failure status");
+          return json;
+        },
+        CACHE_TTL.EXTERNAL_API
+      );
 
       let maxStreak = 0;
       if (data.submissionCalendar) {

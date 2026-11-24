@@ -6,6 +6,7 @@ import { db } from "../firebase.config";
 import BlueprintSection from "../components/ui/BlueprintSection";
 import SectionHeader from "../components/ui/SectionHeader";
 import Footer from "../components/Footer";
+import { cachedFetch, getCachedData, CACHE_TTL } from "../utils/cache";
 
 const BlogSkeleton = () => (
   <div className="flex flex-col bg-[var(--surface)] border border-[var(--line)] w-full animate-pulse h-full">
@@ -22,61 +23,82 @@ const BlogSkeleton = () => (
 );
 
 const Blogs = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [blogs, setBlogs] = useState(() => {
+    const cached = getCachedData("firestore_blogs");
+    return cached && cached.data ? cached.data : [];
+  });
+  const [loading, setLoading] = useState(() => {
+    const cached = getCachedData("firestore_blogs");
+    return !cached || !cached.data || cached.data.length === 0;
+  });
   const [error, setError] = useState(null);
   const [retryCount, setRetryCount] = useState(0);
   const [showSkeleton, setShowSkeleton] = useState(false);
 
   const fetchBlogs = useCallback(async () => {
-    setLoading(true);
+    // If we don't already have cached blogs, show loading
+    const cached = getCachedData("firestore_blogs");
+    if (!cached || !cached.data || cached.data.length === 0) {
+      setLoading(true);
+    }
     setError(null);
 
     try {
-      const blogsRef = collection(db, "blogs");
-      let querySnapshot;
+      const blogsData = await cachedFetch(
+        "firestore_blogs",
+        async () => {
+          const blogsRef = collection(db, "blogs");
+          let querySnapshot;
 
-      try {
-        const q = query(blogsRef, orderBy("createdAt", "desc"));
-        querySnapshot = await getDocs(q);
-      } catch (orderErr) {
-        console.warn("Ordered query failed, falling back to direct collection fetch:", orderErr);
-        querySnapshot = await getDocs(blogsRef);
-      }
+          try {
+            const q = query(blogsRef, orderBy("createdAt", "desc"));
+            querySnapshot = await getDocs(q);
+          } catch (orderErr) {
+            console.warn("Ordered query failed, falling back to direct collection fetch:", orderErr);
+            querySnapshot = await getDocs(blogsRef);
+          }
 
-      // If ordered query returned 0 documents, also try direct getDocs in case documents lack createdAt
-      if (querySnapshot.empty) {
-        querySnapshot = await getDocs(blogsRef);
-      }
+          // If ordered query returned 0 documents, also try direct getDocs in case documents lack createdAt
+          if (querySnapshot.empty) {
+            querySnapshot = await getDocs(blogsRef);
+          }
 
-      const blogsData = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+          const docs = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
 
-      // Sort client-side safely so that blogs with missing or varying date formats still sort properly
-      blogsData.sort((a, b) => {
-        const getTime = (val) => {
-          if (!val) return 0;
-          if (typeof val.toDate === "function") return val.toDate().getTime();
-          if (val.seconds) return val.seconds * 1000;
-          const d = new Date(val);
-          return isNaN(d.getTime()) ? 0 : d.getTime();
-        };
-        const timeA = getTime(a.createdAt || a.updatedAt);
-        const timeB = getTime(b.createdAt || b.updatedAt);
-        return timeB - timeA;
-      });
+          // Sort client-side safely so that blogs with missing or varying date formats still sort properly
+          docs.sort((a, b) => {
+            const getTime = (val) => {
+              if (!val) return 0;
+              if (typeof val.toDate === "function") return val.toDate().getTime();
+              if (val.seconds) return val.seconds * 1000;
+              const d = new Date(val);
+              return isNaN(d.getTime()) ? 0 : d.getTime();
+            };
+            const timeA = getTime(a.createdAt || a.updatedAt);
+            const timeB = getTime(b.createdAt || b.updatedAt);
+            return timeB - timeA;
+          });
+
+          return docs;
+        },
+        CACHE_TTL.FIRESTORE,
+        retryCount > 0
+      );
 
       setBlogs(blogsData);
       setLoading(false);
     } catch (firebaseErr) {
       console.error("Firebase fetch failed: ", firebaseErr);
-      setBlogs([]);
-      setError("Unable to connect to Blog Database.");
+      if (blogs.length === 0) {
+        setBlogs([]);
+        setError("Unable to connect to Blog Database.");
+      }
       setLoading(false);
     }
-  }, []);
+  }, [retryCount, blogs.length]);
 
   useEffect(() => {
     fetchBlogs();

@@ -22,6 +22,7 @@ import BlueprintSection from "../components/ui/BlueprintSection";
 import Footer from "../components/Footer";
 import BlueprintParticles from "../components/ui/BlueprintParticles";
 import { playCopySuccessChime } from "../utils/sound";
+import { cachedFetch, getCachedData, CACHE_TTL } from "../utils/cache";
 
 const formatDate = (dateValue) => {
   if (!dateValue) return "";
@@ -142,25 +143,52 @@ const MarkdownComponents = {
 
 const BlogDetail = () => {
   const { id } = useParams();
-  const [blog, setBlog] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [blog, setBlog] = useState(() => {
+    // Check if parent blog list already cached this blog
+    const listCache = getCachedData("firestore_blogs");
+    if (listCache && Array.isArray(listCache.data)) {
+      const found = listCache.data.find((b) => b.id === id);
+      if (found) return found;
+    }
+    // Or if individual blog is cached
+    const singleCache = getCachedData(`firestore_blog_${id}`);
+    if (singleCache && singleCache.data) return singleCache.data;
+    return null;
+  });
+  const [loading, setLoading] = useState(() => {
+    const listCache = getCachedData("firestore_blogs");
+    if (listCache && Array.isArray(listCache.data)) {
+      if (listCache.data.some((b) => b.id === id)) return false;
+    }
+    const singleCache = getCachedData(`firestore_blog_${id}`);
+    return !singleCache || !singleCache.data;
+  });
   const [error, setError] = useState(null);
   const [showSkeleton, setShowSkeleton] = useState(false);
 
   useEffect(() => {
     const fetchBlogDetail = async () => {
       try {
-        const blogRef = doc(db, "blogs", id);
-        const blogSnap = await getDoc(blogRef);
+        const blogData = await cachedFetch(
+          `firestore_blog_${id}`,
+          async () => {
+            const blogRef = doc(db, "blogs", id);
+            const blogSnap = await getDoc(blogRef);
 
-        if (blogSnap.exists()) {
-          setBlog({ id: blogSnap.id, ...blogSnap.data() });
-        } else {
-          setError("Blog not found");
-        }
+            if (!blogSnap.exists()) {
+              throw new Error("NOT_FOUND");
+            }
+            return { id: blogSnap.id, ...blogSnap.data() };
+          },
+          CACHE_TTL.FIRESTORE
+        );
+
+        setBlog(blogData);
         setLoading(false);
-      } catch {
-        setError("Unable to connect to Blog Database.");
+      } catch (err) {
+        if (!blog) {
+          setError(err.message === "NOT_FOUND" ? "Blog not found" : "Unable to connect to Blog Database.");
+        }
         setLoading(false);
       }
     };

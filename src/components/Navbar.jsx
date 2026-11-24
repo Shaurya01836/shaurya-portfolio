@@ -20,10 +20,12 @@ import {
   getSoundMuted,
   toggleSoundMuted,
 } from "../utils/sound";
+import useUmamiStats from "../hooks/useUmamiStats";
 
 const Navbar = ({ toggleTheme, isDarkMode, isDevMode = false, toggleDevMode }) => {
   const location = useLocation();
   const [soundMuted, setSoundMutedState] = useState(getSoundMuted());
+  const stats = useUmamiStats();
 
   const handleSoundToggle = () => {
     const nextMuted = toggleSoundMuted();

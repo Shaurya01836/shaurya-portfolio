@@ -124,7 +124,7 @@ const ContactSection = () => {
     <BlueprintSection id="contact" ariaLabel="Contact Information">
       {/* 2-cell Section Header */}
       <SectionHeader
-        number="08"
+        number="09"
         label="CONTACT"
         title="Direct"
         accentWord="Message"
