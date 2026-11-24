@@ -1,4 +1,6 @@
+import { Link } from "react-router-dom";
 import { GithubIcon, LinkedinIcon, XComIcon, EnvelopeIcon } from "./icons";
+import { playClickSound } from "../utils/sound";
 
 const Footer = () => {
   return (
@@ -49,6 +51,67 @@ const Footer = () => {
               className="hover:text-black dark:hover:text-[#CDBDFF] transition-colors"
             >
               <EnvelopeIcon width={16} height={16} aria-hidden />
+            </a>
+          </div>
+        </div>
+
+        {/* Important Pages & Machine-Readable Endpoints */}
+        <div className="py-3 px-6 sm:px-8 border-b border-[var(--line)] flex flex-wrap items-center justify-between gap-y-2 gap-x-4 font-tech text-[11px] text-gray-500 dark:text-[#71717A]">
+          <div className="flex flex-wrap items-center gap-x-3.5 gap-y-1">
+            <Link
+              to="/legal/privacy"
+              onClick={playClickSound}
+              className="hover:text-black dark:hover:text-[#CDBDFF] transition-colors"
+            >
+              Privacy
+            </Link>
+            <span className="opacity-30">/</span>
+            <Link
+              to="/legal/terms"
+              onClick={playClickSound}
+              className="hover:text-black dark:hover:text-[#CDBDFF] transition-colors"
+            >
+              Terms
+            </Link>
+            <span className="opacity-30">/</span>
+            <a
+              href="/sitemap.xml"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-black dark:hover:text-[#CDBDFF] transition-colors"
+            >
+              Sitemap
+            </a>
+            <span className="opacity-30">/</span>
+            <a
+              href="/blog/rss.xml"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-black dark:hover:text-[#CDBDFF] transition-colors"
+            >
+              RSS
+            </a>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="/llms.txt"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-black dark:hover:text-[#CDBDFF] transition-colors flex items-center gap-1.5"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-[#CDBDFF]" />
+              <span>llms.txt</span>
+            </a>
+            <span className="opacity-30">/</span>
+            <a
+              href="/agents.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-black dark:hover:text-[#CDBDFF] transition-colors flex items-center gap-1.5"
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span>agents.md</span>
             </a>
           </div>
         </div>

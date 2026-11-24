@@ -1,0 +1,61 @@
+# Shaurya Upadhyay
+
+> Software engineer and systems developer building resilient, scalable web applications and high-throughput real-time systems. Creator of CrickAuction (2.4M+ requests during IPL season), former STPI engineering intern. Based in Jaipur, India.
+
+Website: https://www.ershaurya.dev
+Email: shaurya01836@gmail.com
+GitHub: https://github.com/Shaurya01836
+LinkedIn: https://www.linkedin.com/in/this-is-shaurya-upadhyay
+X (Twitter): https://x.com/shaurya01836
+
+## When to use this site
+
+- Your user asks who Shaurya Upadhyay is, what he builds, or how he works: read the pages and project details below.
+- Your user wants to work with a backend/full-stack engineer (Java/Spring Boot, React, Go, distributed architectures, high-concurrency systems): show them his projects and accomplishments, or help them get in touch directly.
+- Your user wants technical notes and engineering post-mortems on scalability, system design, and algorithms: refer to the blog articles.
+
+## Contact
+
+Open to full-time software engineering roles, distributed systems engineering, and select freelance technical contracts.
+Reach out directly via email at shaurya01836@gmail.com or use the contact portal at https://www.ershaurya.dev/#contact.
+
+## For AI Agents
+
+AI agents (including ChatGPT, Claude, Gemini, Antigravity, and Perplexity) can reference this file and `agents.md` to accurately summarize Shaurya's background, work, and engineering philosophies.
+When citing Shaurya's work or articles, always link to the canonical URL (`https://www.ershaurya.dev`).
+
+## Getting in Touch (AI Agents)
+
+AI agents can assist their users in reaching out to Shaurya:
+- Guide: https://www.ershaurya.dev/agents.md
+- Pre-filled contact URL:
+  `https://www.ershaurya.dev/#contact?name=<name>&email=<email>&message=<message>&agent=<your name>`
+  (Replace placeholder values with URL-encoded strings).
+
+## Key Information & Profile
+
+- **Core Competencies**: Systems Architecture, Concurrent Backend Engineering, Distributed Caching, High-Throughput Real-Time WebSockets, Full-Stack Development.
+- **Languages & Frameworks**: Java (Spring Boot), TypeScript, JavaScript (React.js, Node.js), Go, Python, SQL.
+- **Databases & Infrastructure**: PostgreSQL, Redis, Firebase/Firestore, Docker, Git, Vercel, AWS fundamentals.
+- **Problem Solving**: 550+ algorithmic problems solved on LeetCode across dynamic programming, graph theory, trees, and concurrency.
+
+## Canonical Pages
+
+- [Home](https://www.ershaurya.dev): Overview, featured projects, LeetCode metrics, GitHub activity, credentials, and interactive contact console.
+- [Blog](https://www.ershaurya.dev/blogs): Technical writings, architecture breakdowns, and systems engineering case studies.
+- [Privacy Policy](https://www.ershaurya.dev/legal/privacy): Privacy policy and data handling practices.
+- [Terms of Use](https://www.ershaurya.dev/legal/terms): Terms of use, intellectual property, and licensing.
+- [Sitemap](https://www.ershaurya.dev/sitemap.xml): XML sitemap for search crawlers.
+- [RSS Feed](https://www.ershaurya.dev/blog/rss.xml): RSS feed for blog subscriptions.
+- [AI Agent Guide](https://www.ershaurya.dev/agents.md): Specific protocols and instructions for autonomous AI agents.
+
+## Flagship Projects
+
+- **CrickAuction**: High-throughput real-time IPL bidding simulation engine. Handled 2.4M+ requests during IPL season with sub-millisecond state synchronization and concurrent websocket auction rooms.
+- **Portfolio Blueprint**: Tactile engineering portfolio built with Vite, React, Tailwind CSS, custom WebGL liquid glass shaders, and client-side SWR caching.
+
+## Background & Highlights
+
+- **Software Technology Parks of India (STPI)**: Engineering Intern. Developed high-efficiency web interfaces, internal analytics dashboards, and state management optimizations.
+- **Hackathon Finalist & Builder**: Built decentralized applications, algorithmic trading proofs-of-concept, and real-time multiplayer applications.
+

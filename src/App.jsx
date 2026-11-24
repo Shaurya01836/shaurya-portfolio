@@ -16,6 +16,8 @@ import { db } from "./firebase.config";
 
 // Lazy-loaded routes for optimal initial bundle performance
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Privacy = lazy(() => import("./pages/Privacy"));
+const Terms = lazy(() => import("./pages/Terms"));
 
 // Local-only admin portal (aliased via vite.config.js to NotFound if gitignored in production)
 const Admin = lazy(() => import("@admin-portal"));
@@ -118,6 +120,46 @@ function AnimatedRoutes({ darkMode, toggleTheme }) {
                 element={
                   <PageWrapper>
                     <BlogDetail />
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="/legal/privacy"
+                element={
+                  <PageWrapper>
+                    <Suspense fallback={<div className="min-h-[70vh] flex items-center justify-center text-xs font-tech text-gray-400">Loading Privacy Policy...</div>}>
+                      <Privacy />
+                    </Suspense>
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="/privacy"
+                element={
+                  <PageWrapper>
+                    <Suspense fallback={<div className="min-h-[70vh] flex items-center justify-center text-xs font-tech text-gray-400">Loading Privacy Policy...</div>}>
+                      <Privacy />
+                    </Suspense>
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="/legal/terms"
+                element={
+                  <PageWrapper>
+                    <Suspense fallback={<div className="min-h-[70vh] flex items-center justify-center text-xs font-tech text-gray-400">Loading Terms...</div>}>
+                      <Terms />
+                    </Suspense>
+                  </PageWrapper>
+                }
+              />
+              <Route
+                path="/terms"
+                element={
+                  <PageWrapper>
+                    <Suspense fallback={<div className="min-h-[70vh] flex items-center justify-center text-xs font-tech text-gray-400">Loading Terms...</div>}>
+                      <Terms />
+                    </Suspense>
                   </PageWrapper>
                 }
               />

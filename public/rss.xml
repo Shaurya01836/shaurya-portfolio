@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Shaurya Upadhyay — Engineering Blog</title>
+    <link>https://www.ershaurya.dev/blogs</link>
+    <atom:link href="https://www.ershaurya.dev/rss.xml" rel="self" type="application/rss+xml" />
+    <description>Engineering notes on distributed backends, systems architecture, real-time engines, and algorithmic problem solving by Shaurya Upadhyay.</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 24 Nov 2026 00:00:00 GMT</lastBuildDate>
+    <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+    
+    <item>
+      <title>Building High-Throughput Real-Time Bidding Engines: Lessons from 2.4M Requests</title>
+      <link>https://www.ershaurya.dev/blogs</link>
+      <guid isPermaLink="false">crickauction-scalability-2026</guid>
+      <description>Architectural breakdown of CrickAuction: concurrent WebSocket synchronization, distributed in-memory state with Redis, and mitigating stampede traffic during live IPL matches.</description>
+      <pubDate>Tue, 17 Nov 2026 00:00:00 GMT</pubDate>
+      <dc:creator>Shaurya Upadhyay</dc:creator>
+    </item>
+
+    <item>
+      <title>Optimizing Client-Side Performance with Zero-Latency SWR Caching</title>
+      <link>https://www.ershaurya.dev/blogs</link>
+      <guid isPermaLink="false">client-side-caching-swr-2026</guid>
+      <description>How two-tier in-memory and session caching eliminates layout shift, reduces Firebase read quotas, and makes route transitions instantaneous.</description>
+      <pubDate>Mon, 10 Nov 2026 00:00:00 GMT</pubDate>
+      <dc:creator>Shaurya Upadhyay</dc:creator>
+    </item>
+
+    <item>
+      <title>State Management and Reactive Dashboards at STPI</title>
+      <link>https://www.ershaurya.dev/blogs</link>
+      <guid isPermaLink="false">stpi-dashboard-state-management</guid>
+      <description>Reflections on engineering interface scalability, modular state management, and real-time visualization systems at Software Technology Parks of India.</description>
+      <pubDate>Tue, 20 Oct 2026 00:00:00 GMT</pubDate>
+      <dc:creator>Shaurya Upadhyay</dc:creator>
+    </item>
+  </channel>
+</rss>
+
